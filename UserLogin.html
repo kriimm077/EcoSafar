@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>EcoSafar • User Login</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-hero">
+
   <main class="center-card">
     <div class="card small">
       <h2>User Login</h2>
@@ -19,11 +21,10 @@
   </main>
 
   <script>
-    document.getElementById('loginBtn').onclick = async () => {
+    document.getElementById('loginBtn').onclick = () => {
       const u = document.getElementById('username').value || 'user01';
-      // for static demo we just redirect, real app uses API /api/login
-      window.location.href = 'user_dashboard.html?username=' + encodeURIComponent(u);
-    };
+      window.location.href = 'UserDash.html?username=' + encodeURIComponent(u);
+    }
   </script>
 </body>
 </html>
