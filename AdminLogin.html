@@ -15,7 +15,7 @@
       <input id="adminUser" placeholder="admin">
       <label>Password</label>
       <input id="adminPass" placeholder="password" type="password">
-      <button class="btn" id="AdminLogin">Login</button>
+      <button class="btn" id="adminLogin">Login</button>
     </div>
   </main>
 
@@ -25,7 +25,7 @@
       const pass = document.getElementById('adminPass').value;
 
       if(user === 'admin' && pass === 'password'){
-        window.location.href = 'admin_dashboard.html';
+        window.location.href = 'AdminDash.html';
       } else {
         alert('Incorrect username or password');
       }
