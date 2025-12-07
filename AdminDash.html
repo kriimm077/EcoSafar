@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>EcoSafar • Admin</title><link rel="stylesheet" href="styles.css"></head>
+<body class="dashboard-bg">
+  <header class="topbar"><div class="brand"><img src="logo.svg" class="logo-xs" alt=""><h1>EcoSafar Admin</h1></div><button class="btn small" onclick="location.href='index.html'">Home</button></header>
+
+  <main class="container-grid">
+    <section class="card stats">
+      <h3>Alerts</h3>
+      <ul id="alerts"><li>No active alerts</li></ul>
+    </section>
+
+    <section class="card table-card">
+      <h3>Residents</h3>
+      <table><thead><tr><th>User</th><th>Total (g)</th><th>Points</th></tr></thead><tbody id="resTable"></tbody></table>
+    </section>
+
+    <section class="card actions">
+      <h3>Operations</h3>
+      <button class="btn" onclick="simulateBinFull()">Simulate Bin Full</button>
+      <button class="btn" onclick="downloadReport()">Download Report (CSV)</button>
+    </section>
+  </main>
+
+  <script>
+    const residents = [{user:'user01',weight:2100,points:195},{user:'user02',weight:850,points:60},{user:'user03',weight:1200,points:120}];
+    function renderAdmin(){
+      const tbody = document.getElementById('resTable'); tbody.innerHTML='';
+      residents.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML = `<td>${r.user}</td><td>${r.weight}</td><td>${r.points}</td>`; tbody.appendChild(tr); });
+    }
+    function simulateBinFull(){ document.getElementById('alerts').innerHTML = '<li>Bin #A1 is 95% full — notify collection</li>'; alert('Notification sent (demo)'); }
+    function downloadReport(){ const csv = 'User,Weight,Points\n' + residents.map(r=>`${r.user},${r.weight},${r.points}`).join('\n'); const b=new Blob([csv],{type:'text/csv'}); const url=URL.createObjectURL(b); const a=document.createElement('a'); a.href=url; a.download='ecosafar_report.csv'; a.click(); }
+    renderAdmin();
+  </script>
+</body>
+</html>
