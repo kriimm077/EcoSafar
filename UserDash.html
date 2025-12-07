@@ -1,13 +1,18 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>EcoSafar • User Dashboard</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="dashboard-bg">
+
   <header class="topbar">
-    <div class="brand"><img src="logo.svg" class="logo-xs" alt=""><h1>EcoSafar</h1></div>
+    <div class="brand">
+      <img src="logo.svg" class="logo-xs" alt="">
+      <h1>EcoSafar</h1>
+    </div>
     <button class="btn small" onclick="location.href='index.html'">Home</button>
   </header>
 
@@ -21,7 +26,12 @@
 
     <section class="card history">
       <h3>Disposal History</h3>
-      <table id="historyTable"><thead><tr><th>Date</th><th>Weight (g)</th><th>Points</th></tr></thead><tbody></tbody></table>
+      <table id="historyTable">
+        <thead>
+          <tr><th>Date</th><th>Weight (g)</th><th>Points</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </section>
 
     <section class="card actions">
@@ -33,34 +43,56 @@
   </main>
 
   <script>
-    // simple demo state (if backend is used, fetch /api/user/:username)
     const params = new URLSearchParams(location.search);
     const username = params.get('username') || 'user01';
     const storageKey = 'ecosafar_demo_' + username;
-    let user = JSON.parse(localStorage.getItem(storageKey)) || {points:195,totalWeight:2100,history:[
-      {date:'2025-12-07',weight:500,points:50},{date:'2025-12-07',weight:250,points:25},
-      {date:'2025-12-05',weight:500,points:35},{date:'2025-12-03',weight:350,points:35},{date:'2025-12-01',weight:500,points:50}
-    ]};
+
+    let user = JSON.parse(localStorage.getItem(storageKey)) || {
+      points:195,
+      totalWeight:2100,
+      history:[
+        {date:'2025-12-07',weight:500,points:50},
+        {date:'2025-12-07',weight:250,points:25},
+        {date:'2025-12-05',weight:500,points:35},
+        {date:'2025-12-03',weight:350,points:35},
+        {date:'2025-12-01',weight:500,points:50}
+      ]
+    };
 
     function render(){
       document.getElementById('points').innerText = user.points;
       document.getElementById('totalWeight').innerText = user.totalWeight + ' g';
       document.getElementById('level').innerText = getLevel(user.points);
-      const tbody = document.querySelector('#historyTable tbody'); tbody.innerHTML = '';
-      user.history.slice().reverse().forEach(h => {
-        const tr = document.createElement('tr'); tr.innerHTML = `<td>${h.date}</td><td>${h.weight}</td><td>${h.points}</td>`;
+      const tbody = document.querySelector('#historyTable tbody');
+      tbody.innerHTML = '';
+      user.history.slice().reverse().forEach(h=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${h.date}</td><td>${h.weight}</td><td>${h.points}</td>`;
         tbody.appendChild(tr);
       });
       localStorage.setItem(storageKey, JSON.stringify(user));
     }
-    function getLevel(points){ if(points>=1000) return 'Platinum'; if(points>=500) return 'Gold'; if(points>=200) return 'Silver'; return 'Bronze';}
+
+    function getLevel(points){
+      if(points>=1000) return 'Platinum';
+      if(points>=500) return 'Gold';
+      if(points>=200) return 'Silver';
+      return 'Bronze';
+    }
+
     function simulateAdd(weight){
       const pointsAdded = Math.round(weight/10);
       const dt = new Date().toISOString().slice(0,10);
       user.history.push({date:dt,weight,points:pointsAdded});
-      user.points += pointsAdded; user.totalWeight += weight; render();
+      user.points += pointsAdded;
+      user.totalWeight += weight;
+      render();
     }
-    function redeem(){ alert('Redeem: request sent (demo)'); }
+
+    function redeem(){
+      alert('Redeem: request sent (demo)');
+    }
+
     render();
   </script>
 </body>
