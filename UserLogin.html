@@ -1,30 +1,111 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>EcoSafar • User Login</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EcoSafar • User Login</title>
+    <link rel="stylesheet" href="styles.css" />
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .bg-hero {
+            background: linear-gradient(135deg, #00a86b, #007347);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        .card {
+            background: white;
+            padding: 28px;
+            border-radius: 16px;
+            width: 380px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+            color: #007347;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin: 12px 0 5px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .btn {
+            margin-top: 18px;
+            width: 100%;
+            padding: 12px;
+            background: #00a86b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #008f5b;
+        }
+
+        .note {
+            font-size: 12px;
+            margin-top: 10px;
+            color: #666;
+        }
+    </style>
 </head>
+
 <body class="bg-hero">
 
-  <main class="center-card">
-    <div class="card small">
-      <h2>User Login</h2>
-      <label>Username (from RFID)</label>
-      <input id="username" placeholder="username">
-      <label>Password</label>
-      <input id="password" placeholder="password" type="password">
-      <button class="btn" id="loginBtn">Login</button>
-      <p class="note">Demo: click Login to open dashboard (static demo)</p>
-    </div>
-  </main>
+    <main class="center-card">
+        <div class="card small">
+            <h2>User Login</h2>
 
-  <script>
-    document.getElementById('loginBtn').onclick = () => {
-      const u = document.getElementById('username').value || 'user01';
-      window.location.href = 'UserDash.html?username=' + encodeURIComponent(u);
-    }
-  </script>
+            <label>Username (from RFID)</label>
+            <input id="username" placeholder="username">
+
+            <label>Password</label>
+            <input id="password" placeholder="password" type="password">
+
+            <button class="btn" id="loginBtn">Login</button>
+
+            <p class="note">Demo: Click Login to open dashboard (static demo)</p>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById("loginBtn").onclick = () => {
+            const u = document.getElementById("username").value || "user01";
+            window.location.href = "UserDash.html?username=" + encodeURIComponent(u);
+        };
+    </script>
+
 </body>
 </html>
