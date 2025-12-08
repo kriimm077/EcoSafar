@@ -4,70 +4,69 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>EcoSafar • User Login</title>
-    <link rel="stylesheet" href="styles.css" />
 
     <style>
         body {
             margin: 0;
             padding: 0;
             font-family: "Poppins", sans-serif;
-        }
-
-        .bg-hero {
-            background: linear-gradient(135deg, #00a86b, #007347);
+            background: #eef5f0; /* Soft eco-friendly background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .center-card {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
         }
 
         .card {
-            background: white;
-            padding: 28px;
-            border-radius: 16px;
-            width: 380px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: #ffffff;
+            padding: 26px 30px;
+            border-radius: 14px;
+            width: 340px; /* reduced width for premium look */
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
             text-align: center;
         }
 
-        .card h2 {
-            margin-bottom: 15px;
+        h2 {
             color: #007347;
+            margin-bottom: 18px;
+            font-size: 22px;
         }
 
         label {
             display: block;
             text-align: left;
-            margin: 12px 0 5px;
+            margin: 10px 0 4px;
             font-weight: 600;
+            font-size: 13px;
+            color: #2e2e2e;
         }
 
         input {
             width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 14px;
+            padding: 8px 10px; /* reduced size */
+            border-radius: 6px;
+            border: 1px solid #bdbdbd;
+            font-size: 13px; /* smaller professional input font */
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00a86b;
+            box-shadow: 0 0 4px rgba(0, 168, 107, 0.3);
         }
 
         .btn {
-            margin-top: 18px;
+            margin-top: 20px;
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background: #00a86b;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 6px;
+            font-size: 15px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            transition: 0.2s;
         }
 
         .btn:hover {
@@ -75,30 +74,28 @@
         }
 
         .note {
-            font-size: 12px;
-            margin-top: 10px;
+            font-size: 11px;
+            margin-top: 12px;
             color: #666;
         }
     </style>
 </head>
 
-<body class="bg-hero">
+<body>
 
-    <main class="center-card">
-        <div class="card small">
-            <h2>User Login</h2>
+    <div class="card">
+        <h2>User Login</h2>
 
-            <label>Username (from RFID)</label>
-            <input id="username" placeholder="username">
+        <label>Username (from RFID)</label>
+        <input id="username" placeholder="Enter username">
 
-            <label>Password</label>
-            <input id="password" placeholder="password" type="password">
+        <label>Password</label>
+        <input id="password" placeholder="Enter password" type="password">
 
-            <button class="btn" id="loginBtn">Login</button>
+        <button class="btn" id="loginBtn">Login</button>
 
-            <p class="note">Demo: Click Login to open dashboard (static demo)</p>
-        </div>
-    </main>
+        <p class="note">Demo: Click Login to open dashboard</p>
+    </div>
 
     <script>
         document.getElementById("loginBtn").onclick = () => {
