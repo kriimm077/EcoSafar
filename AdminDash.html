@@ -11,27 +11,28 @@
       padding: 0;
       font-family: "Poppins", sans-serif;
       background: #eef5f0;
-      color: #222;
+      color: #1e1e1e;
     }
 
     /* Top Bar */
     .topbar {
       background: #007347;
-      padding: 14px 20px;
+      padding: 14px 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       color: white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .brand h1 {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 600;
       margin: 0;
     }
@@ -42,34 +43,35 @@
 
     /* Button */
     .btn {
-      padding: 8px 14px;
-      background: white;
+      padding: 8px 16px;
+      background: #ffffff;
       color: #007347;
       border: none;
       border-radius: 6px;
       font-weight: 600;
       cursor: pointer;
-      transition: 0.2s;
+      transition: 0.25s;
+      font-size: 14px;
     }
 
     .btn:hover {
-      background: #e2f7ec;
+      background: #e5f6ed;
     }
 
     /* Grid Layout */
     .container-grid {
       display: grid;
-      grid-template-columns: 1fr 2fr 1fr;
-      gap: 20px;
-      padding: 20px;
+      grid-template-columns: 1.2fr 2fr 1fr;
+      gap: 22px;
+      padding: 22px;
     }
 
     /* Card */
     .card {
-      background: white;
+      background: #ffffff;
       padding: 20px;
       border-radius: 14px;
-      box-shadow: 0 5px 18px rgba(0,0,0,0.12);
+      box-shadow: 0 5px 18px rgba(0,0,0,0.08);
     }
 
     .card h3 {
@@ -77,28 +79,29 @@
       color: #007347;
       font-size: 18px;
       font-weight: 600;
-      border-bottom: 2px solid #e5f5eb;
+      border-bottom: 2px solid #e3f3e9;
       padding-bottom: 6px;
     }
 
     /* Alerts List */
     #alerts {
       padding-left: 18px;
-      margin-top: 12px;
-      color: #444;
+      margin-top: 14px;
     }
 
     #alerts li {
       margin-bottom: 8px;
       font-size: 14px;
+      color: #333;
     }
 
     /* Table */
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 12px;
+      margin-top: 14px;
       color: #222;
+      font-size: 14px;
     }
 
     thead {
@@ -107,20 +110,19 @@
     }
 
     th, td {
-      padding: 10px;
+      padding: 10px 12px;
       text-align: left;
-      border-bottom: 1px solid #ccc;
-      font-size: 14px;
+      border-bottom: 1px solid #dcdcdc;
     }
 
     tr:hover td {
-      background: #f4fdf8;
+      background: #f2fbf6;
     }
 
-    /* Operations button spacing */
+    /* Action Buttons */
     .actions .btn {
       width: 100%;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       background: #00a86b;
       color: white;
     }
@@ -144,7 +146,7 @@
     <button class="btn" onclick="location.href='index.html'">Home</button>
   </header>
 
-  <!-- Admin Main Grid -->
+  <!-- Main Admin Grid -->
   <main class="container-grid">
 
     <!-- Alerts Card -->
@@ -179,7 +181,6 @@
 
   </main>
 
-  <!-- Backend Simulation Script -->
   <script>
     const residents = [
       {user:'user01',weight:2100,points:195},
@@ -205,15 +206,16 @@
     }
 
     function downloadReport(){
-      const csv = "User,Weight,Points\n" +
+      const csv =
+        "User,Weight,Points\n" +
         residents.map(r => `${r.user},${r.weight},${r.points}`).join("\n");
 
-      const b = new Blob([csv], {type:'text/csv'});
-      const url = URL.createObjectURL(b);
+      const blob = new Blob([csv], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
 
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = url;
-      a.download = 'EcoSafar_Report.csv';
+      a.download = "EcoSafar_Report.csv";
       a.click();
     }
 
