@@ -4,32 +4,239 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>EcoSafar • Admin Login</title>
-  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    /* Page base */
+    :root{
+      --brand-green: #007347;
+      --accent: #00a86b;
+      --bg: #f3f7f4;   /* soft, professional */
+      --card: #ffffff;
+      --muted: #6b6b6b;
+      --input-border: #d0d6d2;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: #222;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    /* Card */
+    .center-card {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 28px 26px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(27,33,31,0.08);
+      border: 1px solid rgba(15, 20, 17, 0.04);
+    }
+
+    .card h2 {
+      margin: 0 0 12px 0;
+      color: var(--brand-green);
+      font-size: 20px;
+      letter-spacing: 0.2px;
+    }
+
+    .brandline {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:14px;
+    }
+
+    .brandline img { height:28px; width:auto; display:block; }
+
+    label {
+      display:block;
+      margin: 10px 0 6px 0;
+      font-size: 13px;
+      font-weight:600;
+      color:#2e2e2e;
+      text-align:left;
+    }
+
+    /* smaller, more professional inputs */
+    input[type="text"],
+    input[type="password"]{
+      width:100%;
+      padding:9px 10px;
+      font-size:13px;
+      border-radius:8px;
+      border:1px solid var(--input-border);
+      box-sizing:border-box;
+      background: #fbfdfb;
+      transition: box-shadow .12s, border-color .12s;
+    }
+
+    input::placeholder { color:#9aa19a; font-size:13px; }
+
+    input:focus {
+      outline:none;
+      border-color: var(--accent);
+      box-shadow: 0 4px 12px rgba(0,168,107,0.12);
+    }
+
+    .btn {
+      margin-top:16px;
+      width:100%;
+      padding:10px;
+      border-radius:8px;
+      border:none;
+      background: var(--accent);
+      color:white;
+      font-weight:700;
+      font-size:14px;
+      cursor:pointer;
+      transition: transform .08s ease, box-shadow .08s ease;
+    }
+
+    .btn:active { transform: translateY(1px); }
+    .btn[disabled] { opacity:0.6; cursor:not-allowed; }
+
+    .hint {
+      margin-top:12px;
+      font-size:12px;
+      color:var(--muted);
+      text-align:left;
+    }
+
+    .msg {
+      margin-top:12px;
+      font-size:13px;
+      padding:10px;
+      border-radius:8px;
+      display:none;
+    }
+
+    .msg.error {
+      background:#fff0f0;
+      color:#8a1f1f;
+      border:1px solid rgba(138,31,31,0.08);
+    }
+
+    .msg.success {
+      background:#f0fff7;
+      color:#045a2b;
+      border:1px solid rgba(4,90,43,0.06);
+    }
+
+    /* small footer links */
+    .small-links {
+      margin-top:14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:12px;
+      color:#7a7a7a;
+    }
+
+    @media (max-width:420px){
+      .card { padding:20px; border-radius:10px; }
+    }
+  </style>
 </head>
-<body class="bg-hero">
+<body>
 
   <main class="center-card">
-    <div class="card small">
-      <h2>Admin Login</h2>
-      <label>Admin username</label>
-      <input id="adminUser" placeholder="admin">
-      <label>Password</label>
-      <input id="adminPass" placeholder="password" type="password">
+    <div class="card">
+      <div class="brandline">
+        <img src="logo.svg" alt="EcoSafar logo" onerror="this.style.display='none'">
+        <div>
+          <h2>Admin Login</h2>
+          <div style="font-size:12px;color:var(--muted)">Sign in to manage the system</div>
+        </div>
+      </div>
+
+      <label for="adminUser">Admin username</label>
+      <input id="adminUser" type="text" placeholder="admin">
+
+      <label for="adminPass">Password</label>
+      <input id="adminPass" type="password" placeholder="••••••••">
+
       <button class="btn" id="adminLogin">Login</button>
+
+      <div id="msg" class="msg" role="status" aria-live="polite"></div>
+
+      <div class="small-links">
+        <div style="opacity:0.95">Demo credentials: <strong>admin</strong></div>
+        <div><a href="index.html" style="text-decoration:none;color:var(--brand-green)">Back home</a></div>
+      </div>
     </div>
   </main>
 
   <script>
-    document.getElementById('adminLogin').onclick = () => {
-      const user = document.getElementById('adminUser').value;
-      const pass = document.getElementById('adminPass').value;
+    // Demo credentials (only for local demo). Trim inputs to avoid whitespace mismatch.
+    const DEMO_USER = 'admin';
+    const DEMO_PASS = 'password';
 
-      if(user === 'admin' && pass === 'password'){
-        window.location.href = 'AdminDash.html';
-      } else {
-        alert('Incorrect username or password');
+    const inputUser = document.getElementById('adminUser');
+    const inputPass = document.getElementById('adminPass');
+    const btn = document.getElementById('adminLogin');
+    const msg = document.getElementById('msg');
+
+    function showMessage(text, type){
+      msg.textContent = text;
+      msg.className = 'msg ' + (type === 'error' ? 'error' : 'success');
+      msg.style.display = 'block';
+      if(type === 'error') {
+        setTimeout(()=> { msg.style.display = 'none'; }, 4000);
       }
     }
+
+    function clearMessage(){
+      msg.style.display = 'none';
+    }
+
+    function handleLogin(){
+      clearMessage();
+      const user = (inputUser.value || '').trim();
+      const pass = (inputPass.value || '').trim();
+
+      // Basic validation
+      if(!user || !pass){
+        showMessage('Please enter username and password.', 'error');
+        return;
+      }
+
+      // Demo auth check — trim and compare exactly (case-sensitive)
+      if(user === DEMO_USER && pass === DEMO_PASS){
+        // show success then redirect
+        showMessage('Welcome — signing in...', 'success');
+        btn.disabled = true;
+        setTimeout(()=> {
+          // redirect to admin dashboard
+          window.location.href = 'AdminDash.html';
+        }, 800);
+      } else {
+        showMessage('Incorrect username or password.', 'error');
+      }
+    }
+
+    // Click + Enter support
+    btn.addEventListener('click', handleLogin);
+    [inputUser, inputPass].forEach(el => {
+      el.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter') handleLogin();
+      });
+    });
+
+    // Autofocus username
+    inputUser.focus();
   </script>
 </body>
 </html>
