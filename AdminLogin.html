@@ -1,210 +1,166 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin Login — EcoSafar</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>EcoSafar • Admin Login</title>
+
+  <link rel="stylesheet" href="styles.css">
   <style>
-    :root{
-      --bg-1: #f3faf6;
-      --accent: #0e8f58;
-      --accent-dark: #0b6c3f;
-      --card-bg: rgba(255,255,255,0.98);
-      --muted: #6b766e;
-      --danger: #fbe7e7;
-      --danger-text: #b22a2a;
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+      background: #f1f8f4; /* light eco green background */
     }
 
-    html,body{
-      height:100%;
-      margin:0;
-      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg, #eef7f2 0%, #f6fbf9 100%);
-      color: #163b2a;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+    .center-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
 
-    /* center container */
-    .page-wrapper{
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 32px;
-    }
-
-    /* larger card */
     .card {
-      width: min(520px, 96%);
-      background: var(--card-bg);
-      border-radius: 14px;
-      box-shadow: 0 18px 50px rgba(9, 30, 15, 0.08);
-      padding: 36px 34px;
-      border: 1px solid rgba(6, 45, 23, 0.04);
+      width: 420px;
+      padding: 40px;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
     }
 
-    .card h1{
-      margin:0 0 8px 0;
+    h2 {
+      margin-top: 0;
+      text-align: center;
       font-size: 28px;
-      color: var(--accent-dark);
-      font-weight: 800;
-      letter-spacing: .2px;
+      color: #0f6b3d;
+      font-weight: 600;
     }
 
-    .card p.lead{
-      margin: 0 0 18px 0;
-      color: var(--muted);
+    .subtitle {
+      text-align: center;
+      color: #555;
       font-size: 14px;
+      margin-bottom: 25px;
     }
-
-    form { margin-top: 8px; }
 
     label {
-      display:block;
-      font-weight:600;
-      font-size:13px;
-      margin-bottom:6px;
-      color:#1f4636;
+      font-size: 14px;
+      font-weight: 500;
+      margin-top: 15px;
+      display: block;
+      color: #333;
     }
 
-    .field {
-      margin-bottom:16px;
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s;
     }
 
-    input[type="text"],
-    input[type="password"]{
-      width:100%;
-      padding:14px 14px;
-      border-radius:10px;
-      border:1px solid rgba(12,50,30,0.08);
-      font-size:15px;
-      outline:none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-    }
     input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 6px 18px rgba(14,143,88,0.08);
-    }
-
-    .actions {
-      display:flex;
-      gap:12px;
-      align-items:center;
-      margin-top:6px;
-      flex-wrap:wrap;
+      border-color: #0f6b3d;
+      box-shadow: 0 0 4px rgba(15,107,61,0.4);
     }
 
     .btn {
-      display:inline-block;
-      padding:13px 22px;
-      border-radius:10px;
-      font-weight:700;
-      font-size:16px;
-      text-decoration:none;
-      border:none;
-      cursor:pointer;
+      width: 100%;
+      padding: 12px;
+      margin-top: 25px;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #0f6b3d;
+      color: #fff;
+      transition: 0.2s;
     }
 
-    .btn-primary {
-      background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
-      color:white;
-      box-shadow: 0 8px 20px rgba(11,108,63,0.12);
-      flex: 1 1 auto;
-      text-align:center;
+    .btn:hover {
+      background: #0b5430;
     }
 
-    .btn-home {
+    .btn-small {
+      width: 120px;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      padding: 10px;
+      font-size: 15px;
+      margin-top: 15px;
       background: transparent;
-      color: var(--accent-dark);
-      border: 1px solid rgba(11,108,63,0.08);
-      padding: 11px 16px;
-      border-radius: 8px;
-      font-weight:600;
-      text-decoration:none;
+      color: #0f6b3d;
+      border: 2px solid #0f6b3d;
     }
 
-    .demo-note {
-      margin-top:14px;
-      font-size:13px;
-      color:var(--muted);
+    .btn-small:hover {
+      background: #e7f7ef;
     }
 
-    .error {
-      margin-top:14px;
-      border-radius:8px;
-      background: var(--danger);
-      color: var(--danger-text);
-      padding:10px 12px;
-      display:none;
-      font-weight:600;
+    .error-box {
+      margin-top: 20px;
+      padding: 12px;
+      background: #ffe1e1;
+      color: #b50000;
+      border-radius: 10px;
+      display: none;
+      font-size: 14px;
     }
 
-    /* small screens adjustments */
-    @media (max-width:420px){
-      .card { padding: 22px; }
-      .btn-primary { font-size:15px; padding:12px 16px; }
-      input { padding:12px; }
+    .demo {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #444;
+      text-align: center;
+    }
+
+    .demo b {
+      color: #000;
     }
   </style>
 </head>
+
 <body>
-  <div class="page-wrapper">
-    <div class="card" role="region" aria-labelledby="admin-login-title">
-      <h1 id="admin-login-title">Admin Login</h1>
-      <p class="lead">Sign in to manage the system</p>
+  <main class="center-card">
+    <div class="card">
+      <h2>Admin Login</h2>
+      <p class="subtitle">Sign in to manage the system</p>
 
-      <form id="loginForm" autocomplete="off" novalidate>
-        <div class="field">
-          <label for="username">Admin username</label>
-          <input id="username" name="username" type="text" placeholder="admin" value="" required />
-        </div>
+      <label>Admin username</label>
+      <input id="adminUser" placeholder="admin">
 
-        <div class="field">
-          <label for="password">Password</label>
-          <input id="password" name="password" type="password" placeholder="••••••••" required />
-        </div>
+      <label>Password</label>
+      <input id="adminPass" type="password" placeholder="admin">
 
-        <div class="actions">
-          <button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
+      <button class="btn" id="adminLogin">Login</button>
 
-          <!-- Home button (replaces 'Back home') -->
-          <a class="btn-home" href="index.html" id="homeBtn" role="button">Home</a>
-        </div>
+      <button class="btn-small" onclick="window.location.href='index.html'">Home</button>
 
-        <!-- demo/instruction + error box -->
-        <div class="demo-note">Demo credentials: <strong>admin / admin</strong></div>
-        <div id="errorBox" class="error" role="alert" aria-live="assertive">Incorrect username or password.</div>
-      </form>
+      <p class="demo">Demo credentials: <b>admin / admin</b></p>
+
+      <div class="error-box" id="errorBox">Incorrect username or password.</div>
     </div>
-  </div>
+  </main>
 
   <script>
-    // DEMO-ONLY client-side check for local testing.
-    // Remove this script or replace with real server call in production.
-    (function(){
-      const form = document.getElementById('loginForm');
+    document.getElementById('adminLogin').onclick = () => {
+      const u = document.getElementById('adminUser').value.trim();
+      const p = document.getElementById('adminPass').value.trim();
       const errorBox = document.getElementById('errorBox');
 
-      form.addEventListener('submit', function(e){
-        e.preventDefault();
-        errorBox.style.display = 'none';
-
-        const user = document.getElementById('username').value.trim();
-        const pass = document.getElementById('password').value;
-
-        // Demo acceptance: username=admin and password=admin
-        if(user.toLowerCase() === 'admin' && pass === 'admin'){
-          // Simulate successful login — redirect to admin dashboard page
-          window.location.href = 'AdminDash.html';
-          return;
-        }
-
-        // Otherwise show the error message
-        errorBox.textContent = 'Incorrect username or password.';
-        errorBox.style.display = 'block';
-      });
-    })();
+      if (u === "admin" && p === "admin") {
+        window.location.href = "AdminDash.html";
+      } else {
+        errorBox.style.display = "block";
+      }
+    };
   </script>
+
 </body>
 </html>
