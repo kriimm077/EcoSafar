@@ -1,242 +1,210 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>EcoSafar • Admin Login</title>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Login — EcoSafar</title>
   <style>
-    /* Page base */
     :root{
-      --brand-green: #007347;
-      --accent: #00a86b;
-      --bg: #f3f7f4;   /* soft, professional */
-      --card: #ffffff;
-      --muted: #6b6b6b;
-      --input-border: #d0d6d2;
+      --bg-1: #f3faf6;
+      --accent: #0e8f58;
+      --accent-dark: #0b6c3f;
+      --card-bg: rgba(255,255,255,0.98);
+      --muted: #6b766e;
+      --danger: #fbe7e7;
+      --danger-text: #b22a2a;
     }
 
     html,body{
       height:100%;
       margin:0;
       font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: var(--bg);
-      color: #222;
+      background: linear-gradient(180deg, #eef7f2 0%, #f6fbf9 100%);
+      color: #163b2a;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* center container */
+    .page-wrapper{
+      min-height:100vh;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 24px;
-      box-sizing: border-box;
+      padding: 32px;
     }
 
-    /* Card */
-    .center-card {
-      width: 100%;
-      max-width: 420px;
-    }
-
+    /* larger card */
     .card {
-      background: var(--card);
-      padding: 28px 26px;
-      border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(27,33,31,0.08);
-      border: 1px solid rgba(15, 20, 17, 0.04);
+      width: min(520px, 96%);
+      background: var(--card-bg);
+      border-radius: 14px;
+      box-shadow: 0 18px 50px rgba(9, 30, 15, 0.08);
+      padding: 36px 34px;
+      border: 1px solid rgba(6, 45, 23, 0.04);
     }
 
-    .card h2 {
-      margin: 0 0 12px 0;
-      color: var(--brand-green);
-      font-size: 20px;
-      letter-spacing: 0.2px;
+    .card h1{
+      margin:0 0 8px 0;
+      font-size: 28px;
+      color: var(--accent-dark);
+      font-weight: 800;
+      letter-spacing: .2px;
     }
 
-    .brandline {
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:14px;
+    .card p.lead{
+      margin: 0 0 18px 0;
+      color: var(--muted);
+      font-size: 14px;
     }
 
-    .brandline img { height:28px; width:auto; display:block; }
+    form { margin-top: 8px; }
 
     label {
       display:block;
-      margin: 10px 0 6px 0;
-      font-size: 13px;
       font-weight:600;
-      color:#2e2e2e;
-      text-align:left;
+      font-size:13px;
+      margin-bottom:6px;
+      color:#1f4636;
     }
 
-    /* smaller, more professional inputs */
+    .field {
+      margin-bottom:16px;
+    }
+
     input[type="text"],
     input[type="password"]{
       width:100%;
-      padding:9px 10px;
-      font-size:13px;
-      border-radius:8px;
-      border:1px solid var(--input-border);
-      box-sizing:border-box;
-      background: #fbfdfb;
-      transition: box-shadow .12s, border-color .12s;
+      padding:14px 14px;
+      border-radius:10px;
+      border:1px solid rgba(12,50,30,0.08);
+      font-size:15px;
+      outline:none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 6px 18px rgba(14,143,88,0.08);
     }
 
-    input::placeholder { color:#9aa19a; font-size:13px; }
-
-    input:focus {
-      outline:none;
-      border-color: var(--accent);
-      box-shadow: 0 4px 12px rgba(0,168,107,0.12);
+    .actions {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-top:6px;
+      flex-wrap:wrap;
     }
 
     .btn {
-      margin-top:16px;
-      width:100%;
-      padding:10px;
-      border-radius:8px;
-      border:none;
-      background: var(--accent);
-      color:white;
+      display:inline-block;
+      padding:13px 22px;
+      border-radius:10px;
       font-weight:700;
-      font-size:14px;
+      font-size:16px;
+      text-decoration:none;
+      border:none;
       cursor:pointer;
-      transition: transform .08s ease, box-shadow .08s ease;
     }
 
-    .btn:active { transform: translateY(1px); }
-    .btn[disabled] { opacity:0.6; cursor:not-allowed; }
-
-    .hint {
-      margin-top:12px;
-      font-size:12px;
-      color:var(--muted);
-      text-align:left;
+    .btn-primary {
+      background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%);
+      color:white;
+      box-shadow: 0 8px 20px rgba(11,108,63,0.12);
+      flex: 1 1 auto;
+      text-align:center;
     }
 
-    .msg {
-      margin-top:12px;
-      font-size:13px;
-      padding:10px;
-      border-radius:8px;
-      display:none;
+    .btn-home {
+      background: transparent;
+      color: var(--accent-dark);
+      border: 1px solid rgba(11,108,63,0.08);
+      padding: 11px 16px;
+      border-radius: 8px;
+      font-weight:600;
+      text-decoration:none;
     }
 
-    .msg.error {
-      background:#fff0f0;
-      color:#8a1f1f;
-      border:1px solid rgba(138,31,31,0.08);
-    }
-
-    .msg.success {
-      background:#f0fff7;
-      color:#045a2b;
-      border:1px solid rgba(4,90,43,0.06);
-    }
-
-    /* small footer links */
-    .small-links {
+    .demo-note {
       margin-top:14px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      font-size:12px;
-      color:#7a7a7a;
+      font-size:13px;
+      color:var(--muted);
     }
 
+    .error {
+      margin-top:14px;
+      border-radius:8px;
+      background: var(--danger);
+      color: var(--danger-text);
+      padding:10px 12px;
+      display:none;
+      font-weight:600;
+    }
+
+    /* small screens adjustments */
     @media (max-width:420px){
-      .card { padding:20px; border-radius:10px; }
+      .card { padding: 22px; }
+      .btn-primary { font-size:15px; padding:12px 16px; }
+      input { padding:12px; }
     }
   </style>
 </head>
 <body>
+  <div class="page-wrapper">
+    <div class="card" role="region" aria-labelledby="admin-login-title">
+      <h1 id="admin-login-title">Admin Login</h1>
+      <p class="lead">Sign in to manage the system</p>
 
-  <main class="center-card">
-    <div class="card">
-      <div class="brandline">
-        <img src="logo.svg" alt="EcoSafar logo" onerror="this.style.display='none'">
-        <div>
-          <h2>Admin Login</h2>
-          <div style="font-size:12px;color:var(--muted)">Sign in to manage the system</div>
+      <form id="loginForm" autocomplete="off" novalidate>
+        <div class="field">
+          <label for="username">Admin username</label>
+          <input id="username" name="username" type="text" placeholder="admin" value="" required />
         </div>
-      </div>
 
-      <label for="adminUser">Admin username</label>
-      <input id="adminUser" type="text" placeholder="admin">
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="••••••••" required />
+        </div>
 
-      <label for="adminPass">Password</label>
-      <input id="adminPass" type="password" placeholder="••••••••">
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
 
-      <button class="btn" id="adminLogin">Login</button>
+          <!-- Home button (replaces 'Back home') -->
+          <a class="btn-home" href="index.html" id="homeBtn" role="button">Home</a>
+        </div>
 
-      <div id="msg" class="msg" role="status" aria-live="polite"></div>
-
-      <div class="small-links">
-        <div style="opacity:0.95">Demo credentials: <strong>admin</strong></div>
-        <div><a href="index.html" style="text-decoration:none;color:var(--brand-green)">Back home</a></div>
-      </div>
+        <!-- demo/instruction + error box -->
+        <div class="demo-note">Demo credentials: <strong>admin / admin</strong></div>
+        <div id="errorBox" class="error" role="alert" aria-live="assertive">Incorrect username or password.</div>
+      </form>
     </div>
-  </main>
+  </div>
 
   <script>
-    // Demo credentials (only for local demo). Trim inputs to avoid whitespace mismatch.
-    const DEMO_USER = 'admin';
-    const DEMO_PASS = 'password';
+    // DEMO-ONLY client-side check for local testing.
+    // Remove this script or replace with real server call in production.
+    (function(){
+      const form = document.getElementById('loginForm');
+      const errorBox = document.getElementById('errorBox');
 
-    const inputUser = document.getElementById('adminUser');
-    const inputPass = document.getElementById('adminPass');
-    const btn = document.getElementById('adminLogin');
-    const msg = document.getElementById('msg');
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        errorBox.style.display = 'none';
 
-    function showMessage(text, type){
-      msg.textContent = text;
-      msg.className = 'msg ' + (type === 'error' ? 'error' : 'success');
-      msg.style.display = 'block';
-      if(type === 'error') {
-        setTimeout(()=> { msg.style.display = 'none'; }, 4000);
-      }
-    }
+        const user = document.getElementById('username').value.trim();
+        const pass = document.getElementById('password').value;
 
-    function clearMessage(){
-      msg.style.display = 'none';
-    }
-
-    function handleLogin(){
-      clearMessage();
-      const user = (inputUser.value || '').trim();
-      const pass = (inputPass.value || '').trim();
-
-      // Basic validation
-      if(!user || !pass){
-        showMessage('Please enter username and password.', 'error');
-        return;
-      }
-
-      // Demo auth check — trim and compare exactly (case-sensitive)
-      if(user === DEMO_USER && pass === DEMO_PASS){
-        // show success then redirect
-        showMessage('Welcome — signing in...', 'success');
-        btn.disabled = true;
-        setTimeout(()=> {
-          // redirect to admin dashboard
+        // Demo acceptance: username=admin and password=admin
+        if(user.toLowerCase() === 'admin' && pass === 'admin'){
+          // Simulate successful login — redirect to admin dashboard page
           window.location.href = 'AdminDash.html';
-        }, 800);
-      } else {
-        showMessage('Incorrect username or password.', 'error');
-      }
-    }
+          return;
+        }
 
-    // Click + Enter support
-    btn.addEventListener('click', handleLogin);
-    [inputUser, inputPass].forEach(el => {
-      el.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter') handleLogin();
+        // Otherwise show the error message
+        errorBox.textContent = 'Incorrect username or password.';
+        errorBox.style.display = 'block';
       });
-    });
-
-    // Autofocus username
-    inputUser.focus();
+    })();
   </script>
 </body>
 </html>
