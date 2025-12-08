@@ -4,41 +4,182 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>EcoSafar • Admin Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body class="dashboard-bg">
 
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+      background: #eef5f0;
+      color: #222;
+    }
+
+    /* Top Bar */
+    .topbar {
+      background: #007347;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .logo-xs {
+      height: 34px;
+    }
+
+    /* Button */
+    .btn {
+      padding: 8px 14px;
+      background: white;
+      color: #007347;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: #e2f7ec;
+    }
+
+    /* Grid Layout */
+    .container-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    /* Card */
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 5px 18px rgba(0,0,0,0.12);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #007347;
+      font-size: 18px;
+      font-weight: 600;
+      border-bottom: 2px solid #e5f5eb;
+      padding-bottom: 6px;
+    }
+
+    /* Alerts List */
+    #alerts {
+      padding-left: 18px;
+      margin-top: 12px;
+      color: #444;
+    }
+
+    #alerts li {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      color: #222;
+    }
+
+    thead {
+      background: #00a86b;
+      color: white;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    tr:hover td {
+      background: #f4fdf8;
+    }
+
+    /* Operations button spacing */
+    .actions .btn {
+      width: 100%;
+      margin-bottom: 10px;
+      background: #00a86b;
+      color: white;
+    }
+
+    .actions .btn:hover {
+      background: #008f5b;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- Top Bar -->
   <header class="topbar">
     <div class="brand">
-      <img src="logo.svg" class="logo-xs" alt="">
-      <h1>EcoSafar Admin</h1>
+      <img src="logo.svg" class="logo-xs">
+      <h1>EcoSafar Admin Panel</h1>
     </div>
-    <button class="btn small" onclick="location.href='index.html'">Home</button>
+
+    <button class="btn" onclick="location.href='index.html'">Home</button>
   </header>
 
+  <!-- Admin Main Grid -->
   <main class="container-grid">
+
+    <!-- Alerts Card -->
     <section class="card stats">
       <h3>Alerts</h3>
-      <ul id="alerts"><li>No active alerts</li></ul>
+      <ul id="alerts">
+        <li>No active alerts</li>
+      </ul>
     </section>
 
+    <!-- Residents Table -->
     <section class="card table-card">
       <h3>Residents</h3>
       <table>
         <thead>
-          <tr><th>User</th><th>Total (g)</th><th>Points</th></tr>
+          <tr>
+            <th>User</th>
+            <th>Total Waste (g)</th>
+            <th>Points</th>
+          </tr>
         </thead>
         <tbody id="resTable"></tbody>
       </table>
     </section>
 
+    <!-- Actions -->
     <section class="card actions">
       <h3>Operations</h3>
       <button class="btn" onclick="simulateBinFull()">Simulate Bin Full</button>
       <button class="btn" onclick="downloadReport()">Download Report (CSV)</button>
     </section>
+
   </main>
 
+  <!-- Backend Simulation Script -->
   <script>
     const residents = [
       {user:'user01',weight:2100,points:195},
@@ -57,21 +198,27 @@
     }
 
     function simulateBinFull(){
-      document.getElementById('alerts').innerHTML = '<li>Bin #A1 is 95% full — notify collection</li>';
-      alert('Notification sent (demo)');
+      document.getElementById('alerts').innerHTML =
+        '<li><strong>Bin A1:</strong> 95% full — collection required.</li>';
+
+      alert('Collection alert sent (demo)');
     }
 
     function downloadReport(){
-      const csv = 'User,Weight,Points\n' + residents.map(r=>`${r.user},${r.weight},${r.points}`).join('\n');
+      const csv = "User,Weight,Points\n" +
+        residents.map(r => `${r.user},${r.weight},${r.points}`).join("\n");
+
       const b = new Blob([csv], {type:'text/csv'});
       const url = URL.createObjectURL(b);
+
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'ecosafar_report.csv';
+      a.download = 'EcoSafar_Report.csv';
       a.click();
     }
 
     renderAdmin();
   </script>
+
 </body>
 </html>
