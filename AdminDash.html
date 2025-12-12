@@ -164,7 +164,7 @@
                     <th>Bin ID</th>
                     <th>Total Waste (g)</th>
                     <th>Fill Level</th>
-                    <th>Eco Points</th>
+                
                     <th>Last Update</th>
                 </tr>
             </thead>
@@ -183,10 +183,10 @@
 
 <script>
 const sections = [
-    { section:"Block A1", bin:"BIN-01", waste:2100, fill:92, points:120, last:"20 min ago" },
-    { section:"Block B2", bin:"BIN-02", waste:1800, fill:40, points:95, last:"3 hrs ago" },
-    { section:"Tower C", bin:"BIN-03", waste:3950, fill:70, points:180, last:"1 hr ago" },
-    { section:"Wing D", bin:"BIN-04", waste:2500, fill:25, points:140, last:"2 days ago" }
+    { section:"Block A1", bin:"BIN-01", waste:2100, fill:92, last:"20 min ago" },
+    { section:"Block B2", bin:"BIN-02", waste:1800, fill:40, last:"3 hrs ago" },
+    { section:"Tower C", bin:"BIN-03", waste:3950, fill:70, last:"1 hr ago" },
+    { section:"Wing D", bin:"BIN-04", waste:2500, fill:25, last:"2 days ago" }
 ];
 
 // dot color logic
@@ -241,4 +241,5 @@ renderSections();
 
 </body>
 </html>
+
 
