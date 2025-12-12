@@ -1,131 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • User Login</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: "Poppins", sans-serif;
-        background: linear-gradient(135deg, #f0f9f4, #e6f4eb);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    background: linear-gradient(135deg, #f0f9f4, #e6f4eb);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
 
-    .card {
-        background: rgba(255,255,255,0.95);
-        padding: 36px 32px;
-        border-radius: 20px;
-        width: 360px;
-        box-shadow: 0 12px 30px rgba(0,0,0,0.08), 0 6px 15px rgba(0,0,0,0.05);
-        text-align: center;
-        backdrop-filter: blur(6px);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+/* LOGIN CARD */
+.card {
+    background: rgba(255,255,255,0.95);
+    padding: 40px 36px;
+    border-radius: 22px;
+    width: 360px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08), 0 6px 15px rgba(0,0,0,0.05);
+    text-align: center;
+    backdrop-filter: blur(6px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-    .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.12), 0 10px 25px rgba(0,0,0,0.06);
-    }
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.12), 0 10px 25px rgba(0,0,0,0.06);
+}
 
-    /* Adjusted Logo */
-    .logo-xs {
-        width: 80px; /* smaller, proportional */
-        height: auto;
-        margin-bottom: 18px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
+/* LOGO */
+.logo-xs {
+    width: 70px; /* controlled size */
+    height: auto;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
 
-    h2 {
-        color: #0f7a52;
-        margin-bottom: 22px;
-        font-size: 24px;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-    }
+/* HEADINGS */
+h2 {
+    color: #0f7a52;
+    margin-bottom: 22px;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
 
-    label {
-        display: block;
-        text-align: left;
-        margin: 12px 0 6px;
-        font-weight: 600;
-        font-size: 13px;
-        color: #2e2e2e;
-    }
+/* FORM */
+label {
+    display: block;
+    text-align: left;
+    margin: 12px 0 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #2e2e2e;
+}
 
-    input {
-        width: 100%;
-        padding: 10px 12px;
-        border-radius: 8px;
-        border: 1px solid #bdbdbd;
-        font-size: 14px;
-        transition: all 0.2s ease;
-    }
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #bdbdbd;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    background: #fdfdfd;
+}
 
-    input:focus {
-        outline: none;
-        border-color: #00a86b;
-        box-shadow: 0 0 6px rgba(0, 168, 107, 0.3);
-    }
+input:focus {
+    outline: none;
+    border-color: #0fcf7d;
+    box-shadow: 0 0 8px rgba(15,207,125,0.3);
+}
 
-    .btn {
-        margin-top: 22px;
-        width: 100%;
-        padding: 12px;
-        background: #00a86b;
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 15px;
-        cursor: pointer;
-        font-weight: 600;
-        box-shadow: 0 6px 18px rgba(15,122,82,0.25);
-        transition: all 0.25s ease;
-    }
+/* BUTTON */
+.btn {
+    margin-top: 24px;
+    width: 100%;
+    padding: 14px;
+    background: #0fcf7d;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(15,122,82,0.25);
+    transition: all 0.25s ease;
+}
 
-    .btn:hover {
-        background: #0fcf7d;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(15,122,82,0.35);
-    }
+.btn:hover {
+    background: #00a86b;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(15,122,82,0.35);
+}
 
-    .note {
-        font-size: 12px;
-        margin-top: 14px;
-        color: #666;
-    }
+/* DEMO NOTE */
+.note {
+    font-size: 13px;
+    margin-top: 16px;
+    color: #555;
+    opacity: 0.85;
+}
 </style>
 </head>
 
 <body>
 
-    <div class="card">
-        <img src="logo.jpg" class="logo-xs" alt="EcoSafar Logo">
-        <h2>User Login</h2>
+<div class="card">
+    <img src="logo.jpg" class="logo-xs" alt="EcoSafar Logo">
+    <h2>User Login</h2>
 
-        <label>Username (from RFID)</label>
-        <input id="username" placeholder="Enter username">
+    <label>Username (RFID)</label>
+    <input id="username" placeholder="Enter username">
 
-        <label>Password</label>
-        <input id="password" placeholder="Enter password" type="password">
+    <label>Password</label>
+    <input id="password" type="password" placeholder="Enter password">
 
-        <button class="btn" id="loginBtn">Login</button>
+    <button class="btn" id="loginBtn">Login</button>
 
-        <p class="note">Demo: Click Login to open dashboard</p>
-    </div>
+    <p class="note">Demo: Click Login to open dashboard</p>
+</div>
 
-    <script>
-        document.getElementById("loginBtn").onclick = () => {
-            const u = document.getElementById("username").value || "user01";
-            window.location.href = "UserDash.html?username=" + encodeURIComponent(u);
-        };
-    </script>
+<script>
+document.getElementById("loginBtn").onclick = () => {
+    const u = document.getElementById("username").value || "user01";
+    window.location.href = "UserDash.html?username=" + encodeURIComponent(u);
+};
+</script>
 
 </body>
 </html>
