@@ -9,8 +9,10 @@
 
 <style>
 :root {
+    --green-900: #0E4520;
     --green-700: #145A13;
     --green-accent: #0fcf7d;
+    --border-color: #d6e5d8;
 }
 
 /* RESET */
@@ -23,75 +25,76 @@
 
 /* BODY */
 body {
-    background: linear-gradient(135deg, #f0f9f4, #e6f4eb);
+    background: linear-gradient(135deg, #f0f9f4, #e8f6ef);
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 20px;
     min-height: 100vh;
 }
 
 /* LOGIN CARD */
 .card {
-    background: rgba(255,255,255,0.95);
-    padding: 42px 36px;
-    border-radius: 26px;
-    width: 360px;
+    background: rgba(255,255,255,0.96);
+    padding: 48px 40px;
+    border-radius: 28px;
+    width: 390px;
     text-align: center;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.08), 0 6px 15px rgba(0,0,0,0.05);
-    backdrop-filter: blur(6px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.10);
+    backdrop-filter: blur(10px);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.12), 0 10px 25px rgba(0,0,0,0.06);
+    box-shadow: 0 22px 55px rgba(0,0,0,0.15);
 }
 
-/* LOGO */
+/* LOGO BOX */
 .logo-box {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    padding: 12px;
+    display: inline-block;
+    padding: 18px;
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(12px);
     border-radius: 22px;
-    background: rgba(255,255,255,0.32);
-    backdrop-filter: blur(6px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+    margin-bottom: 26px;
 }
 
 .logo-box img {
-    width: 100px;
+    width: 130px;
     height: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+    mix-blend-mode: multiply;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.25));
+    opacity: 0.95;
 }
 
-/* HEADINGS */
+/* TITLE */
 h2 {
-    color: var(--green-700);
-    margin-bottom: 22px;
-    font-size: 28px;
+    color: var(--green-900);
+    margin-bottom: 26px;
+    font-size: 30px;
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
 }
 
-/* FORM LABELS */
+/* LABELS */
 label {
     display: block;
     text-align: left;
-    margin: 12px 0 6px;
+    margin: 14px 0 6px;
     font-weight: 600;
     font-size: 14px;
-    color: #2e2e2e;
+    color: #2b3b2a;
 }
 
 /* INPUTS */
 input {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     border-radius: 12px;
-    border: 1px solid #bdbdbd;
-    font-size: 14px;
+    border: 1px solid var(--border-color);
+    font-size: 15px;
     background: #fdfdfd;
     transition: all 0.25s ease;
 }
@@ -99,36 +102,36 @@ input {
 input:focus {
     outline: none;
     border-color: var(--green-accent);
-    box-shadow: 0 0 8px rgba(15,207,125,0.3);
+    box-shadow: 0 0 9px rgba(15,207,125,0.28);
 }
 
 /* BUTTON */
 .btn {
-    margin-top: 24px;
+    margin-top: 28px;
     width: 100%;
-    padding: 14px;
+    padding: 15px;
     background: var(--green-accent);
     color: white;
     border: none;
     border-radius: 14px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 6px 18px rgba(15,122,82,0.25);
+    box-shadow: 0 6px 20px rgba(15,122,82,0.25);
     transition: all 0.25s ease;
 }
 
 .btn:hover {
-    background: #00a86b;
+    background: #07b66b;
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(15,122,82,0.35);
+    box-shadow: 0 12px 30px rgba(15,122,82,0.35);
 }
 
-/* DEMO NOTE */
+/* NOTE */
 .note {
     font-size: 13px;
     margin-top: 16px;
-    color: #555;
+    color: #4d4d4d;
     opacity: 0.85;
 }
 </style>
@@ -138,23 +141,28 @@ input:focus {
 
 <div class="card">
 
+    <!-- Logo -->
     <div class="logo-box">
         <img src="logo.png" alt="EcoSafar Logo">
     </div>
 
+    <!-- Heading -->
     <h2>User Login</h2>
 
+    <!-- Form -->
     <label>Username (RFID)</label>
     <input id="username" placeholder="Enter username">
 
     <label>Password</label>
     <input id="password" type="password" placeholder="Enter password">
 
+    <!-- Button -->
     <button class="btn" id="loginBtn">Login</button>
 
     <p class="note">Demo: Click Login to open dashboard</p>
 </div>
 
+<!-- JS -->
 <script>
 document.getElementById("loginBtn").onclick = () => {
     const u = document.getElementById("username").value || "user01";
