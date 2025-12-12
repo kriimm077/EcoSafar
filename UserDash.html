@@ -1,201 +1,258 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>EcoSafar • User Dashboard</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>EcoSafar • User Dashboard</title>
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Poppins", sans-serif;
-      background: #eef5f0;
-      color: #222;
-    }
+<style>
+  /* BODY & BACKGROUND */
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(120deg, #f0f9f4, #e6f4eb); /* soft eco-gradient */
+    color: #1b3a2d;
+  }
 
-    .topbar {
-      background: #00a86b;
-      padding: 12px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-    }
+  /* TOPBAR */
+  .topbar {
+    background: #0f7a52;
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
-    .brand h1 {
-      font-size: 20px;
-      margin: 0;
-    }
+  .brand h1 {
+    font-size: 22px;
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
 
-    .logo-xs {
-      height: 32px;
-    }
+  .logo-xs {
+    height: 36px;
+    border-radius: 6px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  }
 
-    .btn {
-      padding: 8px 14px;
-      background: white;
-      color: #00a86b;
-      border: none;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+  .btn {
+    padding: 10px 18px;
+    background: white;
+    color: #0f7a52;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 3px 12px rgba(15,122,82,0.25);
+    transition: all 0.3s ease;
+  }
 
-    .container-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      padding: 20px;
-    }
+  .btn:hover {
+    background: #dafae9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(15,122,82,0.35);
+  }
 
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 14px;
-      box-shadow: 0 5px 18px rgba(0,0,0,0.12);
-    }
+  /* GRID LAYOUT */
+  .container-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+    padding: 30px 24px;
+  }
 
-    .card h3 {
-      margin-top: 0;
-      color: #007347;
-    }
+  /* CARD */
+  .card {
+    background: rgba(255,255,255,0.9);
+    padding: 32px 28px;
+    border-radius: 20px;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.08), 0 6px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(6px);
+  }
 
-    .big-number {
-      font-size: 36px;
-      font-weight: bold;
-      color: #00a86b;
-      margin-bottom: 10px;
-    }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15), 0 10px 25px rgba(0,0,0,0.08);
+  }
 
-    /* Table styling */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      color: #222;
-    }
+  .card h3 {
+    margin-top: 0;
+    color: #0f7a52;
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
 
-    thead {
-      background: #00a86b;
-      color: white;
-    }
+  .big-number {
+    font-size: 42px;
+    font-weight: 700;
+    color: #00a86b;
+    margin-bottom: 10px;
+    transition: all 0.5s ease;
+  }
 
-    th, td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ccc;
-      font-size: 14px;
-    }
+  /* INFO BOX */
+  .info-box {
+    margin-top: 15px;
+    padding: 14px;
+    background: #e5fff3;
+    border-left: 5px solid #0f7a52;
+    border-radius: 10px;
+    color: #0f4d3f;
+    font-size: 14px;
+    box-shadow: inset 0 1px 6px rgba(0,0,0,0.08);
+  }
 
-    tr:hover {
-      background: #f4fdf8;
-    }
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #1b3a2d;
+  }
 
-    /* Message Box */
-    .info-box {
-      margin-top: 15px;
-      padding: 12px;
-      background: #e8fff1;
-      border-left: 4px solid #00a86b;
-      border-radius: 6px;
-      color: #005c37;
-      font-size: 14px;
-    }
-  </style>
+  thead {
+    background: #0f7a52;
+    color: white;
+    border-radius: 8px;
+  }
+
+  th, td {
+    padding: 12px 10px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  tr:hover {
+    background: #dafae9;
+  }
+
+  /* LEVEL BADGES */
+  .level {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #0fcf7d;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+</style>
 </head>
 
 <body>
+<header class="topbar">
+  <div class="brand">
+    <img src="logo.svg" class="logo-xs" alt="EcoSafar Logo">
+    <h1>EcoSafar</h1>
+  </div>
+  <button class="btn" onclick="location.href='index.html'">Home</button>
+</header>
 
-  <header class="topbar">
-    <div class="brand">
-      <img src="logo.svg" class="logo-xs" alt="">
-      <h1>EcoSafar</h1>
+<main class="container-grid">
+
+  <!-- Stats Card -->
+  <section class="card stats">
+    <h3>Your Eco Points</h3>
+    <div id="points" class="big-number">0</div>
+    <p>Total Waste Added: <strong id="totalWeight">0 g</strong></p>
+    <p>Your Level: <span id="level" class="level">Bronze</span></p>
+
+    <div class="info-box">
+      Points and history are updated automatically by the smart bin.
     </div>
-    <button class="btn" onclick="location.href='index.html'">Home</button>
-  </header>
+  </section>
 
-  <main class="container-grid">
+  <!-- History Card -->
+  <section class="card history">
+    <h3>Disposal History</h3>
+    <table id="historyTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Weight (g)</th>
+          <th>Points Earned</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
 
-    <!-- Stats Card -->
-    <section class="card stats">
-      <h3>Your Eco Points</h3>
-      <div id="points" class="big-number">0</div>
-      <p>Total Waste Added: <strong id="totalWeight">0 g</strong></p>
-      <p>Your Level: <span id="level">Bronze</span></p>
+</main>
 
-      <div class="info-box">
-        Points and history are updated automatically by the smart bin.
-      </div>
-    </section>
+<script>
+  const params = new URLSearchParams(location.search);
+  const username = params.get('username') || 'user01';
+  const storageKey = 'ecosafar_demo_' + username;
 
-    <!-- History Card -->
-    <section class="card history">
-      <h3>Disposal History</h3>
-      <table id="historyTable">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Weight (g)</th>
-            <th>Points Earned</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
+  let user = JSON.parse(localStorage.getItem(storageKey)) || {
+    points: 195,
+    totalWeight: 2100,
+    history: [
+      {date:'2025-12-07',weight:500,points:50},
+      {date:'2025-12-07',weight:250,points:25},
+      {date:'2025-12-05',weight:500,points:35},
+      {date:'2025-12-03',weight:350,points:35},
+      {date:'2025-12-01',weight:500,points:50}
+    ]
+  };
 
-  </main>
+  function render(){
+    const pointsEl = document.getElementById('points');
+    const totalEl = document.getElementById('totalWeight');
+    const levelEl = document.getElementById('level');
 
-  <script>
-    const params = new URLSearchParams(location.search);
-    const username = params.get('username') || 'user01';
-    const storageKey = 'ecosafar_demo_' + username;
+    animateValue(pointsEl, 0, user.points, 1000);
+    totalEl.innerText = user.totalWeight + ' g';
+    levelEl.innerText = getLevel(user.points);
 
-    // Demo stored data (ESP32 would override this in real system)
-    let user = JSON.parse(localStorage.getItem(storageKey)) || {
-      points: 195,
-      totalWeight: 2100,
-      history: [
-        {date:'2025-12-07',weight:500,points:50},
-        {date:'2025-12-07',weight:250,points:25},
-        {date:'2025-12-05',weight:500,points:35},
-        {date:'2025-12-03',weight:350,points:35},
-        {date:'2025-12-01',weight:500,points:50}
-      ]
+    const tbody = document.querySelector('#historyTable tbody');
+    tbody.innerHTML = '';
+    user.history.slice().reverse().forEach(h => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${h.date}</td><td>${h.weight}</td><td>${h.points}</td>`;
+      tbody.appendChild(tr);
+    });
+
+    localStorage.setItem(storageKey, JSON.stringify(user));
+  }
+
+  function getLevel(points){
+    if(points >= 1000) return 'Platinum';
+    if(points >= 500) return 'Gold';
+    if(points >= 200) return 'Silver';
+    return 'Bronze';
+  }
+
+  // Smooth counting animation
+  function animateValue(obj, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      obj.innerText = Math.floor(progress * (end - start) + start);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
     };
+    window.requestAnimationFrame(step);
+  }
 
-    function render(){
-      document.getElementById('points').innerText = user.points;
-      document.getElementById('totalWeight').innerText = user.totalWeight + ' g';
-      document.getElementById('level').innerText = getLevel(user.points);
-
-      const tbody = document.querySelector('#historyTable tbody');
-      tbody.innerHTML = '';
-
-      user.history.slice().reverse().forEach(h => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${h.date}</td><td>${h.weight}</td><td>${h.points}</td>`;
-        tbody.appendChild(tr);
-      });
-
-      localStorage.setItem(storageKey, JSON.stringify(user));
-    }
-
-    function getLevel(points){
-      if(points >= 1000) return 'Platinum';
-      if(points >= 500) return 'Gold';
-      if(points >= 200) return 'Silver';
-      return 'Bronze';
-    }
-
-    render();
-  </script>
-
+  render();
+</script>
 </body>
 </html>
