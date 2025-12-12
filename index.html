@@ -39,22 +39,28 @@ header {
     margin-bottom: 50px;
 }
 
-/* LOGO FIX ✔ */
+/* LOGO */
 .logo-box {
     display: flex;
     justify-content: center;
+    margin-bottom: 20px;
+    padding: 12px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.32);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
 }
 
 .logo-box img {
-    width: 120px;      /* Perfect size */
+    width: 120px;
     height: auto;
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
     animation: floatRotate 6s ease-in-out infinite;
     transition: transform 0.4s ease;
 }
 
-/* HEADING */
+/* HEADER TEXT */
 header h1 {
     font-size: 3rem;
     font-weight: 800;
