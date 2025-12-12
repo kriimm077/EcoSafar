@@ -1,140 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>EcoSafar • Smart Waste Management</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>EcoSafar • Smart Waste Management</title>
 
-    <style>
-        /* BODY & CONTAINER */
-        body {
-            margin: 0;
-            font-family: "Poppins", sans-serif;
-            background: #f9fdf8; /* soft eco-white */
-            color: #0f4d3f;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+<style>
+    /* BODY & CONTAINER */
+    body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #f0f4f8; /* soft, premium off-white */
+        color: #1b3a2d;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
 
-        .container {
-            max-width: 1000px;
-            width: 90%;
-            margin: auto;
-            text-align: center;
-            padding: 80px 0;
-        }
+    .container {
+        max-width: 1100px;
+        width: 90%;
+        margin: auto;
+        text-align: center;
+        padding: 80px 0;
+    }
 
-        /* HEADER */
-        header img {
-            width: 120px;
-            height: auto;
-            margin-bottom: 15px;
-        }
+    /* HEADER */
+    header img {
+        width: 130px;
+        height: auto;
+        margin-bottom: 15px;
+        border-radius: 12px; /* subtle “premium” touch */
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
 
-        header h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            margin: 5px 0;
-            color: #0f4d3f;
-        }
+    header h1 {
+        font-size: 3.2rem;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        margin: 5px 0;
+        color: #0f4d3f;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
 
-        .tag {
-            font-size: 1.2rem;
-            opacity: 0.7;
-            margin-top: -5px;
-        }
+    .tag {
+        font-size: 1.3rem;
+        opacity: 0.65;
+        margin-top: -5px;
+        letter-spacing: 0.5px;
+    }
 
-        /* GRID CARDS */
-        .home-grid {
-            margin-top: 60px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
+    /* GRID CARDS */
+    .home-grid {
+        margin-top: 60px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 35px;
+    }
 
-        .card {
-            background: #ffffff;
-            padding: 35px 25px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+    .card {
+        background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(245,250,245,0.85));
+        padding: 40px 30px;
+        border-radius: 20px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.12), 0 6px 15px rgba(0,0,0,0.08);
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
 
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        }
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.18), 0 10px 25px rgba(0,0,0,0.1);
+    }
 
-        .card h2 {
-            margin-bottom: 12px;
-            font-size: 1.7rem;
-            font-weight: 700;
-        }
+    .card h2 {
+        margin-bottom: 14px;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #0f4d3f;
+    }
 
-        .card p {
-            opacity: 0.85;
-            line-height: 1.5;
-        }
+    .card p {
+        opacity: 0.75;
+        line-height: 1.6;
+        font-size: 1.05rem;
+    }
 
-        /* BUTTONS */
-        .btn {
-            display: inline-block;
-            margin-top: 20px;
-            background: #0f7a52; /* softer green */
-            color: #ffffff;
-            padding: 12px 28px;
-            border-radius: 12px;
-            font-weight: 600;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-            transition: 0.3s;
-        }
+    /* BUTTONS */
+    .btn {
+        display: inline-block;
+        margin-top: 22px;
+        background: #0f7a52;
+        color: #ffffff;
+        padding: 14px 32px;
+        border-radius: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 6px 18px rgba(15,122,82,0.25);
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
 
-        .btn:hover {
-            background: #0fcf7d;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-        }
+    .btn:hover {
+        background: #0fcf7d;
+        box-shadow: 0 10px 25px rgba(15,122,82,0.35);
+        transform: translateY(-2px);
+    }
 
-        /* FOOTER */
-        footer {
-            text-align: center;
-            padding: 25px 0;
-            margin-top: auto;
-            font-size: 0.95rem;
-            opacity: 0.7;
-            color: #0f4d3f;
-        }
-    </style>
+    /* FOOTER */
+    footer {
+        text-align: center;
+        padding: 30px 0;
+        margin-top: auto;
+        font-size: 0.95rem;
+        opacity: 0.7;
+        color: #1b3a2d;
+    }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <img src="logo.jpg" alt="EcoSafar Logo">
-            <h1>EcoSafar</h1>
-            <p class="tag">Smart • Sustainable • Rewarding</p>
-        </header>
+<div class="container">
+    <header>
+        <img src="logo.jpg" alt="EcoSafar Logo">
+        <h1>EcoSafar</h1>
+        <p class="tag">Smart • Sustainable • Rewarding</p>
+    </header>
 
-        <main class="home-grid">
-            <div class="card">
-                <h2>Admin</h2>
-                <p>Manage bins, alerts & resident accounts efficiently.</p>
-                <a class="btn" href="AdminLogin.html">Admin Login</a>
-            </div>
+    <main class="home-grid">
+        <div class="card">
+            <h2>Admin</h2>
+            <p>Manage bins, alerts & resident accounts with ease and precision.</p>
+            <a class="btn" href="AdminLogin.html">Admin Login</a>
+        </div>
 
-            <div class="card">
-                <h2>User</h2>
-                <p>View points, waste history & claim rewards.</p>
-                <a class="btn" href="UserLogin.html">User Login</a>
-            </div>
-        </main>
-    </div>
+        <div class="card">
+            <h2>User</h2>
+            <p>Track points, view waste history, and redeem rewards seamlessly.</p>
+            <a class="btn" href="UserLogin.html">User Login</a>
+        </div>
+    </main>
+</div>
 
-    <footer>
-        © EcoSafar — Smart Waste Management
-    </footer>
+<footer>
+    © EcoSafar — Smart Waste Management
+</footer>
 
 </body>
 </html>
