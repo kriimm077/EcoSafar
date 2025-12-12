@@ -1,70 +1,421 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EcoSafar • Home</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>EcoSafar • Smart Waste Management</title>
 
-  <!-- Google Font -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Main CSS -->
-  <link rel="stylesheet" href="styles.css" />
+<style>
+/* GLOBAL STYLING */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+body {
+    background: linear-gradient(150deg, #f7fdf7, #eaf7ed);
+    color: #1b3a2d;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 1100px;
+    width: 90%;
+    margin: auto;
+    text-align: center;
+    padding: 60px 0 100px 0;
+}
+
+/* HEADER */
+header {
+    margin-bottom: 50px;
+}
+
+/* LOGO */
+.logo-box {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding: 12px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.32);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+.logo-box img {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+    animation: floatRotate 6s ease-in-out infinite;
+    transition: transform 0.4s ease;
+}
+
+/* HEADER TEXT */
+header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    margin: 10px 0 6px;
+    color: #0f4d3f;
+    text-shadow: 0 3px 8px rgba(0,0,0,0.07);
+}
+
+header .tag {
+    font-size: 1.2rem;
+    opacity: 0.7;
+    margin-top: -5px;
+    letter-spacing: 0.6px;
+    color: #0f5f44;
+}
+
+/* GRID */
+.home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 35px;
+    perspective: 1000px;
+}
+
+/* CARD */
+.card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(245,250,245,0.9));
+    padding: 36px 28px;
+    border-radius: 24px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.08), 0 8px 20px rgba(0,0,0,0.05);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    backdrop-filter: blur(6px);
+    text-align: left;
+}
+
+.card:hover {
+    transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.15), 0 12px 30px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    margin-bottom: 16px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0f5f44;
+}
+
+.card p {
+    opacity: 0.8;
+    line-height: 1.6;
+    font-size: 1rem;
+    color: #2a3a2d;
+    margin-bottom: 24px;
+}
+
+/* BUTTON */
+.btn {
+    display: inline-block;
+    background: #0f7a52;
+    color: #ffffff;
+    padding: 14px 30px;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    box-shadow: 0 6px 22px rgba(15,122,82,0.25);
+    transition: all 0.35s ease;
+}
+
+.btn:hover {
+    background: #0fcf7d;
+    box-shadow: 0 12px 32px rgba(15,122,82,0.35);
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 30px 0;
+    margin-top: auto;
+    font-size: 0.95rem;
+    opacity: 0.75;
+    color: #1b3a2d;
+    border-top: 1px solid rgba(15,122,82,0.15);
+    letter-spacing: 0.5px;
+}
+
+/* LOGO FLOAT ANIMATION */
+@keyframes floatRotate {
+    0% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-6px) rotate(-1deg); }
+    50% { transform: translateY(0) rotate(0deg); }
+    75% { transform: translateY(6px) rotate(1deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* RESPONSIVE */
+@media screen and (max-width: 768px) {
+    header h1 { font-size: 2.5rem; }
+    header .tag { font-size: 1.1rem; }
+    .card h2 { font-size: 1.5rem; }
+    .card p { font-size: 0.95rem; }
+    .btn { font-size: 0.95rem; padding: 12px 24px; }
+    .container { padding: 60px 0 80px 0; }
+}
+
+@media screen and (max-width: 480px) {
+    header h1 { font-size: 2rem; }
+    header .tag { font-size: 1rem; }
+    .card h2 { font-size: 1.3rem; }
+    .card p { font-size: 0.9rem; }
+    .btn { font-size: 0.9rem; padding: 10px 20px; }
+    .home-grid { gap: 25px; }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- HERO BACKGROUND -->
-  <div class="bg-hero">
-
-    <!-- HEADER SECTION -->
-    <header class="site-header">
-      <div class="brand">
-
-        <!-- Glass Logo Box -->
+<div class="container">
+    <header>
         <div class="logo-box">
-          <img src="logo.png" class="logo" alt="EcoSafar Logo" />
+            <img src="logo.png" alt="EcoSafar Logo">
         </div>
-
         <h1>EcoSafar</h1>
-        <p class="tag">Smart Waste Management System</p>
-      </div>
+        <p class="tag">Smart • Sustainable • Rewarding</p>
     </header>
 
-    <!-- HOME CARDS -->
-    <div class="home-grid">
+    <main class="home-grid">
+        <div class="card">
+            <h2>Admin</h2>
+            <p>Manage bins, alerts & resident accounts with efficiency and precision, all in one place.</p>
+            <a class="btn" href="AdminLogin.html">Admin Login</a>
+        </div>
 
-      <!-- User Login Card -->
-      <div class="card">
-        <h2>User Access</h2>
-        <p>
-          Login to track eco points, view history, and manage waste disposal activity.
-        </p>
-        <a href="UserLogin.html" class="btn">User Login</a>
-      </div>
+        <div class="card">
+            <h2>User</h2>
+            <p>Track points, view waste history, and redeem rewards seamlessly for a greener lifestyle.</p>
+            <a class="btn" href="UserLogin.html">User Login</a>
+        </div>
+    </main>
+</div>
 
-      <!-- Admin Login Card -->
-      <div class="card">
-        <h2>Admin Panel</h2>
-        <p>
-          Monitor bins, manage users, and configure the smart dustbin dashboard.
-        </p>
-        <a href="AdminLogin.html" class="btn">Admin Login</a>
-      </div>
-
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-      © 2025 EcoSafar · Smart Waste Management
-    </footer>
-
-  </div>
+<footer>
+    © EcoSafar — Smart Waste Management
+</footer>
 
 </body>
+</html>
+so ths logo in 1st imasge and the logo in secind image the bacgrund aint avsible in secind i awant u to do that  thus is my 1st photo codes the seconf phto codes ae below, edit and give me 1st photo code using second photo codes <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoSafar • Admin Login</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --green-900: #0b3d0f;
+    --green-700: #145A13;
+    --green-500: #2e7d32;
+    --accent: #2ecc71;
+}
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #e1f3e7, #d6efe1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+}
+
+/* CARD */
+.card {
+    background: rgba(255,255,255,0.96);
+    padding: 48px 42px;
+    border-radius: 28px;
+    width: 420px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.09);
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+/* NEW LOGO BOX (matches homepage) */
+.logo-box {
+    display: inline-block;
+    padding: 18px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.32);
+    backdrop-filter: blur(10px);
+    margin: 0 auto 24px auto;
+}
+
+.logo-box img {
+    width: 125px;
+    height: auto;
+    mix-blend-mode: multiply;
+    opacity: 0.93;
+    filter: drop-shadow(0 6px 16px rgba(0,0,0,0.35));
+}
+
+/* TITLE */
+.title {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--green-700);
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    font-size: 15px;
+    color: #4f5e57;
+    margin-bottom: 28px;
+}
+
+/* INPUT LABEL */
+label {
+    display: block;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: left;
+    margin-top: 18px;
+    color: #2a3a30;
+}
+
+/* INPUT BOXES */
+input {
+    width: 100%;
+    padding: 13px 14px;
+    margin-top: 6px;
+    border-radius: 12px;
+    border: 1px solid #c8d8cc;
+    font-size: 15px;
+    background: #ffffff;
+    transition: 0.25s;
+}
+
+input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 6px rgba(46,204,113,0.4);
+    outline: none;
+}
+
+/* PRIMARY BUTTON */
+.btn {
+    margin-top: 30px;
+    width: 100%;
+    padding: 14px;
+    background: var(--green-700);
+    color: #fff;
+    border: none;
+    font-size: 17px;
+    font-weight: 600;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(15,122,82,0.25);
+    transition: all 0.25s ease;
+}
+
+.btn:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(15,122,82,0.28);
+}
+
+/* SECONDARY BUTTON */
+.btn-secondary {
+    margin-top: 14px;
+    width: 100%;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 600;
+    background: transparent;
+    border: 2px solid var(--green-700);
+    border-radius: 14px;
+    color: var(--green-700);
+    cursor: pointer;
+    transition: 0.25s ease;
+}
+
+.btn-secondary:hover {
+    background: rgba(20,90,19,0.12);
+}
+
+/* ERROR BOX */
+.error-box {
+    display: none;
+    background: #ffe7e7;
+    color: #c40000;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 18px;
+    font-size: 14px;
+    border-left: 4px solid #ff6f6f;
+}
+
+/* DEMO */
+.demo {
+    margin-top: 18px;
+    font-size: 13px;
+    color: #555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="logo-box">
+        <img src="logo.png" alt="EcoSafar Logo">
+    </div>
+
+    <h2 class="title">Admin Login</h2>
+    <p class="subtitle">Access EcoSafar Control Panel</p>
+
+    <label>Username</label>
+    <input id="adminUser" placeholder="admin">
+
+    <label>Password</label>
+    <input id="adminPass" type="password" placeholder="admin">
+
+    <button class="btn" id="adminLogin">Sign In</button>
+    <button class="btn-secondary" onclick="location.href='index.html'">Home</button>
+
+    <p class="demo">Demo: <b>admin / admin</b></p>
+
+    <div class="error-box" id="errorBox">Incorrect username or password.</div>
+</div>
+
+<script>
+document.getElementById('adminLogin').onclick = () => {
+    const u = document.getElementById('adminUser').value.trim();
+    const p = document.getElementById('adminPass').value.trim();
+    const errorBox = document.getElementById('errorBox');
+
+    if (u === "admin" && p === "admin") {
+        window.location.href = "AdminDash.html";
+    } else {
+        errorBox.style.display = "block";
+    }
+};
+</script>
+
+</body>
 </html>
