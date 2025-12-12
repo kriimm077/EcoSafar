@@ -41,13 +41,29 @@ body {
   justify-content: center;
 }
 
+/* ✨ NEW — Glass effect box behind logo */
+.logo-box {
+  display: inline-block;
+  padding: 18px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(10px);
+}
+
+/* ✨ NEW — Blended logo style */
 .logo {
   width: 125px;
   height: auto;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+
+  /* soft blending */
+  mix-blend-mode: multiply;
+  opacity: 0.93;
+
+  /* soft depth */
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.35));
 }
 
-/* bold TITLE vibe */
+/* TITLE */
 .brand h1 {
   margin: 0;
   font-size: 3rem;
