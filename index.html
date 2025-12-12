@@ -31,10 +31,14 @@ body {
     width: 90%;
     margin: auto;
     text-align: center;
-    padding: 100px 0;
+    padding: 60px 0 100px 0;
 }
 
 /* HEADER */
+header {
+    margin-bottom: 50px;
+}
+
 header img {
     width: 150px;
     height: auto;
@@ -42,13 +46,11 @@ header img {
     border-radius: 14px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     transition: transform 0.4s ease;
-}
-header img:hover {
-    transform: rotate(-2deg) scale(1.05);
+    animation: floatRotate 6s ease-in-out infinite;
 }
 
 header h1 {
-    font-size: 3.8rem;
+    font-size: 3rem;
     font-weight: 800;
     letter-spacing: 1.4px;
     margin: 10px 0 6px;
@@ -57,7 +59,7 @@ header h1 {
 }
 
 header .tag {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     opacity: 0.7;
     margin-top: -5px;
     letter-spacing: 0.6px;
@@ -66,41 +68,40 @@ header .tag {
 
 /* GRID CARDS */
 .home-grid {
-    margin-top: 80px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 45px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 35px;
     perspective: 1000px;
 }
 
 .card {
     background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(245,250,245,0.9));
-    padding: 48px 36px;
-    border-radius: 28px;
-    box-shadow: 0 18px 45px rgba(0,0,0,0.08), 0 10px 25px rgba(0,0,0,0.05);
+    padding: 36px 28px;
+    border-radius: 24px;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.08), 0 8px 20px rgba(0,0,0,0.05);
     transition: transform 0.5s ease, box-shadow 0.5s ease;
     backdrop-filter: blur(6px);
     text-align: left;
 }
 
 .card:hover {
-    transform: translateY(-15px) rotateX(3deg) rotateY(3deg);
-    box-shadow: 0 28px 70px rgba(0,0,0,0.15), 0 14px 35px rgba(0,0,0,0.08);
+    transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.15), 0 12px 30px rgba(0,0,0,0.08);
 }
 
 .card h2 {
-    margin-bottom: 18px;
-    font-size: 2.1rem;
+    margin-bottom: 16px;
+    font-size: 1.8rem;
     font-weight: 700;
     color: #0f5f44;
 }
 
 .card p {
     opacity: 0.8;
-    line-height: 1.7;
-    font-size: 1.1rem;
+    line-height: 1.6;
+    font-size: 1rem;
     color: #2a3a2d;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
 }
 
 /* BUTTONS */
@@ -108,42 +109,59 @@ header .tag {
     display: inline-block;
     background: #0f7a52;
     color: #ffffff;
-    padding: 16px 40px;
-    border-radius: 18px;
+    padding: 14px 30px;
+    border-radius: 16px;
     font-weight: 600;
-    font-size: 1.05rem;
+    font-size: 1rem;
     text-decoration: none;
-    box-shadow: 0 8px 28px rgba(15,122,82,0.25);
+    box-shadow: 0 6px 22px rgba(15,122,82,0.25);
     transition: all 0.35s ease;
 }
 
 .btn:hover {
     background: #0fcf7d;
-    box-shadow: 0 14px 36px rgba(15,122,82,0.35);
-    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(15,122,82,0.35);
+    transform: translateY(-2px) scale(1.02);
 }
 
 /* FOOTER */
 footer {
     text-align: center;
-    padding: 40px 0;
+    padding: 30px 0;
     margin-top: auto;
-    font-size: 1rem;
+    font-size: 0.95rem;
     opacity: 0.75;
     color: #1b3a2d;
     border-top: 1px solid rgba(15,122,82,0.15);
     letter-spacing: 0.5px;
 }
 
-/* ANIMATION */
-@keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-    100% { transform: translateY(0); }
+/* LOGO ANIMATION */
+@keyframes floatRotate {
+    0% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-6px) rotate(-1deg); }
+    50% { transform: translateY(0) rotate(0deg); }
+    75% { transform: translateY(6px) rotate(1deg); }
+    100% { transform: translateY(0) rotate(0deg); }
 }
 
-header img {
-    animation: float 4s ease-in-out infinite;
+/* RESPONSIVE MEDIA QUERIES */
+@media screen and (max-width: 768px) {
+    header h1 { font-size: 2.5rem; }
+    header .tag { font-size: 1.1rem; }
+    .card h2 { font-size: 1.5rem; }
+    .card p { font-size: 0.95rem; }
+    .btn { font-size: 0.95rem; padding: 12px 24px; }
+    .container { padding: 60px 0 80px 0; }
+}
+
+@media screen and (max-width: 480px) {
+    header h1 { font-size: 2rem; }
+    header .tag { font-size: 1rem; }
+    .card h2 { font-size: 1.3rem; }
+    .card p { font-size: 0.9rem; }
+    .btn { font-size: 0.9rem; padding: 10px 20px; }
+    .home-grid { gap: 25px; }
 }
 </style>
 </head>
