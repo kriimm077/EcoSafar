@@ -50,6 +50,17 @@ body {
 .logo-box img {
     width: 140px;
     height: auto;
+    /* Cute floating animation */
+    animation: cuteFloat 4s ease-in-out infinite;
+}
+
+/* CUTE FLOATING ANIMATION */
+@keyframes cuteFloat {
+    0% { transform: translateY(0) rotate(0deg) scale(1); }
+    25% { transform: translateY(-10px) rotate(-3deg) scale(1.05); }
+    50% { transform: translateY(-5px) rotate(3deg) scale(1.08); }
+    75% { transform: translateY(-12px) rotate(-2deg) scale(1.03); }
+    100% { transform: translateY(0) rotate(0deg) scale(1); }
 }
 
 /* TITLE */
