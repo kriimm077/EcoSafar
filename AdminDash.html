@@ -42,8 +42,10 @@
         gap: 12px;
     }
 
+    /* LOGO WITH CUTE ANIMATION */
     .brand img {
-        height: 40px; /* logo size */
+        height: 40px;
+        animation: cuteBounce 2s infinite, cuteWiggle 3s infinite;
     }
 
     .brand h1 {
@@ -134,7 +136,6 @@
         background: #f0f9f4;
     }
 
-    /* Status dot */
     .dot {
         height: 10px;
         width: 10px;
@@ -158,6 +159,23 @@
     .operations button:hover {
         transform: translateY(-2px);
         box-shadow: 0 8px 28px rgba(15,122,82,0.3);
+    }
+
+    /* CUTE LOGO ANIMATIONS */
+    @keyframes cuteBounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
+        40% { transform: translateY(-10px) scale(1.1); }
+        60% { transform: translateY(-6px) scale(1.05); }
+    }
+
+    @keyframes cuteWiggle {
+        0%, 100% { transform: rotate(0deg); }
+        15% { transform: rotate(-5deg); }
+        30% { transform: rotate(5deg); }
+        45% { transform: rotate(-4deg); }
+        60% { transform: rotate(4deg); }
+        75% { transform: rotate(-2deg); }
+        90% { transform: rotate(2deg); }
     }
 
 </style>
@@ -219,11 +237,10 @@ const sections = [
     { section:"Wing D", bin:"BIN-04", waste:2500, fill:25, last:"2 days ago" }
 ];
 
-// dot color logic
 function getDotColor(fill){
-    if(fill < 40) return "#5cb85c";  // green
-    if(fill < 80) return "#f0ad4e";  // yellow
-    return "#d9534f";               // red
+    if(fill < 40) return "#5cb85c";
+    if(fill < 80) return "#f0ad4e";
+    return "#d9534f";
 }
 
 function renderSections(){
