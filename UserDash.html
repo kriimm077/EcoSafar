@@ -32,7 +32,7 @@ body {
 
 /* TOPBAR */
 .topbar {
-    background: var(--green-700);
+    background-color: #d6f5d6; /* light green only for topbar */
     padding: 14px 28px;
     display: flex;
     justify-content: space-between;
@@ -48,6 +48,16 @@ body {
     display: flex;
     align-items: center;
     gap: 14px;
+}
+
+/* LOGO - transparent, bigger, keep animation */
+.brand img {
+    height: 70px; /* bigger logo */
+    width: auto;
+    display: block;
+    background: none; /* transparent PNG */
+    padding: 0; /* no extra space */
+    animation: cuteBounce 2s infinite, cuteWiggle 3s infinite;
 }
 
 /* BUTTON */
@@ -152,54 +162,8 @@ th, td {
 tr:hover {
     background: #dafae9;
 }
-</style>
-</head>
 
-<body>
-<header class="topbar">
-    <div class="brand">
-        <!-- CLEAN LOGO ONLY WITH CUTE ANIMATION -->
-        <img src="logo.png" alt="EcoSafar Logo"
-             style="height:40px; width:auto; display:block; margin:auto;
-                    animation: cuteBounce 2s infinite, cuteWiggle 3s infinite;">
-    </div>
-    <button class="btn" onclick="location.href='index.html'">Home</button>
-</header>
-
-<main class="container-grid">
-
-    <!-- Stats Card -->
-    <section class="card stats">
-        <h3>Your Eco Points</h3>
-        <div id="points" class="big-number">0</div>
-
-        <p>Total Waste Added: <strong id="totalWeight">0 g</strong></p>
-        <p>Your Level: <span id="level" class="level">Bronze</span></p>
-
-        <div class="info-box">
-            Points and history are updated automatically by the smart bin.
-        </div>
-    </section>
-
-    <!-- History Card -->
-    <section class="card history">
-        <h3>Disposal History</h3>
-        <table id="historyTable">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Weight (g)</th>
-                    <th>Points</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </section>
-
-</main>
-
-<!-- Cute animation keyframes inline in HTML -->
-<style>
+/* CUTE ANIMATIONS */
 @keyframes cuteBounce {
     0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
     40% { transform: translateY(-10px) scale(1.1); }
@@ -216,6 +180,43 @@ tr:hover {
     90% { transform: rotate(2deg); }
 }
 </style>
+</head>
+
+<body>
+<header class="topbar">
+    <div class="brand">
+        <img src="logo.png" alt="EcoSafar Logo">
+    </div>
+    <button class="btn" onclick="location.href='index.html'">Home</button>
+</header>
+
+<main class="container-grid">
+    <section class="card stats">
+        <h3>Your Eco Points</h3>
+        <div id="points" class="big-number">0</div>
+
+        <p>Total Waste Added: <strong id="totalWeight">0 g</strong></p>
+        <p>Your Level: <span id="level" class="level">Bronze</span></p>
+
+        <div class="info-box">
+            Points and history are updated automatically by the smart bin.
+        </div>
+    </section>
+
+    <section class="card history">
+        <h3>Disposal History</h3>
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Weight (g)</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+</main>
 
 <script>
 const params = new URLSearchParams(location.search);
