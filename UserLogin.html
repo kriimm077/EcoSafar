@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EcoSafar • User Dashboard</title>
+<title>EcoSafar • User Login</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-    --green-700: #145A13;
-    --accent: #2ecc71;
+    --green-900: #0E4520;
+    --green-accent: #0fcf7d;
 }
 
 /* RESET */
@@ -23,275 +23,132 @@
 
 /* BODY */
 body {
-    background: linear-gradient(150deg, #f0f9f4, #e6f4eb);
+    background: linear-gradient(135deg, #f0f9f4, #e8f6ef);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
     min-height: 100vh;
-    color: #1b3a2d;
 }
 
-/* TOPBAR */
-.topbar {
-    background: var(--green-700);
-    padding: 14px 28px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.15);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+/* LOGIN CARD */
+.card {
+    background: rgba(255,255,255,0.96);
+    padding: 40px 32px;
+    border-radius: 24px;
+    width: 380px;
+    text-align: center;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.10);
+    backdrop-filter: blur(10px);
 }
 
-.brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: relative;
+/* LOGO ONLY */
+.logo-box {
+    margin-bottom: 28px;
 }
 
-/* LOGO + LEAVES */
-.brand img {
-    height: 40px; /* matches Admin dashboard */
-    width: auto;
-    position: relative;
-    z-index: 1;
+.logo-box img {
+    width: 140px;
+    height: auto;
 }
 
-.leaf {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    background: var(--accent);
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    opacity: 0.7;
-    z-index: 0;
-    transform-origin: center bottom;
-    animation: leafMove 2s infinite ease-in-out alternate;
+/* TITLE */
+h2 {
+    color: var(--green-900);
+    margin-bottom: 24px;
+    font-size: 28px;
+    font-weight: 700;
 }
 
-.leaf:nth-child(2) {
-    animation-delay: 0.5s;
-    left: -10px;
-    top: -10px;
+/* LABELS */
+label {
+    display: block;
+    text-align: left;
+    margin: 14px 0 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #2b3b2a;
 }
 
-.leaf:nth-child(3) {
-    animation-delay: 1s;
-    right: -10px;
-    top: -8px;
+/* INPUTS */
+input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #d6e5d8;
+    font-size: 15px;
+    background: #fdfdfd;
+    transition: all 0.25s ease;
 }
 
-@keyframes leafMove {
-    0% { transform: rotate(0deg) scale(1); opacity:0.7;}
-    50% { transform: rotate(15deg) scale(1.2); opacity:1; }
-    100% { transform: rotate(-15deg) scale(1); opacity:0.7;}
+input:focus {
+    outline: none;
+    border-color: var(--green-accent);
+    box-shadow: 0 0 9px rgba(15,207,125,0.28);
 }
 
 /* BUTTON */
 .btn {
-    padding: 10px 22px;
-    background: white;
-    color: var(--green-700);
+    margin-top: 28px;
+    width: 100%;
+    padding: 15px;
+    background: var(--green-accent);
+    color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 14px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 3px 12px rgba(15,122,82,0.25);
-    transition: 0.3s ease;
+    box-shadow: 0 6px 20px rgba(15,122,82,0.25);
+    transition: all 0.25s ease;
 }
 
 .btn:hover {
-    background: #dafae9;
+    background: #07b66b;
     transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(15,122,82,0.35);
 }
 
-/* GRID */
-.container-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 30px;
-    padding: 36px 28px;
-}
-
-/* CARD */
-.card {
-    background: rgba(255,255,255,0.95);
-    padding: 32px 28px;
-    border-radius: 22px;
-    box-shadow: 0 12px 25px rgba(0,0,0,0.08), 0 6px 15px rgba(0,0,0,0.05);
-    transition: 0.3s ease;
-    backdrop-filter: blur(6px);
-}
-
-.card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-}
-
-.card h3 {
-    color: var(--green-700);
-    font-size: 1.6rem;
-    margin-bottom: 16px;
-}
-
-/* STATS */
-.big-number {
-    font-size: 46px;
-    font-weight: 700;
-    color: var(--accent);
-    margin-bottom: 10px;
-}
-
-/* LEVEL TAG */
-.level {
-    display: inline-block;
-    padding: 6px 14px;
-    border-radius: 16px;
-    background: var(--green-700);
-    color: white;
-    font-weight: 600;
-    font-size: 0.95rem;
-}
-
-/* INFO BOX */
-.info-box {
+/* NOTE */
+.note {
+    font-size: 13px;
     margin-top: 16px;
-    padding: 14px 16px;
-    background: #e5fff3;
-    border-left: 5px solid var(--green-700);
-    border-radius: 12px;
-    color: #0f4d3f;
-    font-size: 14px;
-    box-shadow: inset 0 1px 6px rgba(0,0,0,0.08);
-}
-
-/* TABLE */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 16px;
-    font-size: 14px;
-    color: #1b3a2d;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-thead {
-    background: var(--green-700);
-    color: white;
-}
-
-th, td {
-    padding: 12px 10px;
-    text-align: left;
-}
-
-tr:hover {
-    background: #dafae9;
+    color: #4d4d4d;
+    opacity: 0.85;
 }
 </style>
 </head>
 
 <body>
-<header class="topbar">
-    <div class="brand">
-        <!-- CLEAN LOGO + TWO LEAVES -->
+
+<div class="card">
+
+    <!-- Logo -->
+    <div class="logo-box">
         <img src="logo.png" alt="EcoSafar Logo">
-        <div class="leaf"></div>
-        <div class="leaf"></div>
-        <h1>EcoSafar</h1>
     </div>
-    <button class="btn" onclick="location.href='index.html'">Home</button>
-</header>
 
-<main class="container-grid">
+    <!-- Heading -->
+    <h2>User Login</h2>
 
-    <!-- Stats Card -->
-    <section class="card stats">
-        <h3>Your Eco Points</h3>
-        <div id="points" class="big-number">0</div>
+    <!-- Form -->
+    <label>Username (RFID)</label>
+    <input id="username" placeholder="Enter username">
 
-        <p>Total Waste Added: <strong id="totalWeight">0 g</strong></p>
-        <p>Your Level: <span id="level" class="level">Bronze</span></p>
+    <label>Password</label>
+    <input id="password" type="password" placeholder="Enter password">
 
-        <div class="info-box">
-            Points and history are updated automatically by the smart bin.
-        </div>
-    </section>
+    <!-- Button -->
+    <button class="btn" id="loginBtn">Login</button>
 
-    <!-- History Card -->
-    <section class="card history">
-        <h3>Disposal History</h3>
-        <table id="historyTable">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Weight (g)</th>
-                    <th>Points</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </section>
-
-</main>
+    <p class="note">Demo: Click Login to open dashboard</p>
+</div>
 
 <script>
-const params = new URLSearchParams(location.search);
-const username = params.get('username') || 'user01';
-const storageKey = 'ecosafar_demo_' + username;
-
-let user = JSON.parse(localStorage.getItem(storageKey)) || {
-    points: 195,
-    totalWeight: 2100,
-    history: [
-        {date:'2025-12-07',weight:500,points:50},
-        {date:'2025-12-07',weight:250,points:25},
-        {date:'2025-12-05',weight:500,points:35},
-        {date:'2025-12-03',weight:350,points:35},
-        {date:'2025-12-01',weight:500,points:50}
-    ]
+document.getElementById("loginBtn").onclick = () => {
+    const u = document.getElementById("username").value || "user01";
+    window.location.href = "UserDash.html?username=" + encodeURIComponent(u);
 };
-
-function render(){
-    const pointsEl = document.getElementById('points');
-    const totalEl = document.getElementById('totalWeight');
-    const levelEl = document.getElementById('level');
-
-    animateValue(pointsEl, 0, user.points, 1000);
-    totalEl.innerText = user.totalWeight + ' g';
-    levelEl.innerText = getLevel(user.points);
-
-    const tbody = document.querySelector('#historyTable tbody');
-    tbody.innerHTML = '';
-    user.history.slice().reverse().forEach(h => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${h.date}</td><td>${h.weight}</td><td>${h.points}</td>`;
-        tbody.appendChild(tr);
-    });
-
-    localStorage.setItem(storageKey, JSON.stringify(user));
-}
-
-function getLevel(points){
-    if(points >= 1000) return 'Platinum';
-    if(points >= 500) return 'Gold';
-    if(points >= 200) return 'Silver';
-    return 'Bronze';
-}
-
-function animateValue(obj, start, end, duration) {
-    let startTimestamp = null;
-    const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        obj.innerText = Math.floor(progress * (end - start) + start);
-        if (progress < 1) window.requestAnimationFrame(step);
-    };
-    window.requestAnimationFrame(step);
-}
-
-render();
 </script>
 
 </body>
