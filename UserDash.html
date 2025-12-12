@@ -23,7 +23,7 @@
     font-family: "Inter", sans-serif;
 }
 
-/* BODY & BACKGROUND */
+/* BODY */
 body {
     background: linear-gradient(150deg, #f0f9f4, #e6f4eb);
     min-height: 100vh;
@@ -47,31 +47,26 @@ body {
 .brand {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 }
 
 .brand .logo-box {
-    display: inline-block;
     padding: 6px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.3);
-    backdrop-filter: blur(6px);
+    background: rgba(255,255,255,0.25);
+    border-radius: 16px;
+    backdrop-filter: blur(5px);
 }
 
 .brand img {
-    height: 48px;
-    border-radius: 8px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
-}
-
-.brand h1 {
-    font-size: 24px;
-    font-weight: 700;
+    height: 50px;
+    width: 50px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.18);
 }
 
 /* BUTTON */
 .btn {
-    padding: 10px 20px;
+    padding: 10px 22px;
     background: white;
     color: var(--green-700);
     border: none;
@@ -79,16 +74,15 @@ body {
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 3px 12px rgba(15,122,82,0.25);
-    transition: all 0.3s ease;
+    transition: 0.3s ease;
 }
 
 .btn:hover {
     background: #dafae9;
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(15,122,82,0.35);
 }
 
-/* GRID LAYOUT */
+/* GRID */
 .container-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -102,20 +96,18 @@ body {
     padding: 32px 28px;
     border-radius: 22px;
     box-shadow: 0 12px 25px rgba(0,0,0,0.08), 0 6px 15px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: 0.3s ease;
     backdrop-filter: blur(6px);
 }
 
 .card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15), 0 10px 25px rgba(0,0,0,0.08);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
 }
 
 .card h3 {
-    margin-top: 0;
     color: var(--green-700);
     font-size: 1.6rem;
-    font-weight: 700;
     margin-bottom: 16px;
 }
 
@@ -125,16 +117,15 @@ body {
     font-weight: 700;
     color: var(--accent);
     margin-bottom: 10px;
-    transition: all 0.5s ease;
 }
 
-/* LEVEL BADGE */
+/* LEVEL TAG */
 .level {
     display: inline-block;
-    padding: 5px 12px;
-    border-radius: 14px;
+    padding: 6px 14px;
+    border-radius: 16px;
     background: var(--green-700);
-    color: #ffffff;
+    color: white;
     font-weight: 600;
     font-size: 0.95rem;
 }
@@ -175,12 +166,6 @@ th, td {
 tr:hover {
     background: #dafae9;
 }
-
-/* Smooth animation */
-@keyframes countUp {
-    from {opacity: 0; transform: translateY(10px);}
-    to {opacity: 1; transform: translateY(0);}
-}
 </style>
 </head>
 
@@ -201,6 +186,7 @@ tr:hover {
     <section class="card stats">
         <h3>Your Eco Points</h3>
         <div id="points" class="big-number">0</div>
+
         <p>Total Waste Added: <strong id="totalWeight">0 g</strong></p>
         <p>Your Level: <span id="level" class="level">Bronze</span></p>
 
@@ -217,7 +203,7 @@ tr:hover {
                 <tr>
                     <th>Date</th>
                     <th>Weight (g)</th>
-                    <th>Points Earned</th>
+                    <th>Points</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -283,5 +269,6 @@ function animateValue(obj, start, end, duration) {
 
 render();
 </script>
+
 </body>
 </html>
