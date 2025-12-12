@@ -37,11 +37,16 @@ body {
 
 /* LOGO */
 .logo-xs {
-    width: 70px; /* controlled size */
+    width: 70px;
     height: auto;
-    margin-bottom: 18px;
     border-radius: 10px;
+    margin-bottom: 18px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.logo-box {
+    display: flex;
+    justify-content: center;
 }
 
 /* HEADINGS */
@@ -114,9 +119,11 @@ input:focus {
 <body>
 
 <div class="card">
+
     <div class="logo-box">
-    <img src="logo.png" alt="EcoSafar Logo">
-</div>
+        <img src="logo.png" alt="EcoSafar Logo" class="logo-xs">
+    </div>
+
     <h2>User Login</h2>
 
     <label>Username (RFID)</label>
@@ -139,4 +146,3 @@ document.getElementById("loginBtn").onclick = () => {
 
 </body>
 </html>
-
