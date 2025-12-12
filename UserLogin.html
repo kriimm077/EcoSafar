@@ -1,84 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>EcoSafar • User Login</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EcoSafar • User Login</title>
 
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: "Poppins", sans-serif;
-            background: #eef5f0; /* Soft eco-friendly background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #f0f9f4, #e6f4eb); /* eco-friendly gradient */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
 
-        .card {
-            background: #ffffff;
-            padding: 26px 30px;
-            border-radius: 14px;
-            width: 340px; /* reduced width for premium look */
-            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.12);
-            text-align: center;
-        }
+    .card {
+        background: rgba(255,255,255,0.95);
+        padding: 36px 32px;
+        border-radius: 20px;
+        width: 360px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.08), 0 6px 15px rgba(0,0,0,0.05);
+        text-align: center;
+        backdrop-filter: blur(6px);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        h2 {
-            color: #007347;
-            margin-bottom: 18px;
-            font-size: 22px;
-        }
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 50px rgba(0,0,0,0.12), 0 10px 25px rgba(0,0,0,0.06);
+    }
 
-        label {
-            display: block;
-            text-align: left;
-            margin: 10px 0 4px;
-            font-weight: 600;
-            font-size: 13px;
-            color: #2e2e2e;
-        }
+    h2 {
+        color: #0f7a52;
+        margin-bottom: 22px;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
 
-        input {
-            width: 100%;
-            padding: 8px 10px; /* reduced size */
-            border-radius: 6px;
-            border: 1px solid #bdbdbd;
-            font-size: 13px; /* smaller professional input font */
-        }
+    label {
+        display: block;
+        text-align: left;
+        margin: 12px 0 6px;
+        font-weight: 600;
+        font-size: 13px;
+        color: #2e2e2e;
+    }
 
-        input:focus {
-            outline: none;
-            border-color: #00a86b;
-            box-shadow: 0 0 4px rgba(0, 168, 107, 0.3);
-        }
+    input {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #bdbdbd;
+        font-size: 14px;
+        transition: all 0.2s ease;
+    }
 
-        .btn {
-            margin-top: 20px;
-            width: 100%;
-            padding: 10px;
-            background: #00a86b;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.2s;
-        }
+    input:focus {
+        outline: none;
+        border-color: #00a86b;
+        box-shadow: 0 0 6px rgba(0, 168, 107, 0.3);
+    }
 
-        .btn:hover {
-            background: #008f5b;
-        }
+    .btn {
+        margin-top: 22px;
+        width: 100%;
+        padding: 12px;
+        background: #00a86b;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 6px 18px rgba(15,122,82,0.25);
+        transition: all 0.25s ease;
+    }
 
-        .note {
-            font-size: 11px;
-            margin-top: 12px;
-            color: #666;
-        }
-    </style>
+    .btn:hover {
+        background: #0fcf7d;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(15,122,82,0.35);
+    }
+
+    .note {
+        font-size: 12px;
+        margin-top: 14px;
+        color: #666;
+    }
+</style>
 </head>
 
 <body>
