@@ -42,21 +42,35 @@ body {
   gap: 14px;
 }
 
-/* Glass effect behind logo */
+/* --- NEW GLASS-BLUR LOGO BOX (matches Admin Login) --- */
 .logo-box {
   padding: 18px;
   border-radius: 22px;
+
   background: rgba(255, 255, 255, 0.32);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px) saturate(1.2);
+
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Logo */
+/* --- LOGO INSIDE (Higher quality, bigger, clean) --- */
 .logo {
-  width: 125px;
+  width: 140px;
   height: auto;
-  mix-blend-mode: multiply;
-  opacity: 0.93;
-  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.35));
+  object-fit: contain;
+
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.32));
+  opacity: 0.95;
+  transition: transform 0.25s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
 }
 
 /* Title */
