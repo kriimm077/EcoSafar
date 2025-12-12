@@ -50,18 +50,10 @@ body {
     gap: 14px;
 }
 
-.brand .logo-box {
-    padding: 6px;
-    background: rgba(255,255,255,0.25);
-    border-radius: 16px;
-    backdrop-filter: blur(5px);
-}
-
+/* CLEAN LOGO ONLY */
 .brand img {
-    height: 50px;
-    width: 50px;
-    border-radius: 12px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.18);
+    height: 40px; /* adjust as needed */
+    width: auto;
 }
 
 /* BUTTON */
@@ -172,9 +164,8 @@ tr:hover {
 <body>
 <header class="topbar">
     <div class="brand">
-        <div class="logo-box">
-            <img src="logo.png" alt="EcoSafar Logo">
-        </div>
+        <!-- CLEAN LOGO ONLY -->
+        <img src="logo.png" alt="EcoSafar Logo">
         <h1>EcoSafar</h1>
     </div>
     <button class="btn" onclick="location.href='index.html'">Home</button>
