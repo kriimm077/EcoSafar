@@ -9,9 +9,7 @@
 
 <style>
 :root {
-    --green-900: #0b3d0f;
     --green-700: #145A13;
-    --green-500: #2e7d32;
     --accent: #2ecc71;
 }
 
@@ -48,12 +46,45 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+    position: relative;
 }
 
-/* CLEAN LOGO ONLY */
+/* LOGO + LEAVES */
 .brand img {
     height: 40px; /* matches Admin dashboard */
     width: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.leaf {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: var(--accent);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    opacity: 0.7;
+    z-index: 0;
+    transform-origin: center bottom;
+    animation: leafMove 2s infinite ease-in-out alternate;
+}
+
+.leaf:nth-child(2) {
+    animation-delay: 0.5s;
+    left: -10px;
+    top: -10px;
+}
+
+.leaf:nth-child(3) {
+    animation-delay: 1s;
+    right: -10px;
+    top: -8px;
+}
+
+@keyframes leafMove {
+    0% { transform: rotate(0deg) scale(1); opacity:0.7;}
+    50% { transform: rotate(15deg) scale(1.2); opacity:1; }
+    100% { transform: rotate(-15deg) scale(1); opacity:0.7;}
 }
 
 /* BUTTON */
@@ -164,8 +195,10 @@ tr:hover {
 <body>
 <header class="topbar">
     <div class="brand">
-        <!-- CLEAN LOGO ONLY -->
+        <!-- CLEAN LOGO + TWO LEAVES -->
         <img src="logo.png" alt="EcoSafar Logo">
+        <div class="leaf"></div>
+        <div class="leaf"></div>
         <h1>EcoSafar</h1>
     </div>
     <button class="btn" onclick="location.href='index.html'">Home</button>
