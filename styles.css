@@ -14,23 +14,25 @@ body {
   font-family: Inter, Arial, sans-serif;
   margin: 0;
   color: #052a05;
+  background: #f4fff4;
 }
 
 /* ---------------- HOME BACKGROUND ---------------- */
 .bg-hero {
   background: linear-gradient(
-      rgba(5, 60, 15, 0.75),
-      rgba(5, 60, 15, 0.85)
+      rgba(3, 45, 10, 0.78),
+      rgba(3, 45, 10, 0.9)
     ),
     url("https://i.imgur.com/o8YtYg7.jpeg");
   background-size: cover;
   background-position: center;
   min-height: 100vh;
+  padding-bottom: 40px;
 }
 
 /* ---------------- HEADER ---------------- */
 .site-header {
-  padding: 40px 20px;
+  padding: 40px 20px 25px;
   text-align: center;
   color: #e9f6ea;
 }
@@ -42,52 +44,54 @@ body {
   gap: 14px;
 }
 
-/* --- NEW GLASS-BLUR LOGO BOX (matches Admin Login) --- */
+/* --- GLASS-BLUR LOGO BOX (same as Admin Login) --- */
 .logo-box {
-  padding: 18px;
+  padding: 20px;
   border-radius: 22px;
 
-  background: rgba(255, 255, 255, 0.32);
-  backdrop-filter: blur(10px) saturate(1.2);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(14px) saturate(1.4);
 
   box-shadow:
-    0 10px 26px rgba(0, 0, 0, 0.25),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+    0 12px 30px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* --- LOGO INSIDE (Higher quality, bigger, clean) --- */
+/* --- LOGO --- */
 .logo {
-  width: 140px;
+  width: 150px;
   height: auto;
   object-fit: contain;
 
-  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.32));
-  opacity: 0.95;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,0.35));
+  opacity: 0.97;
   transition: transform 0.25s ease;
 }
 
 .logo:hover {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 /* Title */
 .brand h1 {
-  margin: 0;
-  font-size: 3rem;
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-size: 3.1rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2px;
   color: #e9ffe9;
-  text-shadow: 0px 3px 10px rgba(0,0,0,0.4);
+  text-shadow: 0 3px 10px rgba(0,0,0,0.45);
 }
 
 .tag {
-  margin-top: 8px;
-  font-size: 1.1rem;
-  opacity: 0.9;
+  margin-top: 6px;
+  font-size: 1.15rem;
+  opacity: 0.92;
 }
 
 /* ---------------- CARDS ---------------- */
@@ -100,33 +104,36 @@ body {
 }
 
 .card {
-  background: rgba(255, 255, 255, 0.12);
-  padding: 24px;
-  border-radius: 15px;
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.16);
+  padding: 26px;
+  border-radius: 18px;
+  backdrop-filter: blur(10px);
   min-width: 260px;
   text-align: center;
   color: #f3fff3;
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.35);
-  transition: transform 0.2s;
+
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.38);
+  transition: transform 0.2s ease;
 }
 
 .card:hover {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 /* ---------------- BUTTON ---------------- */
 .btn {
   display: inline-block;
-  padding: 12px 20px;
+  padding: 13px 22px;
   border-radius: 12px;
+
   background: var(--accent);
   color: #fff;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-decoration: none;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  transition: 0.2s;
+
+  box-shadow: 0 5px 14px rgba(0,0,0,0.32);
+  transition: 0.2s ease;
 }
 
 .btn:hover {
@@ -137,11 +144,11 @@ body {
 /* ---------------- FOOTER ---------------- */
 .footer {
   text-align: center;
-  padding: 22px;
+  padding: 25px;
   color: #e6f6e6;
 }
 
-/* ---------------- DASHBOARD (User/Admin) ---------------- */
+/* ---------------- DASHBOARD ---------------- */
 .dashboard-bg {
   background: linear-gradient(180deg, #eaf6ea, #dff3df);
   min-height: 100vh;
@@ -161,6 +168,7 @@ body {
   padding: 22px;
 }
 
+/* Stats */
 .stats {
   display: flex;
   flex-direction: column;
@@ -173,39 +181,31 @@ body {
 }
 
 /* ---------------- TABLE ---------------- */
-.table-card table {
+.table-card table,
+.history table {
   width: 100%;
   border-collapse: collapse;
   color: #083808;
 }
 
 .table-card th,
-.table-card td {
-  padding: 8px;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-}
-
-/* History table */
-.history table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
+.table-card td,
 .history th,
 .history td {
-  padding: 8px;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  padding: 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
 }
 
-/* ---------------- FORMS ---------------- */
+/* ---------------- FORM FIELDS ---------------- */
 input,
 select,
 textarea {
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
   width: 100%;
-  margin: 8px 0;
+  margin: 10px 0;
+  background: #ffffff;
 }
 
 .note {
@@ -218,11 +218,13 @@ textarea {
   .container-grid {
     grid-template-columns: 1fr;
   }
+
   .home-grid {
     flex-direction: column;
-    padding: 18px;
+    padding: 20px;
   }
+
   .brand h1 {
-    font-size: 2.4rem;
+    font-size: 2.5rem;
   }
 }
