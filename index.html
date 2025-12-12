@@ -39,25 +39,24 @@ header {
     margin-bottom: 50px;
 }
 
-/* LOGO */
+/* UPDATED LOGO BOX  
+   (Copied from Admin Login design for perfect match) */
 .logo-box {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-    padding: 12px;
+    display: inline-block;
+    padding: 18px;
     border-radius: 22px;
     background: rgba(255,255,255,0.32);
-    backdrop-filter: blur(6px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    margin-bottom: 24px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.12);
 }
 
 .logo-box img {
-    width: 120px;
+    width: 125px;
     height: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
-    animation: floatRotate 6s ease-in-out infinite;
-    transition: transform 0.4s ease;
+    mix-blend-mode: multiply;
+    opacity: 0.93;
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,0.35));
 }
 
 /* HEADER TEXT */
@@ -148,40 +147,13 @@ footer {
     border-top: 1px solid rgba(15,122,82,0.15);
     letter-spacing: 0.5px;
 }
-
-/* LOGO FLOAT ANIMATION */
-@keyframes floatRotate {
-    0% { transform: translateY(0) rotate(0deg); }
-    25% { transform: translateY(-6px) rotate(-1deg); }
-    50% { transform: translateY(0) rotate(0deg); }
-    75% { transform: translateY(6px) rotate(1deg); }
-    100% { transform: translateY(0) rotate(0deg); }
-}
-
-/* RESPONSIVE */
-@media screen and (max-width: 768px) {
-    header h1 { font-size: 2.5rem; }
-    header .tag { font-size: 1.1rem; }
-    .card h2 { font-size: 1.5rem; }
-    .card p { font-size: 0.95rem; }
-    .btn { font-size: 0.95rem; padding: 12px 24px; }
-    .container { padding: 60px 0 80px 0; }
-}
-
-@media screen and (max-width: 480px) {
-    header h1 { font-size: 2rem; }
-    header .tag { font-size: 1rem; }
-    .card h2 { font-size: 1.3rem; }
-    .card p { font-size: 0.9rem; }
-    .btn { font-size: 0.9rem; padding: 10px 20px; }
-    .home-grid { gap: 25px; }
-}
 </style>
 </head>
 
 <body>
 
 <div class="container">
+
     <header>
         <div class="logo-box">
             <img src="logo.png" alt="EcoSafar Logo">
@@ -203,6 +175,7 @@ footer {
             <a class="btn" href="UserLogin.html">User Login</a>
         </div>
     </main>
+
 </div>
 
 <footer>
