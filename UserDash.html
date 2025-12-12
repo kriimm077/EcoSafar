@@ -5,9 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • User Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+:root {
+    --green-900: #0b3d0f;
+    --green-700: #145A13;
+    --green-500: #2e7d32;
+    --accent: #2ecc71;
+}
+
+/* RESET */
 * {
     margin: 0;
     padding: 0;
@@ -17,14 +25,14 @@
 
 /* BODY & BACKGROUND */
 body {
-    background: linear-gradient(135deg, #f0f9f4, #e6f4eb);
-    color: #1b3a2d;
+    background: linear-gradient(150deg, #f0f9f4, #e6f4eb);
     min-height: 100vh;
+    color: #1b3a2d;
 }
 
 /* TOPBAR */
 .topbar {
-    background: #0f7a52;
+    background: var(--green-700);
     padding: 14px 28px;
     display: flex;
     justify-content: space-between;
@@ -42,6 +50,14 @@ body {
     gap: 12px;
 }
 
+.brand .logo-box {
+    display: inline-block;
+    padding: 6px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.3);
+    backdrop-filter: blur(6px);
+}
+
 .brand img {
     height: 48px;
     border-radius: 8px;
@@ -57,7 +73,7 @@ body {
 .btn {
     padding: 10px 20px;
     background: white;
-    color: #0f7a52;
+    color: var(--green-700);
     border: none;
     border-radius: 10px;
     font-weight: 600;
@@ -97,7 +113,7 @@ body {
 
 .card h3 {
     margin-top: 0;
-    color: #0f7a52;
+    color: var(--green-700);
     font-size: 1.6rem;
     font-weight: 700;
     margin-bottom: 16px;
@@ -107,7 +123,7 @@ body {
 .big-number {
     font-size: 46px;
     font-weight: 700;
-    color: #0fcf7d;
+    color: var(--accent);
     margin-bottom: 10px;
     transition: all 0.5s ease;
 }
@@ -117,7 +133,7 @@ body {
     display: inline-block;
     padding: 5px 12px;
     border-radius: 14px;
-    background: #0f7a52;
+    background: var(--green-700);
     color: #ffffff;
     font-weight: 600;
     font-size: 0.95rem;
@@ -128,7 +144,7 @@ body {
     margin-top: 16px;
     padding: 14px 16px;
     background: #e5fff3;
-    border-left: 5px solid #0f7a52;
+    border-left: 5px solid var(--green-700);
     border-radius: 12px;
     color: #0f4d3f;
     font-size: 14px;
@@ -147,7 +163,7 @@ table {
 }
 
 thead {
-    background: #0f7a52;
+    background: var(--green-700);
     color: white;
 }
 
@@ -171,9 +187,9 @@ tr:hover {
 <body>
 <header class="topbar">
     <div class="brand">
-      <div class="logo-box">
-    <img src="logo.png" alt="EcoSafar Logo">
-</div>
+        <div class="logo-box">
+            <img src="logo.png" alt="EcoSafar Logo">
+        </div>
         <h1>EcoSafar</h1>
     </div>
     <button class="btn" onclick="location.href='index.html'">Home</button>
@@ -269,4 +285,3 @@ render();
 </script>
 </body>
 </html>
-
