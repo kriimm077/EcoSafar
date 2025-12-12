@@ -1,23 +1,31 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • User Dashboard</title>
 
-<style>
-  /* BODY & BACKGROUND */
-  body {
-    margin: 0;
-    font-family: "Poppins", sans-serif;
-    background: linear-gradient(120deg, #f0f9f4, #e6f4eb); /* soft eco-gradient */
-    color: #1b3a2d;
-  }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  /* TOPBAR */
-  .topbar {
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}
+
+/* BODY & BACKGROUND */
+body {
+    background: linear-gradient(135deg, #f0f9f4, #e6f4eb);
+    color: #1b3a2d;
+    min-height: 100vh;
+}
+
+/* TOPBAR */
+.topbar {
     background: #0f7a52;
-    padding: 14px 24px;
+    padding: 14px 28px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -26,192 +34,198 @@
     position: sticky;
     top: 0;
     z-index: 100;
-  }
+}
 
-  .brand {
+.brand {
     display: flex;
     align-items: center;
     gap: 12px;
-  }
+}
 
-  .brand h1 {
-    font-size: 22px;
-    margin: 0;
+.brand img {
+    height: 48px;
+    border-radius: 8px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+}
+
+.brand h1 {
+    font-size: 24px;
     font-weight: 700;
-    letter-spacing: 0.5px;
-  }
+}
 
-  .logo-xs {
-    height: 36px;
-    border-radius: 6px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-  }
-
-  .btn {
-    padding: 10px 18px;
+/* BUTTON */
+.btn {
+    padding: 10px 20px;
     background: white;
     color: #0f7a52;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 3px 12px rgba(15,122,82,0.25);
     transition: all 0.3s ease;
-  }
+}
 
-  .btn:hover {
+.btn:hover {
     background: #dafae9;
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(15,122,82,0.35);
-  }
+}
 
-  /* GRID LAYOUT */
-  .container-grid {
+/* GRID LAYOUT */
+.container-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 28px;
-    padding: 30px 24px;
-  }
+    gap: 30px;
+    padding: 36px 28px;
+}
 
-  /* CARD */
-  .card {
-    background: rgba(255,255,255,0.9);
+/* CARD */
+.card {
+    background: rgba(255,255,255,0.95);
     padding: 32px 28px;
-    border-radius: 20px;
+    border-radius: 22px;
     box-shadow: 0 12px 25px rgba(0,0,0,0.08), 0 6px 15px rgba(0,0,0,0.05);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     backdrop-filter: blur(6px);
-  }
+}
 
-  .card:hover {
+.card:hover {
     transform: translateY(-6px);
     box-shadow: 0 20px 50px rgba(0,0,0,0.15), 0 10px 25px rgba(0,0,0,0.08);
-  }
+}
 
-  .card h3 {
+.card h3 {
     margin-top: 0;
     color: #0f7a52;
     font-size: 1.6rem;
     font-weight: 700;
-  }
+    margin-bottom: 16px;
+}
 
-  .big-number {
-    font-size: 42px;
+/* STATS */
+.big-number {
+    font-size: 46px;
     font-weight: 700;
-    color: #00a86b;
+    color: #0fcf7d;
     margin-bottom: 10px;
     transition: all 0.5s ease;
-  }
+}
 
-  /* INFO BOX */
-  .info-box {
-    margin-top: 15px;
-    padding: 14px;
+/* LEVEL BADGE */
+.level {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 14px;
+    background: #0f7a52;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* INFO BOX */
+.info-box {
+    margin-top: 16px;
+    padding: 14px 16px;
     background: #e5fff3;
     border-left: 5px solid #0f7a52;
-    border-radius: 10px;
+    border-radius: 12px;
     color: #0f4d3f;
     font-size: 14px;
     box-shadow: inset 0 1px 6px rgba(0,0,0,0.08);
-  }
+}
 
-  /* TABLE */
-  table {
+/* TABLE */
+table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
+    margin-top: 16px;
     font-size: 14px;
     color: #1b3a2d;
-  }
+    border-radius: 12px;
+    overflow: hidden;
+}
 
-  thead {
+thead {
     background: #0f7a52;
     color: white;
-    border-radius: 8px;
-  }
+}
 
-  th, td {
+th, td {
     padding: 12px 10px;
     text-align: left;
-    border-bottom: 1px solid #e0e0e0;
-  }
+}
 
-  tr:hover {
+tr:hover {
     background: #dafae9;
-  }
+}
 
-  /* LEVEL BADGES */
-  .level {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 12px;
-    background: #0fcf7d;
-    color: white;
-    font-weight: 600;
-    font-size: 0.9rem;
-  }
-
+/* Smooth animation */
+@keyframes countUp {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
 </style>
 </head>
 
 <body>
 <header class="topbar">
-  <div class="brand">
-    <img src="logo.jpg" class="logo-xs" alt="EcoSafar Logo">
-    <h1>EcoSafar</h1>
-  </div>
-  <button class="btn" onclick="location.href='index.html'">Home</button>
+    <div class="brand">
+        <img src="logo.jpg" alt="EcoSafar Logo">
+        <h1>EcoSafar</h1>
+    </div>
+    <button class="btn" onclick="location.href='index.html'">Home</button>
 </header>
 
 <main class="container-grid">
 
-  <!-- Stats Card -->
-  <section class="card stats">
-    <h3>Your Eco Points</h3>
-    <div id="points" class="big-number">0</div>
-    <p>Total Waste Added: <strong id="totalWeight">0 g</strong></p>
-    <p>Your Level: <span id="level" class="level">Bronze</span></p>
+    <!-- Stats Card -->
+    <section class="card stats">
+        <h3>Your Eco Points</h3>
+        <div id="points" class="big-number">0</div>
+        <p>Total Waste Added: <strong id="totalWeight">0 g</strong></p>
+        <p>Your Level: <span id="level" class="level">Bronze</span></p>
 
-    <div class="info-box">
-      Points and history are updated automatically by the smart bin.
-    </div>
-  </section>
+        <div class="info-box">
+            Points and history are updated automatically by the smart bin.
+        </div>
+    </section>
 
-  <!-- History Card -->
-  <section class="card history">
-    <h3>Disposal History</h3>
-    <table id="historyTable">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Weight (g)</th>
-          <th>Points Earned</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
+    <!-- History Card -->
+    <section class="card history">
+        <h3>Disposal History</h3>
+        <table id="historyTable">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Weight (g)</th>
+                    <th>Points Earned</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
 
 </main>
 
 <script>
-  const params = new URLSearchParams(location.search);
-  const username = params.get('username') || 'user01';
-  const storageKey = 'ecosafar_demo_' + username;
+const params = new URLSearchParams(location.search);
+const username = params.get('username') || 'user01';
+const storageKey = 'ecosafar_demo_' + username;
 
-  let user = JSON.parse(localStorage.getItem(storageKey)) || {
+let user = JSON.parse(localStorage.getItem(storageKey)) || {
     points: 195,
     totalWeight: 2100,
     history: [
-      {date:'2025-12-07',weight:500,points:50},
-      {date:'2025-12-07',weight:250,points:25},
-      {date:'2025-12-05',weight:500,points:35},
-      {date:'2025-12-03',weight:350,points:35},
-      {date:'2025-12-01',weight:500,points:50}
+        {date:'2025-12-07',weight:500,points:50},
+        {date:'2025-12-07',weight:250,points:25},
+        {date:'2025-12-05',weight:500,points:35},
+        {date:'2025-12-03',weight:350,points:35},
+        {date:'2025-12-01',weight:500,points:50}
     ]
-  };
+};
 
-  function render(){
+function render(){
     const pointsEl = document.getElementById('points');
     const totalEl = document.getElementById('totalWeight');
     const levelEl = document.getElementById('level');
@@ -223,37 +237,33 @@
     const tbody = document.querySelector('#historyTable tbody');
     tbody.innerHTML = '';
     user.history.slice().reverse().forEach(h => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${h.date}</td><td>${h.weight}</td><td>${h.points}</td>`;
-      tbody.appendChild(tr);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${h.date}</td><td>${h.weight}</td><td>${h.points}</td>`;
+        tbody.appendChild(tr);
     });
 
     localStorage.setItem(storageKey, JSON.stringify(user));
-  }
+}
 
-  function getLevel(points){
+function getLevel(points){
     if(points >= 1000) return 'Platinum';
     if(points >= 500) return 'Gold';
     if(points >= 200) return 'Silver';
     return 'Bronze';
-  }
+}
 
-  // Smooth counting animation
-  function animateValue(obj, start, end, duration) {
+function animateValue(obj, start, end, duration) {
     let startTimestamp = null;
     const step = (timestamp) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      obj.innerText = Math.floor(progress * (end - start) + start);
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      }
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerText = Math.floor(progress * (end - start) + start);
+        if (progress < 1) window.requestAnimationFrame(step);
     };
     window.requestAnimationFrame(step);
-  }
+}
 
-  render();
+render();
 </script>
 </body>
 </html>
-
