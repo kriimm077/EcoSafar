@@ -115,17 +115,22 @@ footer {
     color: #123a2d;
 }
 
-/* FLOAT + SHAKE ANIMATION KEYFRAMES */
-@keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0); }
+/* CUTE FLOATING LOGO ANIMATION */
+@keyframes cuteFloat {
+    0% { transform: translateY(0) rotate(0deg) scale(1); }
+    25% { transform: translateY(-10px) rotate(-3deg) scale(1.05); }
+    50% { transform: translateY(-5px) rotate(3deg) scale(1.08); }
+    75% { transform: translateY(-12px) rotate(-2deg) scale(1.03); }
+    100% { transform: translateY(0) rotate(0deg) scale(1); }
 }
 
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+.logo {
+    width: 200px;
+    height: auto;
+    display: block;
+    margin: 0 auto 15px auto;
+    filter: drop-shadow(0 6px 15px rgba(0,0,0,0.2));
+    animation: cuteFloat 4s ease-in-out infinite;
 }
 
 /* RESPONSIVE */
@@ -133,6 +138,7 @@ footer {
     h1 { font-size: 2.3rem; }
     .tag { font-size: 1.05rem; }
     .card h2 { font-size: 1.5rem; }
+    .logo { width: 150px; }
 }
 </style>
 </head>
@@ -141,9 +147,8 @@ footer {
 
 <div class="container">
 
-    <!-- LOGO with bigger size and noticeable animation -->
-    <img src="logo.png" class="logo" alt="EcoSafar Logo" width="200"
-    style="animation: float 3s ease-in-out infinite alternate, shake 6s ease-in-out infinite; display: block; margin: 0 auto 15px auto; filter: drop-shadow(0 6px 15px rgba(0,0,0,0.2));">
+    <!-- LOGO with cute animation -->
+    <img src="logo.png" class="logo" alt="EcoSafar Logo">
 
     <!-- TITLE -->
     <h1>EcoSafar</h1>
