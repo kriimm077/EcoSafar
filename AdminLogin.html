@@ -1,166 +1,171 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>EcoSafar • Admin Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoSafar • Admin Login</title>
 
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Poppins", sans-serif;
-      background: #f1f8f4; /* light eco green background */
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
     }
 
-    .center-card {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    body {
+        background: #f7f9f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
     }
 
     .card {
-      width: 420px;
-      padding: 40px;
-      background: #ffffff;
-      border-radius: 18px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        background: #ffffff;
+        width: 420px;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 6px 22px rgba(0,0,0,0.08);
+        animation: fadeIn 0.3s ease;
     }
 
-    h2 {
-      margin-top: 0;
-      text-align: center;
-      font-size: 28px;
-      color: #0f6b3d;
-      font-weight: 600;
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .title {
+        text-align: center;
+        font-size: 26px;
+        font-weight: 600;
+        color: #4A7A3C;
+        margin-bottom: 6px;
     }
 
     .subtitle {
-      text-align: center;
-      color: #555;
-      font-size: 14px;
-      margin-bottom: 25px;
+        text-align: center;
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 25px;
     }
 
     label {
-      font-size: 14px;
-      font-weight: 500;
-      margin-top: 15px;
-      display: block;
-      color: #333;
+        font-size: 14px;
+        font-weight: 500;
+        display: block;
+        margin-top: 14px;
+        color: #2f2f2f;
     }
 
     input {
-      width: 100%;
-      padding: 12px;
-      margin-top: 6px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 15px;
-      outline: none;
-      transition: 0.2s;
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        border: 1px solid #cdd8c8;
+        border-radius: 10px;
+        font-size: 15px;
+        transition: 0.2s;
+        background: #fdfdfd;
     }
 
     input:focus {
-      border-color: #0f6b3d;
-      box-shadow: 0 0 4px rgba(15,107,61,0.4);
+        border-color: #8BC34A;
+        box-shadow: 0 0 4px rgba(139,195,74,0.4);
+        background: #ffffff;
     }
 
     .btn {
-      width: 100%;
-      padding: 12px;
-      margin-top: 25px;
-      border: none;
-      border-radius: 12px;
-      font-size: 17px;
-      font-weight: 600;
-      cursor: pointer;
-      background: #0f6b3d;
-      color: #fff;
-      transition: 0.2s;
+        margin-top: 25px;
+        width: 100%;
+        padding: 13px;
+        background: #8BC34A;
+        color: #fff;
+        border: none;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.2s;
     }
 
     .btn:hover {
-      background: #0b5430;
+        background: #7ab03f;
     }
 
-    .btn-small {
-      width: 120px;
-      margin-left: auto;
-      margin-right: auto;
-      display: block;
-      padding: 10px;
-      font-size: 15px;
-      margin-top: 15px;
-      background: transparent;
-      color: #0f6b3d;
-      border: 2px solid #0f6b3d;
+    .btn-secondary {
+        margin-top: 14px;
+        width: 100%;
+        padding: 11px;
+        font-size: 15px;
+        font-weight: 500;
+        background: transparent;
+        border: 2px solid #8BC34A;
+        border-radius: 12px;
+        color: #4A7A3C;
+        cursor: pointer;
+        transition: 0.2s;
     }
 
-    .btn-small:hover {
-      background: #e7f7ef;
+    .btn-secondary:hover {
+        background: #eef7e6;
     }
 
     .error-box {
-      margin-top: 20px;
-      padding: 12px;
-      background: #ffe1e1;
-      color: #b50000;
-      border-radius: 10px;
-      display: none;
-      font-size: 14px;
+        display: none;
+        background: #ffefef;
+        color: #b80000;
+        padding: 12px;
+        border-radius: 10px;
+        margin-top: 18px;
+        font-size: 14px;
+        border-left: 4px solid #ff7272;
     }
 
     .demo {
-      margin-top: 10px;
-      font-size: 13px;
-      color: #444;
-      text-align: center;
+        margin-top: 15px;
+        text-align: center;
+        font-size: 13px;
+        color: #555;
     }
-
-    .demo b {
-      color: #000;
-    }
-  </style>
+</style>
 </head>
 
 <body>
-  <main class="center-card">
-    <div class="card">
-      <h2>Admin Login</h2>
-      <p class="subtitle">Sign in to manage the system</p>
 
-      <label>Admin username</label>
-      <input id="adminUser" placeholder="admin">
+<div class="card">
+    <h2 class="title">Admin Login</h2>
+    <p class="subtitle">Access EcoSafar control panel</p>
 
-      <label>Password</label>
-      <input id="adminPass" type="password" placeholder="admin">
+    <label>Username</label>
+    <input id="adminUser" placeholder="admin">
 
-      <button class="btn" id="adminLogin">Login</button>
+    <label>Password</label>
+    <input id="adminPass" type="password" placeholder="admin">
 
-      <button class="btn-small" onclick="window.location.href='index.html'">Home</button>
+    <button class="btn" id="adminLogin">Sign In</button>
+    <button class="btn-secondary" onclick="location.href='index.html'">Home</button>
 
-      <p class="demo">Demo credentials: <b>admin / admin</b></p>
+    <p class="demo">Demo: <b>admin / admin</b></p>
 
-      <div class="error-box" id="errorBox">Incorrect username or password.</div>
-    </div>
-  </main>
+    <div class="error-box" id="errorBox">Incorrect username or password.</div>
+</div>
 
-  <script>
-    document.getElementById('adminLogin').onclick = () => {
-      const u = document.getElementById('adminUser').value.trim();
-      const p = document.getElementById('adminPass').value.trim();
-      const errorBox = document.getElementById('errorBox');
+<script>
+document.getElementById('adminLogin').onclick = () => {
+    const u = document.getElementById('adminUser').value.trim();
+    const p = document.getElementById('adminPass').value.trim();
+    const errorBox = document.getElementById('errorBox');
 
-      if (u === "admin" && p === "admin") {
+    if (u === "admin" && p === "admin") {
         window.location.href = "AdminDash.html";
-      } else {
+    } else {
         errorBox.style.display = "block";
-      }
-    };
-  </script>
+    }
+};
+</script>
 
 </body>
 </html>
