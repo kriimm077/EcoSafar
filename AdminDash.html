@@ -8,383 +8,256 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-  :root{
+  :root {
     --bg-1: #ecf8f1;
     --bg-2: #e6f3ea;
-    --card-1: #ffffff;
+    --card: #ffffff;
     --accent: #0f7a52;
     --accent-2: #0fcf7d;
     --muted: #4c5a51;
-    --glass: rgba(255,255,255,0.66);
-    --shadow-1: 0 10px 30px rgba(15,122,82,0.06);
-    --shadow-2: 0 18px 40px rgba(0,0,0,0.08);
     --radius: 18px;
+    --shadow: 0 10px 30px rgba(15,122,82,0.06);
   }
 
-  *{box-sizing:border-box;margin:0;padding:0;font-family:"Inter",system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+  * { margin:0; padding:0; box-sizing:border-box; font-family:"Inter", sans-serif; }
 
-  html,body{height:100%;}
-  body{
+  body {
     background: linear-gradient(180deg,var(--bg-1),var(--bg-2));
-    color: #1e2b24;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
     padding: 24px;
     min-height:100vh;
+    color:#1b2b24;
   }
 
-  /* Topbar */
-  .topbar{
-    position:sticky; top:12px; z-index:50;
-    margin: 0 auto 28px auto;
+  /* === TOPBAR === */
+  .topbar {
     max-width:1200px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(246,251,247,0.8));
-    border-radius: 14px;
-    padding: 12px 18px;
+    margin:0 auto 28px auto;
+    padding:12px 18px;
+    border-radius:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:rgba(255,255,255,0.75);
+    backdrop-filter:blur(6px);
+    border:1px solid rgba(15,122,82,0.08);
+    box-shadow: var(--shadow);
+  }
+
+  .brand {
     display:flex;
     align-items:center;
-    justify-content:space-between;
-    gap:16px;
-    box-shadow: var(--shadow-1), 0 2px 8px rgba(0,0,0,0.03);
-    border: 1px solid rgba(15,122,82,0.06);
-    backdrop-filter: blur(6px) saturate(1.05);
+    gap:14px;
   }
 
-  .brand{
-    display:flex; align-items:center; gap:14px;
-  }
-
-  .logo-wrap{
+  .logo-wrap {
     width:56px; height:56px;
-    display:flex; align-items:center; justify-content:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
     border-radius:10px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(245,251,245,0.9));
+    background:#fff;
     padding:6px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    box-shadow:0 6px 16px rgba(0,0,0,0.08);
   }
 
-  .logo-wrap img{ width:100%; height:100%; object-fit:contain; display:block; }
-
-  .brand h1{
-    font-size:18px; font-weight:700;
-    color: var(--accent);
-    letter-spacing:0.2px;
+  .logo-wrap img {
+    width:100%; height:100%; object-fit:contain;
   }
 
-  .top-actions{ display:flex; gap:10px; align-items:center; }
-
-  .btn{
-    background: linear-gradient(180deg, var(--accent), var(--accent-2));
-    color:#fff; border:none; padding:10px 16px;
-    border-radius:999px; font-weight:600; cursor:pointer;
-    box-shadow: 0 8px 22px rgba(15,122,82,0.18);
-    transition: transform .18s ease, box-shadow .18s ease;
-  }
-  .btn:hover{ transform: translateY(-3px); box-shadow: 0 14px 32px rgba(15,122,82,0.22); }
-
-  .btn-ghost{
-    background:transparent; border:1.8px solid rgba(15,122,82,0.12);
-    color:var(--accent); padding:8px 12px; border-radius:12px; font-weight:600;
+  .brand h1 {
+    font-size:20px;
+    font-weight:700;
+    color:var(--accent);
   }
 
-  /* Layout grid */
-  .wrap{ max-width:1200px; margin: 0 auto; display:grid; gap:22px;
-    grid-template-columns: 1fr 360px; align-items:start;
+  .btn-home {
+    background:var(--accent);
+    color:#fff;
+    padding:10px 20px;
+    border:none;
+    border-radius:999px;
+    font-weight:600;
+    cursor:pointer;
   }
 
-  /* Left column (main) */
-  .main{
-    display:flex; flex-direction:column; gap:22px;
+  /* === GRID LAYOUT === */
+  .wrap {
+    max-width:1200px;
+    margin:0 auto;
+    display:grid;
+    gap:22px;
+    grid-template-columns:1fr 300px;
   }
 
-  /* Cards */
-  .card{
-    background: linear-gradient(180deg,var(--card-1), #f8fffa);
-    border-radius: var(--radius);
+  .card {
+    background:var(--card);
     padding:20px;
-    box-shadow: var(--shadow-2);
-    border: 1px solid rgba(10,50,30,0.03);
-    transition: transform .18s ease;
-  }
-  .card:hover{ transform: translateY(-4px); }
-
-  .card h3{
-    font-size:16px; margin-bottom:12px; color:var(--accent); font-weight:700;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    border:1px solid rgba(0,0,0,0.04);
   }
 
-  .alerts-list li{ margin-bottom:10px; color:var(--muted); font-size:14px; list-style: disc inside; }
-
-  /* Table */
-  .table-wrap{ overflow:auto; border-radius:12px; }
-  table{ width:100%; border-collapse:collapse; font-size:14px; min-width:680px; }
-  thead th{
-    text-align:left; padding:14px 12px; background: linear-gradient(90deg, rgba(15,122,82,0.06), rgba(15,122,82,0.03));
-    color: var(--accent); font-weight:700; font-size:13px;
-    border-bottom:1px solid rgba(8,60,38,0.04);
-  }
-  tbody td{ padding:12px; border-bottom:1px solid rgba(10,50,30,0.03); color:#2c3a33; vertical-align:middle; }
-  tbody tr:hover td{ background: rgba(15,122,82,0.02); }
-
-  .dot{
-    display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:8px; vertical-align:middle;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  .card h3 {
+    color:var(--accent);
+    font-size:17px;
+    margin-bottom:12px;
   }
 
-  .progress{
-    display:inline-flex; align-items:center; gap:10px;
-  }
-  .bar{
-    height:8px; width:140px; background:rgba(0,0,0,0.06); border-radius:999px; overflow:hidden;
-  }
-  .bar > i{ display:block; height:100%; background: linear-gradient(90deg,var(--accent),var(--accent-2)); border-radius:999px; }
-
-  /* Right column (side) */
-  .side{ display:flex; flex-direction:column; gap:22px; }
-
-  .operations button{ width:100%; padding:12px 14px; border-radius:12px; border:none; font-weight:700; color:#fff; cursor:pointer;
-    background: linear-gradient(180deg,var(--accent),var(--accent-2));
-    box-shadow: 0 10px 28px rgba(15,122,82,0.18);
-    transition: transform .16s ease;
-  }
-  .operations button.secondary{ background: transparent; color:var(--accent); border:2px solid rgba(15,122,82,0.12); box-shadow:none; }
-
-  .small{ font-size:13px; color:var(--muted); }
-
-  /* KPI Row */
-  .kpi-row{ display:flex; gap:14px; }
-  .kpi{
-    flex:1; padding:14px; border-radius:12px; background: linear-gradient(180deg,#fff,#f6fbf7);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.04); text-align:left;
-  }
-  .kpi .num{ font-size:20px; font-weight:800; color:var(--accent); }
-  .kpi p{ color:var(--muted); font-size:13px; margin-top:6px; }
-
-  /* footer note */
-  .footer-note{ text-align:center; margin-top:26px; color:var(--muted); font-size:13px; }
-
-  /* Responsive */
-  @media (max-width:1000px){
-    .wrap{ grid-template-columns: 1fr; }
-    .table-wrap table{ min-width:620px; }
+  /* === ALERTS === */
+  .alerts-list li {
+    font-size:14px;
+    color:var(--muted);
+    margin-bottom:8px;
   }
 
-  @media (max-width:560px){
-    .logo-wrap{ width:48px;height:48px; }
-    .brand h1{ font-size:15px; }
-    .kpi-row{ flex-direction:column; }
-    .table-wrap table{ min-width:540px; }
+  /* === TABLE === */
+  table {
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+  }
+
+  thead th {
+    background:#e8f5ed;
+    padding:12px;
+    text-align:left;
+    font-weight:700;
+    color:var(--accent);
+    border-bottom:1px solid rgba(0,0,0,0.06);
+  }
+
+  tbody td {
+    padding:12px;
+    border-bottom:1px solid rgba(0,0,0,0.05);
+    color:#2d3b33;
+  }
+
+  tbody tr:hover td {
+    background:#f3fbf6;
+  }
+
+  .dot {
+    width:10px; height:10px;
+    border-radius:50%;
+    display:inline-block;
+    margin-right:8px;
+  }
+
+  /* === RIGHT PANEL === */
+  .operations button {
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:12px;
+    border:none;
+    background:var(--accent);
+    color:white;
+    font-weight:600;
+    cursor:pointer;
   }
 </style>
 </head>
+
 <body>
 
-<header class="topbar">
+<!-- TOPBAR -->
+<div class="topbar">
   <div class="brand">
-    <div class="logo-wrap" aria-hidden="true">
+    <div class="logo-wrap">
       <img src="logo.png" alt="EcoSafar Logo">
     </div>
     <h1>EcoSafar Admin Panel</h1>
   </div>
 
-  <div class="top-actions">
-    <button class="btn-ghost" title="Profile">Admin</button>
-    <button class="btn" onclick="location.href = 'index.html'">Home</button>
-  </div>
-</header>
+  <button class="btn-home" onclick="location.href='index.html'">Home</button>
+</div>
 
-<main class="wrap">
-  <section class="main">
+<!-- MAIN GRID -->
+<div class="wrap">
 
-    <!-- KPIs -->
-    <div class="card kpi-row" aria-hidden="true">
-      <div class="kpi">
-        <div class="num" id="kpi-waste">10,350 g</div>
-        <p>Total Waste Collected</p>
-      </div>
-      <div class="kpi">
-        <div class="num" id="kpi-bins">42</div>
-        <p>Active Bins</p>
-      </div>
-      <div class="kpi">
-        <div class="num" id="kpi-points">1,240</div>
-        <p>Eco Points Distributed</p>
-      </div>
-    </div>
+  <!-- LEFT SIDE -->
+  <div>
 
-    <!-- Alerts -->
+    <!-- ALERTS -->
     <div class="card">
       <h3>Alerts</h3>
-      <ul id="alerts" class="alerts-list small">
-        <li>No active alerts</li>
+      <ul class="alerts-list" id="alerts">
+        <li><strong>Block A1:</strong> Bin reached 95% capacity — collection required.</li>
       </ul>
     </div>
 
-    <!-- Sections table -->
+    <!-- TABLE -->
     <div class="card">
       <h3>Building Sections</h3>
-
-      <div class="table-wrap" role="region" aria-label="Sections table">
-        <table aria-describedby="table-help">
-          <thead>
-            <tr>
-              <th>Section</th>
-              <th>Bin ID</th>
-              <th>Total Waste</th>
-              <th>Fill Level</th>
-              <th>Last Update</th>
-            </tr>
-          </thead>
-          <tbody id="sectionTable">
-            <!-- rows rendered by JS -->
-          </tbody>
-        </table>
-      </div>
-
-      <p id="table-help" class="small" style="margin-top:10px;">Click an operation on the right to simulate actions or download reports.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Section</th>
+            <th>Bin ID</th>
+            <th>Total Waste</th>
+            <th>Fill Level</th>
+            <th>Last Update</th>
+          </tr>
+        </thead>
+        <tbody id="sectionTable"></tbody>
+      </table>
     </div>
 
-  </section>
+  </div>
 
-  <!-- Right side -->
-  <aside class="side">
-    <div class="card operations">
+  <!-- RIGHT SIDE -->
+  <aside>
+
+    <div class="card">
       <h3>Operations</h3>
       <button onclick="simulateBinFull()">Simulate Bin Full</button>
-      <button onclick="emptyAllBins()" class="secondary">Empty All Bins (simulate)</button>
       <button onclick="downloadReport()">Download CSV</button>
-      <button onclick="showPoints()" class="secondary" style="margin-top:6px;">Show Points Summary</button>
     </div>
 
-    <div class="card">
-      <h3>Quick Controls</h3>
-      <p class="small">Use quick actions for testing and demo purposes. These actions do not persist server-side (demo only).</p>
-      <div style="margin-top:12px; display:flex; gap:10px;">
-        <button class="btn" style="flex:1" onclick="markAllNormal()">Mark Normal</button>
-        <button class="btn-ghost" style="flex:1" onclick="markAllWarning()">Mark Warning</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>About</h3>
-      <p class="small">EcoSafar is a smart waste management dashboard. Bins report weight & fill level — this panel helps admins monitor and schedule collections.</p>
-      <p class="small" style="margin-top:10px;">Version: <strong>1.0</strong></p>
-    </div>
   </aside>
-</main>
 
-<p class="footer-note">© EcoSafar • Smart Waste Management</p>
+</div>
 
 <script>
-  // Sample data
-  const sections = [
-    { section:"Block A1", bin:"BIN-01", waste:2100, fill:92, last:"20 min ago", points: 21 },
-    { section:"Block B2", bin:"BIN-02", waste:1800, fill:40, last:"3 hrs ago", points: 18 },
-    { section:"Tower C", bin:"BIN-03", waste:3950, fill:70, last:"1 hr ago", points: 39 },
-    { section:"Wing D", bin:"BIN-04", waste:2500, fill:25, last:"2 days ago", points: 25 }
-  ];
+const sections = [
+  { section:"Block A1", bin:"BIN-01", waste:"2,100 g", fill:92, last:"20 min ago" },
+  { section:"Block B2", bin:"BIN-02", waste:"1,800 g", fill:40, last:"3 hrs ago" },
+  { section:"Tower C", bin:"BIN-03", waste:"3,950 g", fill:70, last:"1 hr ago" },
+  { section:"Wing D", bin:"BIN-04", waste:"2,500 g", fill:25, last:"2 days ago" }
+];
 
-  function getDotColor(fill){
-    if(fill < 40) return "#26a65b";   // green
-    if(fill < 80) return "#f0ad4e";   // amber
-    return "#e14c4c";                 // red
-  }
+function dotColor(fill){
+  if(fill < 40) return "#26a65b";
+  if(fill < 80) return "#f0ad4e";
+  return "#e14c4c";
+}
 
-  function renderSections(){
-    const tbody = document.getElementById("sectionTable");
-    tbody.innerHTML = "";
-    sections.forEach(s=>{
-      const tr = document.createElement('tr');
+function render(){
+  const tbody = document.getElementById("sectionTable");
+  tbody.innerHTML = "";
 
-      // Fill progress bar width
-      const barWidth = Math.max(2, Math.min(100, s.fill));
-
-      tr.innerHTML = `
-        <td style="font-weight:700; color:#163c2f;">${s.section}</td>
+  sections.forEach(s => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${s.section}</td>
         <td>${s.bin}</td>
-        <td>${s.waste.toLocaleString()} g</td>
-        <td>
-          <div class="progress">
-            <span class="dot" style="background:${getDotColor(s.fill)}"></span>
-            <div class="bar" aria-hidden="true"><i style="width:${barWidth}%;"></i></div>
-            <span style="min-width:36px; text-align:right; display:inline-block; color:var(--muted); font-weight:600;">${s.fill}%</span>
-          </div>
-        </td>
-        <td style="white-space:nowrap;">${s.last}</td>
-      `;
-      tbody.appendChild(tr);
-    });
+        <td>${s.waste}</td>
+        <td><span class="dot" style="background:${dotColor(s.fill)}"></span> ${s.fill}%</td>
+        <td>${s.last}</td>
+      </tr>
+    `;
+  });
+}
 
-    // Update KPIs
-    const totalWaste = sections.reduce((a,b)=>a+b.waste,0);
-    document.getElementById('kpi-waste').textContent = totalWaste.toLocaleString() + ' g';
-    document.getElementById('kpi-bins').textContent = sections.length;
-    const totalPoints = sections.reduce((a,b)=>a+(b.points||0),0);
-    document.getElementById('kpi-points').textContent = totalPoints;
-  }
+function simulateBinFull(){
+  alert("Simulation activated: Bin A1 set to 95%");
+}
 
-  function simulateBinFull(){
-    document.getElementById('alerts').innerHTML = `<li><strong>Block A1:</strong> Bin reached 95% capacity — collection required.</li>`;
-    // visually set first section to high
-    sections[0].fill = 95; sections[0].waste += 500; sections[0].last = 'Just now';
-    renderSections();
-    toast('Simulation: Block A1 set to 95%');
-  }
+function downloadReport(){
+  alert("CSV Download Started");
+}
 
-  function emptyAllBins(){
-    sections.forEach(s => { s.fill = 5; s.waste = Math.max(0, s.waste - 2000); s.last = 'Just now'; });
-    renderSections();
-    document.getElementById('alerts').innerHTML = `<li>All bins have been marked empty (simulation).</li>`;
-    toast('All bins emptied (simulated)');
-  }
-
-  function downloadReport(){
-    const csv = [
-      ['Section','Bin','Waste (g)','Fill (%)','Points','Last Update'],
-      ...sections.map(s => [s.section,s.bin,s.waste,s.fill,s.points||0,s.last])
-    ].map(r => r.map(field => `"${String(field).replace(/"/g,'""')}"`).join(',')).join('\n');
-
-    const blob = new Blob([csv], {type: 'text/csv'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'EcoSafar_Sections_Report.csv'; a.click();
-    URL.revokeObjectURL(url);
-    toast('CSV report downloaded');
-  }
-
-  function markAllNormal(){
-    sections.forEach(s => { s.fill = Math.max(10, Math.floor(Math.random()*45)); s.last = 'Just now'; });
-    renderSections(); toast('All bins set to normal ranges');
-  }
-
-  function markAllWarning(){
-    sections.forEach(s => { s.fill = 60 + Math.floor(Math.random()*30); s.last = 'Just now'; });
-    renderSections(); toast('All bins set to warning ranges');
-  }
-
-  function showPoints(){
-    alert('Total Eco Points distributed: ' + sections.reduce((a,b)=>a+(b.points||0),0));
-  }
-
-  // small toast
-  function toast(msg){
-    const t = document.createElement('div');
-    t.textContent = msg;
-    t.style.position = 'fixed';
-    t.style.right = '18px';
-    t.style.bottom = '18px';
-    t.style.background = 'linear-gradient(90deg,#0f7a52,#0fcf7d)';
-    t.style.color = '#fff';
-    t.style.padding = '10px 14px';
-    t.style.borderRadius = '10px';
-    t.style.boxShadow = '0 8px 30px rgba(15,122,82,0.18)';
-    t.style.fontWeight = '600';
-    t.style.zIndex = 9999;
-    document.body.appendChild(t);
-    setTimeout(()=> t.style.opacity = '0', 2300);
-    setTimeout(()=> t.remove(), 2600);
-  }
-
-  // initial render
-  renderSections();
+render();
 </script>
 
 </body>
