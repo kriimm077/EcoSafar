@@ -33,16 +33,6 @@ body {
     text-align: center;
 }
 
-/* CLEAN LOGO — OPTION A */
-.logo {
-    width: 120px;
-    height: auto;
-    margin: 0 auto 15px auto;
-    display: block;
-    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.10));
-    animation: float 4s ease-in-out infinite;
-}
-
 /* TITLE */
 h1 {
     font-size: 2.9rem;
@@ -125,10 +115,10 @@ footer {
     color: #123a2d;
 }
 
-/* FLOAT ANIMATION FOR LOGO */
+/* FLOAT ANIMATION KEYFRAMES */
 @keyframes float {
     0% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+    50% { transform: translateY(-10px); }
     100% { transform: translateY(0); }
 }
 
@@ -145,8 +135,9 @@ footer {
 
 <div class="container">
 
-    <!-- LOGO -->
-    <img src="logo.png" class="logo" alt="EcoSafar Logo">
+    <!-- LOGO with inline floating animation -->
+    <img src="logo.png" class="logo" alt="EcoSafar Logo" width="160"
+    style="animation: float 4s ease-in-out infinite; display: block; margin: 0 auto 15px auto; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));">
 
     <!-- TITLE -->
     <h1>EcoSafar</h1>
