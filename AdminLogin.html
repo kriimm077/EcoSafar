@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • Admin Login</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -16,109 +16,119 @@
 }
 
 body {
-    background: linear-gradient(135deg, #f0f9f4, #e6f4eb);
+    background: linear-gradient(135deg, #eef7f1, #e5f3eb);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    padding: 20px;
 }
 
+/* MAIN CARD */
 .card {
-    background: rgba(255,255,255,0.95);
-    padding: 42px 36px;
-    border-radius: 22px;
-    width: 400px;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.08), 0 4px 14px rgba(0,0,0,0.04);
+    background: rgba(255,255,255,0.97);
+    padding: 46px 40px;
+    border-radius: 26px;
+    width: 420px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.08);
     text-align: center;
-    backdrop-filter: blur(6px);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    backdrop-filter: blur(8px);
 }
 
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 18px 52px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.06);
+/* LOGO CONTAINER (removes white look) */
+.logo-box {
+    width: 95px;
+    height: 95px;
+    margin: 0 auto 24px auto;
+    background: rgba(255,255,255,0.7);
+    border-radius: 22px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+    padding: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Logo */
-.card img {
-    height: 60px;
-    margin-bottom: 20px;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+.logo-box img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1));
 }
 
-/* Titles */
+/* HEADINGS */
 .title {
-    font-size: 26px;
-    font-weight: 600;
-    color: #0f7a52;
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f6648;
     margin-bottom: 6px;
 }
 
 .subtitle {
-    font-size: 14px;
-    color: #4a4a4a;
+    font-size: 15px;
+    color: #525a55;
     margin-bottom: 28px;
 }
 
-/* Inputs */
+/* INPUT LABEL */
 label {
     display: block;
     font-weight: 500;
     font-size: 14px;
-    margin-top: 14px;
-    color: #2f2f2f;
+    text-align: left;
+    margin-top: 18px;
+    color: #2a3a30;
 }
 
+/* INPUT BOXES */
 input {
     width: 100%;
-    padding: 12px 14px;
+    padding: 13px 14px;
     margin-top: 6px;
-    border-radius: 10px;
-    border: 1px solid #cdd8c8;
+    border-radius: 12px;
+    border: 1px solid #c8d8cc;
     font-size: 15px;
+    background: #fefefe;
     transition: all 0.25s ease;
-    background: #fdfdfd;
 }
 
 input:focus {
     border-color: #0f7a52;
     box-shadow: 0 0 6px rgba(15,122,82,0.3);
-    background: #ffffff;
     outline: none;
 }
 
-/* Buttons */
+/* PRIMARY BUTTON */
 .btn {
-    margin-top: 26px;
+    margin-top: 30px;
     width: 100%;
-    padding: 13px;
+    padding: 14px;
     background: #0f7a52;
     color: #fff;
     border: none;
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
     border-radius: 14px;
     cursor: pointer;
-    box-shadow: 0 6px 18px rgba(15,122,82,0.25);
+    box-shadow: 0 8px 18px rgba(15,122,82,0.25);
     transition: all 0.25s ease;
 }
 
 .btn:hover {
     background: #0fcf7d;
     transform: translateY(-2px);
-    box-shadow: 0 10px 28px rgba(15,122,82,0.35);
+    box-shadow: 0 14px 28px rgba(15,122,82,0.28);
 }
 
-/* Secondary Button */
+/* SECONDARY BUTTON */
 .btn-secondary {
     margin-top: 14px;
     width: 100%;
-    padding: 12px;
+    padding: 13px;
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 600;
     background: transparent;
-    border: 2px solid #0f7a52;
+    border: 2.2px solid #0f7a52;
     border-radius: 14px;
     color: #0f7a52;
     cursor: pointer;
@@ -126,24 +136,24 @@ input:focus {
 }
 
 .btn-secondary:hover {
-    background: rgba(15,122,82,0.08);
+    background: rgba(15,122,82,0.09);
 }
 
-/* Error Box */
+/* ERROR BOX */
 .error-box {
     display: none;
-    background: #ffeaea;
-    color: #b80000;
+    background: #ffe7e7;
+    color: #c40000;
     padding: 12px;
     border-radius: 12px;
     margin-top: 18px;
     font-size: 14px;
-    border-left: 4px solid #ff7272;
+    border-left: 4px solid #ff6f6f;
 }
 
-/* Demo Text */
+/* DEMO TEXT */
 .demo {
-    margin-top: 16px;
+    margin-top: 18px;
     font-size: 13px;
     color: #555;
 }
@@ -153,9 +163,11 @@ input:focus {
 <body>
 
 <div class="card">
+
     <div class="logo-box">
-    <img src="logo.png" alt="EcoSafar Logo">
-</div>
+        <img src="logo.png" alt="EcoSafar Logo">
+    </div>
+
     <h2 class="title">Admin Login</h2>
     <p class="subtitle">Access EcoSafar Control Panel</p>
 
@@ -169,6 +181,7 @@ input:focus {
     <button class="btn-secondary" onclick="location.href='index.html'">Home</button>
 
     <p class="demo">Demo: <b>admin / admin</b></p>
+
     <div class="error-box" id="errorBox">Incorrect username or password.</div>
 </div>
 
@@ -178,7 +191,7 @@ document.getElementById('adminLogin').onclick = () => {
     const p = document.getElementById('adminPass').value.trim();
     const errorBox = document.getElementById('errorBox');
 
-    if(u === "admin" && p === "admin"){
+    if (u === "admin" && p === "admin") {
         window.location.href = "AdminDash.html";
     } else {
         errorBox.style.display = "block";
@@ -188,4 +201,3 @@ document.getElementById('adminLogin').onclick = () => {
 
 </body>
 </html>
-
