@@ -1,186 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>EcoSafar • Smart Waste Management</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoSafar • Home</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<style>
-/* GLOBAL STYLING */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-}
-
-body {
-    background: linear-gradient(150deg, #f7fdf7, #eaf7ed);
-    color: #1b3a2d;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
-/* CONTAINER */
-.container {
-    max-width: 1100px;
-    width: 90%;
-    margin: auto;
-    text-align: center;
-    padding: 60px 0 100px 0;
-}
-
-/* HEADER */
-header {
-    margin-bottom: 50px;
-}
-
-/* UPDATED LOGO BOX  
-   (Copied from Admin Login design for perfect match) */
-.logo-box {
-    display: inline-block;
-    padding: 18px;
-    border-radius: 22px;
-    background: rgba(255,255,255,0.32);
-    backdrop-filter: blur(10px);
-    margin-bottom: 24px;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.12);
-}
-
-.logo-box img {
-    width: 125px;
-    height: auto;
-    mix-blend-mode: multiply;
-    opacity: 0.93;
-    filter: drop-shadow(0 6px 18px rgba(0,0,0,0.35));
-}
-
-/* HEADER TEXT */
-header h1 {
-    font-size: 3rem;
-    font-weight: 800;
-    letter-spacing: 1.4px;
-    margin: 10px 0 6px;
-    color: #0f4d3f;
-    text-shadow: 0 3px 8px rgba(0,0,0,0.07);
-}
-
-header .tag {
-    font-size: 1.2rem;
-    opacity: 0.7;
-    margin-top: -5px;
-    letter-spacing: 0.6px;
-    color: #0f5f44;
-}
-
-/* GRID */
-.home-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 35px;
-    perspective: 1000px;
-}
-
-/* CARD */
-.card {
-    background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(245,250,245,0.9));
-    padding: 36px 28px;
-    border-radius: 24px;
-    box-shadow: 0 14px 40px rgba(0,0,0,0.08), 0 8px 20px rgba(0,0,0,0.05);
-    transition: transform 0.5s ease, box-shadow 0.5s ease;
-    backdrop-filter: blur(6px);
-    text-align: left;
-}
-
-.card:hover {
-    transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
-    box-shadow: 0 24px 60px rgba(0,0,0,0.15), 0 12px 30px rgba(0,0,0,0.08);
-}
-
-.card h2 {
-    margin-bottom: 16px;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #0f5f44;
-}
-
-.card p {
-    opacity: 0.8;
-    line-height: 1.6;
-    font-size: 1rem;
-    color: #2a3a2d;
-    margin-bottom: 24px;
-}
-
-/* BUTTON */
-.btn {
-    display: inline-block;
-    background: #0f7a52;
-    color: #ffffff;
-    padding: 14px 30px;
-    border-radius: 16px;
-    font-weight: 600;
-    font-size: 1rem;
-    text-decoration: none;
-    box-shadow: 0 6px 22px rgba(15,122,82,0.25);
-    transition: all 0.35s ease;
-}
-
-.btn:hover {
-    background: #0fcf7d;
-    box-shadow: 0 12px 32px rgba(15,122,82,0.35);
-    transform: translateY(-2px) scale(1.02);
-}
-
-/* FOOTER */
-footer {
-    text-align: center;
-    padding: 30px 0;
-    margin-top: auto;
-    font-size: 0.95rem;
-    opacity: 0.75;
-    color: #1b3a2d;
-    border-top: 1px solid rgba(15,122,82,0.15);
-    letter-spacing: 0.5px;
-}
-</style>
+  <!-- Your CSS -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-<div class="container">
+  <!-- HERO BACKGROUND -->
+  <div class="bg-hero">
 
-    <header>
+    <!-- HEADER SECTION -->
+    <header class="site-header">
+      <div class="brand">
+
+        <!-- Glass Logo Box (matches Admin Login look) -->
         <div class="logo-box">
-            <img src="logo.png" alt="EcoSafar Logo">
+          <img src="logo.png" class="logo" alt="EcoSafar Logo">
         </div>
+
         <h1>EcoSafar</h1>
-        <p class="tag">Smart • Sustainable • Rewarding</p>
+        <p class="tag">Smart Waste Management System</p>
+      </div>
     </header>
 
-    <main class="home-grid">
-        <div class="card">
-            <h2>Admin</h2>
-            <p>Manage bins, alerts & resident accounts with efficiency and precision, all in one place.</p>
-            <a class="btn" href="AdminLogin.html">Admin Login</a>
-        </div>
+    <!-- HOME CARDS -->
+    <div class="home-grid">
 
-        <div class="card">
-            <h2>User</h2>
-            <p>Track points, view waste history, and redeem rewards seamlessly for a greener lifestyle.</p>
-            <a class="btn" href="UserLogin.html">User Login</a>
-        </div>
-    </main>
+      <!-- User Login Card -->
+      <div class="card">
+        <h2>User Access</h2>
+        <p>Login to track eco points, view history, and manage waste disposal activity.</p>
+        <a href="UserLogin.html" class="btn">User Login</a>
+      </div>
 
-</div>
+      <!-- Admin Login Card -->
+      <div class="card">
+        <h2>Admin Panel</h2>
+        <p>Monitor bins, manage users, and configure the smart dustbin dashboard.</p>
+        <a href="AdminLogin.html" class="btn">Admin Login</a>
+      </div>
 
-<footer>
-    © EcoSafar — Smart Waste Management
-</footer>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      © 2025 EcoSafar · Smart Waste Management
+    </footer>
+
+  </div>
 
 </body>
 </html>
