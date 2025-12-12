@@ -5,12 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • User Login</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-body {
+:root {
+    --green-700: #145A13;
+    --green-accent: #0fcf7d;
+}
+
+/* RESET */
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     font-family: "Inter", sans-serif;
+}
+
+/* BODY */
+body {
     background: linear-gradient(135deg, #f0f9f4, #e6f4eb);
     display: flex;
     justify-content: center;
@@ -21,11 +33,11 @@ body {
 /* LOGIN CARD */
 .card {
     background: rgba(255,255,255,0.95);
-    padding: 40px 36px;
-    border-radius: 22px;
+    padding: 42px 36px;
+    border-radius: 26px;
     width: 360px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.08), 0 6px 15px rgba(0,0,0,0.05);
     text-align: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08), 0 6px 15px rgba(0,0,0,0.05);
     backdrop-filter: blur(6px);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -36,29 +48,34 @@ body {
 }
 
 /* LOGO */
-.logo-xs {
-    width: 70px;
-    height: auto;
-    border-radius: 10px;
-    margin-bottom: 18px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
 .logo-box {
     display: flex;
     justify-content: center;
+    margin-bottom: 20px;
+    padding: 12px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.32);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+.logo-box img {
+    width: 100px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
 }
 
 /* HEADINGS */
 h2 {
-    color: #0f7a52;
+    color: var(--green-700);
     margin-bottom: 22px;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
     letter-spacing: 0.5px;
 }
 
-/* FORM */
+/* FORM LABELS */
 label {
     display: block;
     text-align: left;
@@ -68,19 +85,20 @@ label {
     color: #2e2e2e;
 }
 
+/* INPUTS */
 input {
     width: 100%;
     padding: 12px;
-    border-radius: 10px;
+    border-radius: 12px;
     border: 1px solid #bdbdbd;
     font-size: 14px;
-    transition: all 0.2s ease;
     background: #fdfdfd;
+    transition: all 0.25s ease;
 }
 
 input:focus {
     outline: none;
-    border-color: #0fcf7d;
+    border-color: var(--green-accent);
     box-shadow: 0 0 8px rgba(15,207,125,0.3);
 }
 
@@ -89,7 +107,7 @@ input:focus {
     margin-top: 24px;
     width: 100%;
     padding: 14px;
-    background: #0fcf7d;
+    background: var(--green-accent);
     color: white;
     border: none;
     border-radius: 14px;
@@ -121,7 +139,7 @@ input:focus {
 <div class="card">
 
     <div class="logo-box">
-        <img src="logo.png" alt="EcoSafar Logo" class="logo-xs">
+        <img src="logo.png" alt="EcoSafar Logo">
     </div>
 
     <h2>User Login</h2>
