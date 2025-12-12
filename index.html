@@ -115,11 +115,17 @@ footer {
     color: #123a2d;
 }
 
-/* FLOAT ANIMATION KEYFRAMES */
+/* FLOAT + SHAKE ANIMATION KEYFRAMES */
 @keyframes float {
     0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(-15px); }
     100% { transform: translateY(0); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
 }
 
 /* RESPONSIVE */
@@ -135,9 +141,9 @@ footer {
 
 <div class="container">
 
-    <!-- LOGO with inline floating animation -->
-    <img src="logo.png" class="logo" alt="EcoSafar Logo" width="160"
-    style="animation: float 4s ease-in-out infinite; display: block; margin: 0 auto 15px auto; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));">
+    <!-- LOGO with bigger size and noticeable animation -->
+    <img src="logo.png" class="logo" alt="EcoSafar Logo" width="200"
+    style="animation: float 3s ease-in-out infinite alternate, shake 6s ease-in-out infinite; display: block; margin: 0 auto 15px auto; filter: drop-shadow(0 6px 15px rgba(0,0,0,0.2));">
 
     <!-- TITLE -->
     <h1>EcoSafar</h1>
