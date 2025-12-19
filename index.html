@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* GLOBAL */
 * {
     margin: 0;
     padding: 0;
@@ -24,7 +23,6 @@ body {
     min-height: 100vh;
 }
 
-/* MAIN CONTAINER */
 .container {
     width: 90%;
     max-width: 1100px;
@@ -33,7 +31,6 @@ body {
     text-align: center;
 }
 
-/* TITLE */
 h1 {
     font-size: 2.9rem;
     font-weight: 800;
@@ -49,28 +46,20 @@ h1 {
     color: #17694f;
 }
 
-/* GRID */
 .home-grid {
     margin-top: 55px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 35px;
-    justify-content: center;
 }
 
-/* CARD */
 .card {
     background: #ffffffef;
     padding: 30px 26px;
     border-radius: 22px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.07);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: 0.25s ease;
     text-align: left;
-}
-
-.card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
 }
 
 .card h2 {
@@ -87,7 +76,6 @@ h1 {
     line-height: 1.55;
 }
 
-/* BUTTON */
 .btn {
     display: inline-block;
     background: #0f7a52;
@@ -96,49 +84,19 @@ h1 {
     border-radius: 14px;
     text-decoration: none;
     font-weight: 600;
-    transition: 0.25s ease;
-    box-shadow: 0 6px 18px rgba(15,122,82,0.25);
 }
 
-.btn:hover {
-    background: #0ec772;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(15,122,82,0.35);
-}
-
-/* FOOTER */
 footer {
     margin-top: auto;
     padding: 25px 0;
     font-size: 0.95rem;
     opacity: 0.7;
-    color: #123a2d;
-}
-
-/* CUTE FLOATING LOGO ANIMATION */
-@keyframes cuteFloat {
-    0% { transform: translateY(0) rotate(0deg) scale(1); }
-    25% { transform: translateY(-10px) rotate(-3deg) scale(1.05); }
-    50% { transform: translateY(-5px) rotate(3deg) scale(1.08); }
-    75% { transform: translateY(-12px) rotate(-2deg) scale(1.03); }
-    100% { transform: translateY(0) rotate(0deg) scale(1); }
 }
 
 .logo {
     width: 200px;
-    height: auto;
     display: block;
-    margin: 0 auto 15px auto;
-    filter: drop-shadow(0 6px 15px rgba(0,0,0,0.2));
-    animation: cuteFloat 4s ease-in-out infinite;
-}
-
-/* RESPONSIVE */
-@media (max-width: 600px) {
-    h1 { font-size: 2.3rem; }
-    .tag { font-size: 1.05rem; }
-    .card h2 { font-size: 1.5rem; }
-    .logo { width: 150px; }
+    margin: 0 auto 15px;
 }
 </style>
 </head>
@@ -147,26 +105,34 @@ footer {
 
 <div class="container">
 
-    <!-- LOGO with cute animation -->
     <img src="logo.png" class="logo" alt="EcoSafar Logo">
 
-    <!-- TITLE -->
     <h1>EcoSafar</h1>
     <p class="tag">Smart • Sustainable • Rewarding</p>
 
-    <!-- OPTIONS -->
     <div class="home-grid">
+
+        <!-- 🔴 LIVE BIN STATUS CARD -->
+        <div class="card">
+            <h2>Live Bin Status</h2>
+            <p>
+                Bin Level: <strong><span id="binLevel">Loading...</span>%</strong><br>
+                Status: <strong><span id="binStatus">Checking...</span></strong>
+            </p>
+        </div>
+
         <div class="card">
             <h2>Admin</h2>
-            <p>Manage bins, alerts & resident accounts with efficiency and precision, all in one place.</p>
+            <p>Manage bins, alerts & resident accounts efficiently.</p>
             <a href="AdminLogin.html" class="btn">Admin Login</a>
         </div>
 
         <div class="card">
             <h2>User</h2>
-            <p>Track points, view waste history, and redeem rewards seamlessly for a greener lifestyle.</p>
+            <p>Track points, view waste history, and redeem rewards.</p>
             <a href="UserLogin.html" class="btn">User Login</a>
         </div>
+
     </div>
 
 </div>
@@ -174,6 +140,34 @@ footer {
 <footer>
     © EcoSafar — Smart Waste Management
 </footer>
+
+<!-- 🔥 FIREBASE CONNECTION -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
+  authDomain: "ecosafar-3da96.firebaseapp.com",
+  databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
+  projectId: "ecosafar-3da96",
+  storageBucket: "ecosafar-3da96.firebasestorage.app",
+  messagingSenderId: "972209472560",
+  appId: "1:972209472560:web:39fcc096311b3006c6d9f5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// 🔁 READ BIN DATA
+onValue(ref(db, "bin/level"), (snap) => {
+  document.getElementById("binLevel").innerText = snap.val() ?? "--";
+});
+
+onValue(ref(db, "bin/status"), (snap) => {
+  document.getElementById("binStatus").innerText = snap.val() ?? "Unknown";
+});
+</script>
 
 </body>
 </html>
