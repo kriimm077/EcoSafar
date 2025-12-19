@@ -5,127 +5,114 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • User Login</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root {
-    --green-900: #0E4520;
-    --green-accent: #0fcf7d;
+:root{
+    --green-dark:#0E4520;
+    --green-accent:#0fcf7d;
 }
 
-/* RESET */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,sans-serif;
 }
 
-/* BODY */
-body {
-    background: linear-gradient(135deg, #f0f9f4, #e8f6ef);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    min-height: 100vh;
+body{
+    background:linear-gradient(135deg,#f0f9f4,#e8f6ef);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
 }
 
-/* LOGIN CARD */
-.card {
-    background: rgba(255,255,255,0.96);
-    padding: 40px 32px;
-    border-radius: 24px;
-    width: 380px;
-    text-align: center;
-    box-shadow: 0 14px 40px rgba(0,0,0,0.10);
-    backdrop-filter: blur(10px);
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.97);
+    width:380px;
+    padding:42px 34px;
+    border-radius:26px;
+    text-align:center;
+    box-shadow:0 16px 45px rgba(0,0,0,0.12);
 }
 
-/* LOGO ONLY */
-.logo-box {
-    margin-bottom: 28px;
+/* LOGO */
+.logo-box{
+    margin-bottom:26px;
+}
+.logo-box img{
+    width:140px;
+    animation:cuteFloat 4s ease-in-out infinite;
 }
 
-.logo-box img {
-    width: 140px;
-    height: auto;
-    /* Cute floating animation */
-    animation: cuteFloat 4s ease-in-out infinite;
-}
-
-/* CUTE FLOATING ANIMATION */
-@keyframes cuteFloat {
-    0% { transform: translateY(0) rotate(0deg) scale(1); }
-    25% { transform: translateY(-10px) rotate(-3deg) scale(1.05); }
-    50% { transform: translateY(-5px) rotate(3deg) scale(1.08); }
-    75% { transform: translateY(-12px) rotate(-2deg) scale(1.03); }
-    100% { transform: translateY(0) rotate(0deg) scale(1); }
+@keyframes cuteFloat{
+    0%{transform:translateY(0) scale(1);}
+    50%{transform:translateY(-10px) scale(1.08);}
+    100%{transform:translateY(0) scale(1);}
 }
 
 /* TITLE */
-h2 {
-    color: var(--green-900);
-    margin-bottom: 24px;
-    font-size: 28px;
-    font-weight: 700;
+h2{
+    color:var(--green-dark);
+    margin-bottom:24px;
+    font-size:28px;
+    font-weight:700;
 }
 
-/* LABELS */
-label {
-    display: block;
-    text-align: left;
-    margin: 14px 0 6px;
-    font-weight: 600;
-    font-size: 14px;
-    color: #2b3b2a;
+/* LABEL */
+label{
+    display:block;
+    text-align:left;
+    margin:16px 0 6px;
+    font-weight:600;
+    font-size:14px;
+    color:#2b3b2a;
 }
 
-/* INPUTS */
-input {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    border: 1px solid #d6e5d8;
-    font-size: 15px;
-    background: #fdfdfd;
-    transition: all 0.25s ease;
+/* INPUT */
+input{
+    width:100%;
+    padding:14px;
+    border-radius:14px;
+    border:1px solid #d6e5d8;
+    font-size:15px;
+    transition:0.25s;
 }
-
-input:focus {
-    outline: none;
-    border-color: var(--green-accent);
-    box-shadow: 0 0 9px rgba(15,207,125,0.28);
+input:focus{
+    outline:none;
+    border-color:var(--green-accent);
+    box-shadow:0 0 10px rgba(15,207,125,0.3);
 }
 
 /* BUTTON */
-.btn {
-    margin-top: 28px;
-    width: 100%;
-    padding: 15px;
-    background: var(--green-accent);
-    color: white;
-    border: none;
-    border-radius: 14px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 6px 20px rgba(15,122,82,0.25);
-    transition: all 0.25s ease;
+.btn{
+    margin-top:28px;
+    width:100%;
+    padding:15px;
+    background:var(--green-accent);
+    color:white;
+    border:none;
+    border-radius:16px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 6px 20px rgba(15,122,82,0.25);
+    transition:0.25s;
 }
-
-.btn:hover {
-    background: #07b66b;
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(15,122,82,0.35);
+.btn:hover{
+    background:#07b66b;
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(15,122,82,0.35);
 }
 
 /* NOTE */
-.note {
-    font-size: 13px;
-    margin-top: 16px;
-    color: #4d4d4d;
-    opacity: 0.85;
+.note{
+    font-size:13px;
+    margin-top:18px;
+    color:#555;
 }
 </style>
 </head>
@@ -134,31 +121,37 @@ input:focus {
 
 <div class="card">
 
-    <!-- Logo -->
     <div class="logo-box">
         <img src="logo.png" alt="EcoSafar Logo">
     </div>
 
-    <!-- Heading -->
     <h2>User Login</h2>
 
-    <!-- Form -->
-    <label>Username (RFID)</label>
-    <input id="username" placeholder="Enter username">
+    <!-- RFID UID INPUT -->
+    <label>RFID UID</label>
+    <input id="uid" placeholder="Example: BF604DEE">
 
-    <label>Password</label>
-    <input id="password" type="password" placeholder="Enter password">
+    <button class="btn" id="loginBtn">Open Dashboard</button>
 
-    <!-- Button -->
-    <button class="btn" id="loginBtn">Login</button>
+    <p class="note">
+        Authentication is based on RFID UID.<br>
+        No password required for users.
+    </p>
 
-    <p class="note">Demo: Click Login to open dashboard</p>
 </div>
 
 <script>
 document.getElementById("loginBtn").onclick = () => {
-    const u = document.getElementById("username").value || "user01";
-    window.location.href = "UserDash.html?username=" + encodeURIComponent(u);
+    let uid = document.getElementById("uid").value.trim();
+
+    if(!uid){
+        alert("Please enter RFID UID");
+        return;
+    }
+
+    uid = uid.replace(/\s+/g,"").toUpperCase(); // remove spaces
+
+    window.location.href = "user-dashboard.html?uid=" + uid;
 };
 </script>
 
