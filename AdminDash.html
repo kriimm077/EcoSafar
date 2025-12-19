@@ -1,289 +1,339 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>EcoSafar • Admin Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoSafar • Admin Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-<style>
+  <style>
+    /* Base Styles */
     * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Inter", sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
     }
 
     body {
-        background: #f0f9f4;
-        color: #2c2c2c;
-        padding-bottom: 40px;
+      background: #f0f9f4;
+      color: #2c2c2c;
+      padding-bottom: 40px;
+      line-height: 1.5;
     }
 
     /* Topbar */
     .topbar {
-        background: #ffffff;
-        border-bottom: 1px solid #dfe9e5;
-        padding: 16px 28px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        backdrop-filter: blur(4px);
+      background: #fff;
+      border-bottom: 1px solid #dfe9e5;
+      padding: 16px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(4px);
     }
 
     .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
-    /* LOGO WITH CUTE ANIMATION */
     .brand img {
-        height: 40px;
-        animation: cuteBounce 2s infinite, cuteWiggle 3s infinite;
+      height: 40px;
+      animation: cuteBounce 2s infinite, cuteWiggle 3s infinite;
     }
 
     .brand h1 {
-        font-size: 22px;
-        font-weight: 600;
-        color: #0f4d3f;
-        letter-spacing: 0.5px;
+      font-size: 22px;
+      font-weight: 600;
+      color: #0f4d3f;
+      letter-spacing: 0.5px;
     }
 
+    /* Buttons */
     .btn {
-        background: #0f7a52;
-        border: none;
-        padding: 10px 22px;
-        border-radius: 30px;
-        cursor: pointer;
-        color: white;
-        font-weight: 500;
-        font-size: 14px;
-        transition: 0.2s;
+      background: #0f7a52;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 30px;
+      cursor: pointer;
+      color: white;
+      font-weight: 500;
+      font-size: 14px;
+      transition: 0.2s;
     }
 
-    .btn:hover { background: #0fcf7d; }
+    .btn:hover {
+      background: #0fcf7d;
+    }
 
-    /* Layout */
+    /* Container & Cards */
     .container {
-        padding: 28px;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 28px;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 28px;
     }
 
-    /* Cards */
     .card {
-        background: linear-gradient(145deg, #ffffff, #e6f4eb);
-        padding: 24px;
-        border-radius: 20px;
-        box-shadow: 0 8px 28px rgba(0,0,0,0.08), 0 4px 14px rgba(0,0,0,0.04);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: linear-gradient(145deg, #ffffff, #e6f4eb);
+      padding: 24px;
+      border-radius: 20px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08),
+                  0 4px 14px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 16px 48px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.06);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12),
+                  0 8px 24px rgba(0, 0, 0, 0.06);
     }
 
     .card h3 {
-        font-size: 18px;
-        margin-bottom: 16px;
-        font-weight: 600;
-        color: #0f4d3f;
-        border-bottom: 1px solid #d6e6db;
-        padding-bottom: 6px;
+      font-size: 18px;
+      margin-bottom: 16px;
+      font-weight: 600;
+      color: #0f4d3f;
+      border-bottom: 1px solid #d6e6db;
+      padding-bottom: 6px;
     }
 
     /* Alerts */
     #alerts li {
-        margin-bottom: 10px;
-        font-size: 14px;
-        list-style: disc inside;
-        color: #2c3e2e;
+      margin-bottom: 10px;
+      font-size: 14px;
+      list-style: disc inside;
+      color: #2c3e2e;
     }
 
-    /* Table */
+    /* Tables */
     table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 12px;
-        font-size: 14px;
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
     }
 
     thead tr {
-        background: #d9f0e1;
+      background: #d9f0e1;
     }
 
     th {
-        text-align: left;
-        padding: 12px;
-        color: #0f4d3f;
-        font-weight: 600;
+      text-align: left;
+      padding: 12px;
+      color: #0f4d3f;
+      font-weight: 600;
     }
 
     td {
-        padding: 12px;
-        border-bottom: 1px solid #e6f0ea;
+      padding: 12px;
+      border-bottom: 1px solid #e6f0ea;
     }
 
     tr:hover td {
-        background: #f0f9f4;
+      background: #f0f9f4;
     }
 
     .dot {
-        height: 10px;
-        width: 10px;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 6px;
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
     }
 
-    /* Operations buttons */
+    /* Operations Buttons */
     .operations button {
-        width: 100%;
-        margin-bottom: 12px;
-        padding: 12px;
-        font-weight: 600;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(15,122,82,0.2);
-        transition: all 0.25s;
-        font-size: 14px;
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 12px;
+      font-weight: 600;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(15, 122, 82, 0.2);
+      transition: all 0.25s;
+      font-size: 14px;
     }
 
     .operations button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 28px rgba(15,122,82,0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(15, 122, 82, 0.3);
     }
 
-    /* CUTE LOGO ANIMATIONS */
+    /* Animations */
     @keyframes cuteBounce {
-        0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
-        40% { transform: translateY(-10px) scale(1.1); }
-        60% { transform: translateY(-6px) scale(1.05); }
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
+      40% { transform: translateY(-10px) scale(1.1); }
+      60% { transform: translateY(-6px) scale(1.05); }
     }
 
     @keyframes cuteWiggle {
-        0%, 100% { transform: rotate(0deg); }
-        15% { transform: rotate(-5deg); }
-        30% { transform: rotate(5deg); }
-        45% { transform: rotate(-4deg); }
-        60% { transform: rotate(4deg); }
-        75% { transform: rotate(-2deg); }
-        90% { transform: rotate(2deg); }
+      0%, 100% { transform: rotate(0deg); }
+      15% { transform: rotate(-5deg); }
+      30% { transform: rotate(5deg); }
+      45% { transform: rotate(-4deg); }
+      60% { transform: rotate(4deg); }
+      75% { transform: rotate(-2deg); }
+      90% { transform: rotate(2deg); }
     }
-
-</style>
+  </style>
 </head>
 <body>
 
-<header class="topbar">
+  <!-- Topbar -->
+  <header class="topbar">
     <div class="brand">
-        <!-- CLEAN LOGO ONLY -->
-        <img src="logo.png" alt="EcoSafar Logo">
-        <h1>EcoSafar Admin Panel</h1>
+      <img src="logo.png" alt="EcoSafar Logo">
+      <h1>EcoSafar Admin Panel</h1>
     </div>
-
     <button class="btn" onclick="location.href='index.html'">Home</button>
-</header>
+  </header>
 
-<main class="container">
+  <!-- Main Dashboard -->
+  <main class="container">
 
-    <!-- Alerts -->
+    <!-- Alerts Section -->
     <section class="card">
-        <h3>Alerts</h3>
-        <ul id="alerts">
-            <li>No active alerts</li>
-        </ul>
+      <h3>Alerts</h3>
+      <ul id="alerts">
+        <li>Loading alerts...</li>
+      </ul>
     </section>
 
-    <!-- Section/Blocks Table -->
+    <!-- Sections Table -->
     <section class="card">
-        <h3>Building Sections</h3>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Section</th>
-                    <th>Bin ID</th>
-                    <th>Total Waste (g)</th>
-                    <th>Fill Level</th>
-                    <th>Last Update</th>
-                </tr>
-            </thead>
-            <tbody id="sectionTable"></tbody>
-        </table>
+      <h3>Building Sections</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Section</th>
+            <th>Bin ID</th>
+            <th>Total Waste (g)</th>
+            <th>Fill Level</th>
+            <th>Last Update</th>
+          </tr>
+        </thead>
+        <tbody id="sectionTable"></tbody>
+      </table>
     </section>
 
-    <!-- Actions -->
+    <!-- Operations -->
     <section class="card operations">
-        <h3>Operations</h3>
-        <button class="btn" onclick="simulateBinFull()">Simulate Bin Full</button>
-        <button class="btn" onclick="downloadReport()">Download CSV</button>
+      <h3>Operations</h3>
+      <button class="btn" onclick="simulateBinFull()">Simulate Bin Full</button>
+      <button class="btn" onclick="downloadReport()">Download CSV</button>
     </section>
 
-</main>
+  </main>
 
-<script>
-const sections = [
-    { section:"Block A1", bin:"BIN-01", waste:2100, fill:92, last:"20 min ago" },
-    { section:"Block B2", bin:"BIN-02", waste:1800, fill:40, last:"3 hrs ago" },
-    { section:"Tower C", bin:"BIN-03", waste:3950, fill:70, last:"1 hr ago" },
-    { section:"Wing D", bin:"BIN-04", waste:2500, fill:25, last:"2 days ago" }
-];
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-function getDotColor(fill){
-    if(fill < 40) return "#5cb85c";
-    if(fill < 80) return "#f0ad4e";
-    return "#d9534f";
-}
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-function renderSections(){
-    const tbody = document.getElementById("sectionTable");
-    tbody.innerHTML = "";
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    sections.forEach(s => {
+    // Helper: Dot color based on fill %
+    function getDotColor(fill){
+      if(fill < 40) return "#5cb85c";
+      if(fill < 80) return "#f0ad4e";
+      return "#d9534f";
+    }
+
+    // Render Sections Table
+    function renderSections(data){
+      const tbody = document.getElementById("sectionTable");
+      tbody.innerHTML = "";
+      data.forEach(s => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-            <td style="font-weight:600">${s.section}</td>
-            <td>${s.bin}</td>
-            <td>${s.waste.toLocaleString()}</td>
-            <td><span class="dot" style="background:${getDotColor(s.fill)}"></span>${s.fill}%</td>
-            <td>${s.last}</td>
+          <td style="font-weight:600">${s.section}</td>
+          <td>${s.bin}</td>
+          <td>${s.waste.toLocaleString()}</td>
+          <td><span class="dot" style="background:${getDotColor(s.fill)}"></span>${s.fill}%</td>
+          <td>${s.last}</td>
         `;
         tbody.appendChild(tr);
+      });
+    }
+
+    // Render Alerts
+    function renderAlerts(alerts){
+      const ul = document.getElementById("alerts");
+      ul.innerHTML = "";
+      if(alerts.length === 0){
+        ul.innerHTML = "<li>No active alerts</li>";
+        return;
+      }
+      alerts.forEach(a => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${a.section}:</strong> ${a.message}`;
+        ul.appendChild(li);
+      });
+    }
+
+    // Firebase Listeners
+    db.ref('sections').on('value', snapshot => {
+      const sections = [];
+      snapshot.forEach(child => sections.push(child.val()));
+      renderSections(sections);
     });
-}
 
-function simulateBinFull(){
-    document.getElementById('alerts').innerHTML =
-        `<li><strong>Block A1:</strong> Bin reached 95% capacity — collection required.</li>`;
-    alert('Simulation sent');
-}
+    db.ref('alerts').on('value', snapshot => {
+      const alerts = [];
+      snapshot.forEach(child => alerts.push(child.val()));
+      renderAlerts(alerts);
+    });
 
-function downloadReport(){
-    const csv =
-        "Section,Bin,Waste,Fill,Points,Last Update\n" +
-        sections.map(s =>
-            `${s.section},${s.bin},${s.waste},${s.fill},${s.points || 0},${s.last}`
-        ).join("\n");
+    // Simulate Bin Full
+    function simulateBinFull(){
+      const alertRef = db.ref('alerts').push();
+      alertRef.set({
+        section: "Block A1",
+        message: "Bin reached 95% capacity — collection required.",
+        timestamp: Date.now()
+      });
+      alert("Simulation sent to Firebase");
+    }
 
-    const blob = new Blob([csv], {type:'text/csv'});
-    const url = URL.createObjectURL(blob);
+    // Download CSV
+    function downloadReport(){
+      db.ref('sections').once('value', snapshot => {
+        const sections = [];
+        snapshot.forEach(child => sections.push(child.val()));
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "EcoSafar_Sections_Report.csv";
-    a.click();
-}
+        const csv = "Section,Bin,Waste,Fill,Last Update\n" +
+                    sections.map(s =>
+                      `${s.section},${s.bin},${s.waste},${s.fill},${s.last}`
+                    ).join("\n");
 
-renderSections();
-</script>
-
+        const blob = new Blob([csv], {type:'text/csv'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "EcoSafar_Sections_Report.csv";
+        a.click();
+      });
+    }
+  </script>
 </body>
 </html>
