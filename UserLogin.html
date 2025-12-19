@@ -8,111 +8,132 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
-    --green-dark:#0E4520;
-    --green-accent:#0fcf7d;
+:root {
+    --green-dark: #0E4520;
+    --green-accent: #0fcf7d;
+    --bg-light: #f0f9f4;
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Inter,sans-serif;
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
 }
 
-body{
-    background:linear-gradient(135deg,#f0f9f4,#e8f6ef);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    padding:20px;
+body {
+    background: linear-gradient(135deg, #f0f9f4, #e8f6ef);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
 }
 
 /* CARD */
-.card{
-    background:rgba(255,255,255,0.97);
-    width:380px;
-    padding:42px 34px;
-    border-radius:26px;
-    text-align:center;
-    box-shadow:0 16px 45px rgba(0,0,0,0.12);
+.card {
+    background: rgba(255,255,255,0.97);
+    width: 400px;
+    padding: 42px 34px;
+    border-radius: 26px;
+    text-align: center;
+    box-shadow: 0 16px 45px rgba(0,0,0,0.12);
+    position: relative;
 }
 
 /* LOGO */
-.logo-box{
-    margin-bottom:26px;
+.logo-box {
+    margin-bottom: 26px;
 }
-.logo-box img{
-    width:140px;
-    animation:cuteFloat 4s ease-in-out infinite;
+.logo-box img {
+    width: 140px;
+    animation: cuteFloat 4s ease-in-out infinite;
 }
-
-@keyframes cuteFloat{
-    0%{transform:translateY(0) scale(1);}
-    50%{transform:translateY(-10px) scale(1.08);}
-    100%{transform:translateY(0) scale(1);}
+@keyframes cuteFloat {
+    0% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-10px) scale(1.08); }
+    100% { transform: translateY(0) scale(1); }
 }
 
 /* TITLE */
-h2{
-    color:var(--green-dark);
-    margin-bottom:24px;
-    font-size:28px;
-    font-weight:700;
+h2 {
+    color: var(--green-dark);
+    margin-bottom: 24px;
+    font-size: 28px;
+    font-weight: 700;
 }
 
 /* LABEL */
-label{
-    display:block;
-    text-align:left;
-    margin:16px 0 6px;
-    font-weight:600;
-    font-size:14px;
-    color:#2b3b2a;
+label {
+    display: block;
+    text-align: left;
+    margin: 16px 0 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #2b3b2a;
 }
 
 /* INPUT */
-input{
-    width:100%;
-    padding:14px;
-    border-radius:14px;
-    border:1px solid #d6e5d8;
-    font-size:15px;
-    transition:0.25s;
+input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid #d6e5d8;
+    font-size: 15px;
+    transition: 0.25s;
 }
-input:focus{
-    outline:none;
-    border-color:var(--green-accent);
-    box-shadow:0 0 10px rgba(15,207,125,0.3);
+input:focus {
+    outline: none;
+    border-color: var(--green-accent);
+    box-shadow: 0 0 10px rgba(15,207,125,0.3);
 }
 
 /* BUTTON */
-.btn{
-    margin-top:28px;
-    width:100%;
-    padding:15px;
-    background:var(--green-accent);
-    color:white;
-    border:none;
-    border-radius:16px;
-    font-size:16px;
-    font-weight:600;
-    cursor:pointer;
-    box-shadow:0 6px 20px rgba(15,122,82,0.25);
-    transition:0.25s;
+.btn {
+    margin-top: 28px;
+    width: 100%;
+    padding: 15px;
+    background: var(--green-accent);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(15,122,82,0.25);
+    transition: 0.25s;
 }
-.btn:hover{
-    background:#07b66b;
-    transform:translateY(-2px);
-    box-shadow:0 12px 30px rgba(15,122,82,0.35);
+.btn:hover {
+    background: #07b66b;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(15,122,82,0.35);
 }
 
 /* NOTE */
-.note{
-    font-size:13px;
-    margin-top:18px;
-    color:#555;
+.note {
+    font-size: 13px;
+    margin-top: 18px;
+    color: #555;
+}
+
+/* WELCOME MESSAGE */
+#welcomeMsg {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--green-dark);
+}
+
+/* USER INFO */
+.user-info {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #2b3b2a;
+    background: #e8f6ef;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: left;
 }
 </style>
 </head>
@@ -133,6 +154,9 @@ input:focus{
 
     <button class="btn" id="loginBtn">Open Dashboard</button>
 
+    <div id="welcomeMsg"></div>
+    <div class="user-info" id="userInfo" style="display:none;"></div>
+
     <p class="note">
         Authentication is based on RFID UID.<br>
         No password required for users.
@@ -141,21 +165,46 @@ input:focus{
 </div>
 
 <script>
+// Sample RFID Users Database
+const usersDB = {
+    "BF604DEE": {name: "Het", role: "Student", lastLogin: "Today 09:30 AM"},
+    "BF305EEE": {name: "Krima", role: "Student", lastLogin: "Yesterday 05:15 PM"},
+    "9FDF4DEE": {name: "Heer", role: "Staff", lastLogin: "Today 08:45 AM"},
+    "8FC14DEE": {name: "Krish", role: "Student", lastLogin: "2 days ago"}
+};
+
 document.getElementById("loginBtn").onclick = () => {
-    let uid = document.getElementById("uid").value.trim();
+    let uid = document.getElementById("uid").value.trim().replace(/\s+/g,"").toUpperCase();
 
     if(!uid){
         alert("Please enter RFID UID");
         return;
     }
 
-    uid = uid.replace(/\s+/g,"").toUpperCase(); // remove spaces
+    if(usersDB[uid]){
+        const user = usersDB[uid];
+        document.getElementById("welcomeMsg").innerText = `Welcome, ${user.name}!`;
+        const infoDiv = document.getElementById("userInfo");
+        infoDiv.style.display = "block";
+        infoDiv.innerHTML = `
+            <strong>Name:</strong> ${user.name}<br>
+            <strong>Role:</strong> ${user.role}<br>
+            <strong>Last Login:</strong> ${user.lastLogin}<br>
+            <strong>UID:</strong> ${uid}
+        `;
 
-    window.location.href = "UserDash.html";
+        // Simulate redirect after 2 seconds
+        setTimeout(() => {
+            window.location.href = "UserDash.html";
+        }, 2000);
+
+    } else {
+        alert("RFID UID not recognized!");
+        document.getElementById("welcomeMsg").innerText = "";
+        document.getElementById("userInfo").style.display = "none";
+    }
 };
 </script>
 
 </body>
 </html>
-
-
