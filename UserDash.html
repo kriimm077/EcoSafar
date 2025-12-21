@@ -26,12 +26,13 @@ body{
     min-height:100vh;
     display:flex;
     justify-content:center;
-    align-items:center;
+    align-items:flex-start;
+    padding:40px 0;
 }
 
 .card{
     background:white;
-    width:460px;
+    width:480px;
     max-width:95%;
     padding:40px 30px;
     border-radius:28px;
@@ -82,6 +83,7 @@ p{
     justify-content:space-between;
     gap:15px;
     flex-wrap:wrap;
+    margin-bottom:30px;
 }
 
 .stat-box{
@@ -119,6 +121,36 @@ p{
 .stat-box:hover .stat-title{
     color:white;
 }
+
+/* HISTORY SECTION */
+.history-container{
+    background:#f0f8f0;
+    border-radius:16px;
+    padding:20px;
+    max-height:200px;
+    overflow-y:auto;
+    text-align:left;
+}
+
+.history-container h4{
+    font-size:16px;
+    color:var(--green-dark);
+    margin-bottom:12px;
+    font-weight:600;
+}
+
+.history-item{
+    font-size:14px;
+    padding:8px 10px;
+    margin-bottom:6px;
+    border-left:4px solid var(--accent);
+    background:#eef9f1;
+    border-radius:6px;
+}
+
+.history-item:last-child{
+    margin-bottom:0;
+}
 </style>
 </head>
 <body>
@@ -139,6 +171,13 @@ p{
             <div class="stat-value" id="userWeight">0</div>
         </div>
     </div>
+
+    <div class="history-container">
+        <h4>History</h4>
+        <div id="historyList">
+            <!-- History items will be inserted here -->
+        </div>
+    </div>
 </div>
 
 <script>
@@ -153,10 +192,10 @@ const db = firebase.database();
 
 /* 🔐 Default users if Firebase not available */
 const defaultUsers = {
-    "BF604DEE": {name:"Het", Ecopoints:0, TotalWeight:0},
-    "BF305EEE": {name:"Krima", Ecopoints:0, TotalWeight:0},
-    "9FDF4DEE": {name:"Heer", Ecopoints:0, TotalWeight:0},
-    "8FC14DEE": {name:"Krish", Ecopoints:0, TotalWeight:0}
+    "BF604DEE": {name:"Het", Ecopoints:0, TotalWeight:0, history: ["Scanned 5kg waste","Redeemed 10 points"]},
+    "BF305EEE": {name:"Krima", Ecopoints:0, TotalWeight:0, history: ["Scanned 3kg waste","Redeemed 5 points"]},
+    "9FDF4DEE": {name:"Heer", Ecopoints:0, TotalWeight:0, history: ["Scanned 8kg waste"]},
+    "8FC14DEE": {name:"Krish", Ecopoints:0, TotalWeight:0, history: ["Scanned 2kg waste","Redeemed 2 points"]}
 };
 
 /* Get UID from URL */
@@ -173,18 +212,30 @@ function loadUser(uid){
 
     db.ref("users/" + uid).once("value")
     .then(snapshot => {
+        let user;
         if(snapshot.exists()){
-            const user = snapshot.val();
-            document.getElementById("userName").innerText = user.name;
-            document.getElementById("userPoints").innerText = user.Ecopoints;
-            document.getElementById("userWeight").innerText = user.TotalWeight;
+            user = snapshot.val();
         } else if(defaultUsers[uid]){
-            const user = defaultUsers[uid];
-            document.getElementById("userName").innerText = user.name;
-            document.getElementById("userPoints").innerText = user.Ecopoints;
-            document.getElementById("userWeight").innerText = user.TotalWeight;
+            user = defaultUsers[uid];
         } else {
-            document.getElementById("userName").innerText = "Unknown";
+            user = {name:"Unknown", Ecopoints:0, TotalWeight:0, history:[]};
+        }
+
+        document.getElementById("userName").innerText = user.name;
+        document.getElementById("userPoints").innerText = user.Ecopoints;
+        document.getElementById("userWeight").innerText = user.TotalWeight;
+
+        const historyList = document.getElementById("historyList");
+        historyList.innerHTML = "";
+        if(user.history && user.history.length>0){
+            user.history.slice().reverse().forEach(item=>{
+                const div = document.createElement("div");
+                div.className = "history-item";
+                div.innerText = item;
+                historyList.appendChild(div);
+            });
+        } else {
+            historyList.innerHTML = "<div class='history-item'>No history available</div>";
         }
     })
     .catch(err=>{
