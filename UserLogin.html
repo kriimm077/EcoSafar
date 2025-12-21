@@ -110,10 +110,15 @@ button:hover{
     margin-top:18px;
     font-weight:600;
     color:var(--green-dark);
+    line-height:1.5;
 }
 
 .error{
     color:#c40000;
+}
+
+.info{
+    color:#145A13;
 }
 </style>
 </head>
@@ -127,7 +132,7 @@ button:hover{
     <h2>User Login</h2>
     <p class="subtitle">Scan or enter your RFID UID</p>
 
-    <label>RFID UID</label>
+    <label for="uidInput">RFID UID</label>
     <input id="uidInput" placeholder="Example: BF604DEE">
 
     <button onclick="login()">Open Dashboard</button>
@@ -136,53 +141,47 @@ button:hover{
 </div>
 
 <script>
-/* 🔥 FIREBASE CONFIG */
+/* 🔥 FIREBASE CONFIG (optional for future expansion) */
 const firebaseConfig = {
   apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
   databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
   projectId: "ecosafar-3da96"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* 🔐 UID-BASED LOGIN */
+/* 🔐 VALID UIDs */
+const validUIDs = {
+    "BF604DEE": {name: "Het", Ecopoints: 0, TotalWeight: 0},
+    "BF305EEE": {name: "Krima", Ecopoints: 0, TotalWeight: 0},
+    "9FDF4DEE": {name: "Heer", Ecopoints: 0, TotalWeight: 0},
+    "8FC14DEE": {name: "Krish", Ecopoints: 0, TotalWeight: 0}
+};
+
 function login(){
-
     const msg = document.getElementById("msg");
-
-    let uid = document.getElementById("uidInput")
-        .value.trim()
-        .replace(/\s+/g,"")
-        .toUpperCase();
+    let uid = document.getElementById("uidInput").value.trim().replace(/\s+/g,"").toUpperCase();
 
     if(!uid){
         msg.innerHTML = "<span class='error'>Please enter RFID UID</span>";
         return;
     }
 
-    db.ref("users/" + uid).once("value")
-    .then(snapshot => {
-
-        if(!snapshot.exists()){
-            msg.innerHTML = "<span class='error'>RFID not recognized</span>";
-            return;
-        }
-
-        msg.innerHTML = "Access granted ✔ Redirecting...";
+    if(validUIDs[uid]){
+        const user = validUIDs[uid];
+        msg.innerHTML = `<span class='info'>Welcome, ${user.name}!<br>
+                         Ecopoints: ${user.Ecopoints} | TotalWeight: ${user.TotalWeight} kg<br>
+                         Redirecting...</span>`;
 
         setTimeout(()=>{
-            window.location.href = "UserDash.html";
-        },1200);
+            window.location.href = "UserDash.html?uid=" + uid;
+        },1500);
 
-    })
-    .catch(err=>{
-        msg.innerHTML = "<span class='error'>Connection error</span>";
-        console.error(err);
-    });
+    } else {
+        msg.innerHTML = "<span class='error'>RFID not recognized</span>";
+    }
 }
 </script>
 
 </body>
 </html>
-
