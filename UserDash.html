@@ -2,270 +2,93 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>EcoSafar • User Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoSafar • User Login</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <style>
 :root{
-    --green-dark:#0e3b1f;
-    --green-main:#1b7a3e;
-    --green-soft:#e9f8f0;
+    --green-dark:#0b3d0f;
+    --green-main:#145A13;
     --accent:#2ecc71;
-    --bg:#f3fbf7;
+    --bg:#eef9f1;
 }
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    font-family:Inter,sans-serif;
-}
-
-body{
-    background:linear-gradient(145deg,#eefaf2,#e2f5ea);
-    color:#1b3a2d;
-    min-height:100vh;
-}
-
-/* TOP BAR */
-.topbar{
-    background:white;
-    padding:18px 36px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 8px 24px rgba(0,0,0,0.08);
-    position:sticky;
-    top:0;
-    z-index:10;
-}
-
-.topbar h2{
-    font-weight:700;
-    color:var(--green-dark);
-}
-
-.btn{
-    padding:10px 24px;
-    background:var(--green-main);
-    color:white;
-    border:none;
-    border-radius:14px;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.3s;
-}
-.btn:hover{
-    background:#155f32;
-    transform:translateY(-2px);
-}
-
-/* LAYOUT */
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:42px 30px;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
-    gap:34px;
-}
-
-/* CARDS */
-.card{
-    background:white;
-    border-radius:26px;
-    padding:36px;
-    box-shadow:
-        0 16px 40px rgba(0,0,0,0.1),
-        0 6px 14px rgba(0,0,0,0.05);
-    transition:0.3s;
-}
-.card:hover{
-    transform:translateY(-6px);
-}
-
-.card h3{
-    font-size:1.7rem;
-    margin-bottom:22px;
-    color:var(--green-main);
-}
-
-/* STATS */
-.big{
-    font-size:56px;
-    font-weight:700;
-    color:var(--accent);
-    margin-bottom:14px;
-}
-
-.stat-line{
-    margin-top:8px;
-    font-size:15px;
-}
-
-.level{
-    display:inline-block;
-    margin-top:14px;
-    padding:8px 20px;
-    background:var(--green-main);
-    color:white;
-    border-radius:20px;
-    font-weight:600;
-}
-
-/* TABLE */
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:18px;
-    font-size:14px;
-    overflow:hidden;
-    border-radius:16px;
-}
-
-thead{
-    background:var(--green-main);
-    color:white;
-}
-
-th,td{
-    padding:14px;
-    text-align:left;
-}
-
-tbody tr{
-    transition:0.2s;
-}
-tbody tr:hover{
-    background:var(--green-soft);
-}
-
-.empty{
-    text-align:center;
-    font-size:14px;
-    padding:20px;
-    color:#666;
-}
-
-/* NOTE */
-.note{
-    margin-top:18px;
-    font-size:13px;
-    background:var(--green-soft);
-    border-left:5px solid var(--green-main);
-    padding:14px 16px;
-    border-radius:14px;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;}
+body{background:linear-gradient(135deg,#e8f6ef,#dff3ea);min-height:100vh;display:flex;justify-content:center;align-items:center;}
+.card{background:white;width:420px;padding:44px;border-radius:28px;box-shadow:0 20px 50px rgba(0,0,0,0.12);text-align:center;}
+.logo{width:120px;margin-bottom:18px;animation:float 4s ease-in-out infinite;}
+@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+h2{color:var(--green-main);margin-bottom:8px;font-weight:700;}
+.subtitle{font-size:14px;color:#4f5e57;margin-bottom:28px;}
+label{display:block;text-align:left;font-weight:600;margin-bottom:6px;}
+input{width:100%;padding:14px;border-radius:14px;border:1px solid #cfded5;margin-bottom:22px;font-size:15px;}
+input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 6px rgba(46,204,113,0.4);}
+button{width:100%;padding:15px;border:none;border-radius:16px;background:var(--green-main);color:white;font-size:16px;font-weight:600;cursor:pointer;transition:0.25s;}
+button:hover{background:var(--accent);transform:translateY(-2px);}
+.msg{margin-top:18px;font-weight:600;color:var(--green-dark);}
+.error{color:#c40000;}
+.info{color:#145A13;}
 </style>
 </head>
 
 <body>
 
-<header class="topbar">
-    <h2 id="username">User</h2>
-    <button class="btn" onclick="location.href='index.html'">Logout</button>
-</header>
+<div class="card">
+    <img src="logo.png" class="logo" alt="EcoSafar Logo">
+    <h2>User Login</h2>
+    <p class="subtitle">Scan or enter your RFID UID</p>
 
-<main class="container">
+    <label for="uidInput">RFID UID</label>
+    <input id="uidInput" placeholder="Example: BF604DEE">
 
-    <!-- ECO STATS -->
-    <section class="card">
-        <h3>Your Eco Impact</h3>
+    <button onclick="login()">Open Dashboard</button>
+    <div id="msg" class="msg"></div>
+</div>
 
-        <div id="points" class="big">0</div>
-
-        <div class="stat-line">
-            Total Waste Deposited:
-            <strong id="weight">0 g</strong>
-        </div>
-
-        <div class="stat-line">
-            Level:
-            <span id="level" class="level">Bronze</span>
-        </div>
-
-        <div class="note">
-            EcoPoints are awarded automatically when you dispose waste using the smart EcoSafar bin.
-        </div>
-    </section>
-
-    <!-- HISTORY -->
-    <section class="card">
-        <h3>Disposal History</h3>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Weight (g)</th>
-                    <th>EcoPoints</th>
-                </tr>
-            </thead>
-            <tbody id="history">
-                <tr><td colspan="3" class="empty">No disposal records yet</td></tr>
-            </tbody>
-        </table>
-    </section>
-
-</main>
-
-<!-- FIREBASE -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
-
+<script>
+/* 🔥 FIREBASE CONFIG */
 const firebaseConfig = {
-  apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
-  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
-  projectId: "ecosafar-b8e9b"
+  apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
+  databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
+  projectId: "ecosafar-3da96"
 };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+/* 🔐 UID-BASED LOGIN */
+function login(){
+    const msg = document.getElementById("msg");
+    let uid = document.getElementById("uidInput").value.trim().replace(/\s+/g,"").toUpperCase();
 
-const uid = new URLSearchParams(window.location.search).get("uid");
-if(!uid){
-    alert("UID missing");
-    throw new Error("UID missing");
-}
-
-const userRef = ref(db,"users/"+uid);
-
-onValue(userRef,(snapshot)=>{
-    if(!snapshot.exists()) return;
-
-    const d = snapshot.val();
-
-    document.getElementById("username").innerText = d.name;
-    document.getElementById("points").innerText = d.Ecopoints ?? 0;
-    document.getElementById("weight").innerText = (d.TotalWeight ?? 0) + " g";
-    document.getElementById("level").innerText = getLevel(d.Ecopoints ?? 0);
-
-    const tbody = document.getElementById("history");
-    tbody.innerHTML = "";
-
-    if(d.history){
-        Object.values(d.history).reverse().forEach(h=>{
-            tbody.innerHTML += `
-            <tr>
-                <td>${h.date}</td>
-                <td>${h.weight}</td>
-                <td>${h.points}</td>
-            </tr>`;
-        });
-    } else {
-        tbody.innerHTML =
-            `<tr><td colspan="3" class="empty">No disposal records yet</td></tr>`;
+    if(!uid){
+        msg.innerHTML = "<span class='error'>Please enter RFID UID</span>";
+        return;
     }
-});
 
-function getLevel(p){
-    if(p >= 1000) return "Platinum";
-    if(p >= 500) return "Gold";
-    if(p >= 200) return "Silver";
-    return "Bronze";
+    db.ref("users/" + uid).once("value")
+    .then(snapshot => {
+        if(!snapshot.exists()){
+            msg.innerHTML = "<span class='error'>RFID not recognized</span>";
+            return;
+        }
+
+        const user = snapshot.val();
+        msg.innerHTML = `<span class='info'>Welcome, ${user.name}!<br>
+                         Ecopoints: ${user.Ecopoints} | TotalWeight: ${user.TotalWeight} kg<br>
+                         Redirecting...</span>`;
+
+        setTimeout(()=>{
+            window.location.href = "UserDash.html?uid=" + uid;
+        },1500);
+    })
+    .catch(err=>{
+        msg.innerHTML = "<span class='error'>Connection error. Try again.</span>";
+        console.error(err);
+    });
 }
 </script>
 
