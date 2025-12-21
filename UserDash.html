@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EcoSafar • User Login</title>
+<title>EcoSafar • User Dashboard</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -15,38 +15,130 @@
     --green-dark:#0b3d0f;
     --green-main:#145A13;
     --accent:#2ecc71;
-    --bg:#eef9f1;
+    --bg:#f4f9f3;
+    --card-shadow: rgba(0,0,0,0.15);
+    --font-color:#2d3a2d;
 }
+
 *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;}
-body{background:linear-gradient(135deg,#e8f6ef,#dff3ea);min-height:100vh;display:flex;justify-content:center;align-items:center;}
-.card{background:white;width:420px;padding:44px;border-radius:28px;box-shadow:0 20px 50px rgba(0,0,0,0.12);text-align:center;}
-.logo{width:120px;margin-bottom:18px;animation:float 4s ease-in-out infinite;}
-@keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
-h2{color:var(--green-main);margin-bottom:8px;font-weight:700;}
-.subtitle{font-size:14px;color:#4f5e57;margin-bottom:28px;}
-label{display:block;text-align:left;font-weight:600;margin-bottom:6px;}
-input{width:100%;padding:14px;border-radius:14px;border:1px solid #cfded5;margin-bottom:22px;font-size:15px;}
-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 6px rgba(46,204,113,0.4);}
-button{width:100%;padding:15px;border:none;border-radius:16px;background:var(--green-main);color:white;font-size:16px;font-weight:600;cursor:pointer;transition:0.25s;}
-button:hover{background:var(--accent);transform:translateY(-2px);}
-.msg{margin-top:18px;font-weight:600;color:var(--green-dark);}
-.error{color:#c40000;}
-.info{color:#145A13;}
+body{
+    background:linear-gradient(135deg,#dff3ea,#c9ebd9);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.card{
+    background:white;
+    width:460px;
+    max-width:95%;
+    padding:40px 30px;
+    border-radius:28px;
+    box-shadow:0 15px 40px var(--card-shadow);
+    text-align:center;
+    transition:transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 25px 60px var(--card-shadow);
+}
+
+.logo{
+    width:100px;
+    margin-bottom:20px;
+    animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%{transform:translateY(0)}
+    50%{transform:translateY(-8px)}
+    100%{transform:translateY(0)}
+}
+
+h2{
+    color:var(--green-main);
+    margin-bottom:8px;
+    font-weight:700;
+    font-size:24px;
+}
+
+h3{
+    color:var(--font-color);
+    margin-bottom:16px;
+    font-weight:600;
+    font-size:18px;
+}
+
+p{
+    font-size:15px;
+    color:#4f5e57;
+    margin-bottom:24px;
+}
+
+.stats{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.stat-box{
+    flex:1;
+    background:#eef9f1;
+    padding:16px 20px;
+    border-radius:14px;
+    min-width:120px;
+    transition:background 0.3s ease, transform 0.3s ease;
+    cursor:default;
+}
+
+.stat-box:hover{
+    background:var(--accent);
+    color:white;
+    transform:translateY(-3px);
+}
+
+.stat-title{
+    font-size:13px;
+    color:#4f5e57;
+    margin-bottom:6px;
+}
+
+.stat-value{
+    font-size:20px;
+    font-weight:700;
+    color:var(--green-main);
+}
+
+.stat-box:hover .stat-value{
+    color:white;
+}
+
+.stat-box:hover .stat-title{
+    color:white;
+}
 </style>
 </head>
-
 <body>
 
 <div class="card">
     <img src="logo.png" class="logo" alt="EcoSafar Logo">
-    <h2>User Login</h2>
-    <p class="subtitle">Scan or enter your RFID UID</p>
+    <h2>Welcome, <span id="userName">User</span>!</h2>
+    <h3>EcoSafar Dashboard</h3>
+    <p>Your RFID UID: <span id="userUID">----</span></p>
 
-    <label for="uidInput">RFID UID</label>
-    <input id="uidInput" placeholder="Example: BF604DEE">
-
-    <button onclick="login()">Open Dashboard</button>
-    <div id="msg" class="msg"></div>
+    <div class="stats">
+        <div class="stat-box">
+            <div class="stat-title">Ecopoints</div>
+            <div class="stat-value" id="userPoints">0</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-title">Total Weight (kg)</div>
+            <div class="stat-value" id="userWeight">0</div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -59,37 +151,56 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* 🔐 UID-BASED LOGIN */
-function login(){
-    const msg = document.getElementById("msg");
-    let uid = document.getElementById("uidInput").value.trim().replace(/\s+/g,"").toUpperCase();
+/* 🔐 Default users if Firebase not available */
+const defaultUsers = {
+    "BF604DEE": {name:"Het", Ecopoints:0, TotalWeight:0},
+    "BF305EEE": {name:"Krima", Ecopoints:0, TotalWeight:0},
+    "9FDF4DEE": {name:"Heer", Ecopoints:0, TotalWeight:0},
+    "8FC14DEE": {name:"Krish", Ecopoints:0, TotalWeight:0}
+};
 
+/* Get UID from URL */
+const urlParams = new URLSearchParams(window.location.search);
+const uid = (urlParams.get('uid') || '').trim().toUpperCase();
+document.getElementById("userUID").innerText = uid || "----";
+
+/* Display user info */
+function loadUser(uid){
     if(!uid){
-        msg.innerHTML = "<span class='error'>Please enter RFID UID</span>";
+        document.getElementById("userName").innerText = "Guest";
         return;
     }
 
     db.ref("users/" + uid).once("value")
     .then(snapshot => {
-        if(!snapshot.exists()){
-            msg.innerHTML = "<span class='error'>RFID not recognized</span>";
-            return;
+        if(snapshot.exists()){
+            const user = snapshot.val();
+            document.getElementById("userName").innerText = user.name;
+            document.getElementById("userPoints").innerText = user.Ecopoints;
+            document.getElementById("userWeight").innerText = user.TotalWeight;
+        } else if(defaultUsers[uid]){
+            const user = defaultUsers[uid];
+            document.getElementById("userName").innerText = user.name;
+            document.getElementById("userPoints").innerText = user.Ecopoints;
+            document.getElementById("userWeight").innerText = user.TotalWeight;
+        } else {
+            document.getElementById("userName").innerText = "Unknown";
         }
-
-        const user = snapshot.val();
-        msg.innerHTML = `<span class='info'>Welcome, ${user.name}!<br>
-                         Ecopoints: ${user.Ecopoints} | TotalWeight: ${user.TotalWeight} kg<br>
-                         Redirecting...</span>`;
-
-        setTimeout(()=>{
-            window.location.href = "UserDash.html?uid=" + uid;
-        },1500);
     })
     .catch(err=>{
-        msg.innerHTML = "<span class='error'>Connection error. Try again.</span>";
         console.error(err);
+        if(defaultUsers[uid]){
+            const user = defaultUsers[uid];
+            document.getElementById("userName").innerText = user.name;
+            document.getElementById("userPoints").innerText = user.Ecopoints;
+            document.getElementById("userWeight").innerText = user.TotalWeight;
+        } else {
+            document.getElementById("userName").innerText = "Unknown";
+        }
     });
 }
+
+loadUser(uid);
 </script>
 
 </body>
