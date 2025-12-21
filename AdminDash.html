@@ -202,8 +202,10 @@ tbody tr:hover{
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
+// 🔑 Your Firebase config
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
   databaseURL: "https://YOUR_PROJECT.firebaseio.com",
   projectId: "YOUR_PROJECT"
 };
@@ -211,36 +213,34 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* UTIL */
+/* UTILITY */
 function dotColor(fill){
   if(fill < 40) return "#5cb85c";
   if(fill < 80) return "#f0ad4e";
   return "#d9534f";
 }
 
-/* SECTIONS */
+/* SECTIONS TABLE */
 db.ref("sections").on("value", snap=>{
   const tbody = document.getElementById("sectionTable");
   tbody.innerHTML = "";
 
   snap.forEach(c=>{
     const s = c.val();
+    const lastUpdate = typeof s.last === "number" ? new Date(s.last).toLocaleString() : s.last;
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><strong>${s.section}</strong></td>
       <td>${s.bin}</td>
       <td>${s.waste}</td>
-      <td>
-        <span class="dot" style="background:${dotColor(s.fill)}"></span>
-        ${s.fill}%
-      </td>
-      <td>${s.last}</td>
+      <td><span class="dot" style="background:${dotColor(s.fill)}"></span>${s.fill}%</td>
+      <td>${lastUpdate}</td>
     `;
     tbody.appendChild(tr);
   });
 });
 
-/* ALERTS */
+/* ALERTS LIST */
 db.ref("alerts").on("value", snap=>{
   const ul = document.getElementById("alerts");
   ul.innerHTML = "";
@@ -263,28 +263,43 @@ function simulateBinFull(){
     message:"Bin reached 95% capacity — collection required",
     timestamp:Date.now()
   });
-  alert("Simulation sent");
+  alert("Simulation sent!");
 }
 
-/* CSV DOWNLOAD — ECOPOINTS COMPLETELY REMOVED */
-function downloadCSV(){
-  db.ref("sections").once("value", snap=>{
+/* CSV DOWNLOAD */
+async function downloadCSV(){
+  try{
+    const snapshot = await db.ref("sections").once("value");
+    if(!snapshot.exists()){
+      alert("No section data to download!");
+      return;
+    }
+
     let csv = "Section,Bin ID,Total Waste (g),Fill Level (%),Last Update\n";
 
-    snap.forEach(c=>{
+    snapshot.forEach(c=>{
       const s = c.val();
-      csv += `${s.section},${s.bin},${s.waste},${s.fill},${s.last}\n`;
+      const lastUpdate = typeof s.last === "number" ? new Date(s.last).toLocaleString() : s.last;
+      csv += `${s.section},${s.bin},${s.waste},${s.fill},${lastUpdate}\n`;
     });
 
-    const blob = new Blob([csv],{type:"text/csv"});
+    const blob = new Blob([csv], {type:"text/csv"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = "EcoSafar_Admin_Report.csv";
+    document.body.appendChild(a);
     a.click();
-  });
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+  } catch(err){
+    console.error(err);
+    alert("Failed to generate CSV!");
+  }
 }
 </script>
 
 </body>
 </html>
+
