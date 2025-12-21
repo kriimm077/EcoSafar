@@ -9,11 +9,11 @@
 
 <style>
 :root{
-    --green-dark:#0b3d0f;
-    --green-main:#145A13;
-    --green-light:#dafae9;
+    --green-dark:#0e3b1f;
+    --green-main:#1b7a3e;
+    --green-soft:#e9f8f0;
     --accent:#2ecc71;
-    --bg:#f4fbf7;
+    --bg:#f3fbf7;
 }
 
 *{
@@ -24,19 +24,19 @@
 }
 
 body{
-    background:linear-gradient(145deg,#eef9f1,#e3f5ea);
+    background:linear-gradient(145deg,#eefaf2,#e2f5ea);
     color:#1b3a2d;
     min-height:100vh;
 }
 
 /* TOP BAR */
 .topbar{
-    background:#d6f5d6;
-    padding:16px 32px;
+    background:white;
+    padding:18px 36px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    box-shadow:0 6px 20px rgba(0,0,0,0.12);
+    box-shadow:0 8px 24px rgba(0,0,0,0.08);
     position:sticky;
     top:0;
     z-index:10;
@@ -48,17 +48,17 @@ body{
 }
 
 .btn{
-    padding:10px 22px;
-    background:white;
+    padding:10px 24px;
+    background:var(--green-main);
+    color:white;
     border:none;
-    border-radius:12px;
+    border-radius:14px;
     font-weight:600;
     cursor:pointer;
-    box-shadow:0 4px 12px rgba(0,0,0,0.15);
     transition:0.3s;
 }
 .btn:hover{
-    background:var(--green-light);
+    background:#155f32;
     transform:translateY(-2px);
 }
 
@@ -66,66 +66,63 @@ body{
 .container{
     max-width:1200px;
     margin:auto;
-    padding:36px 28px;
+    padding:42px 30px;
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    gap:32px;
+    grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+    gap:34px;
 }
 
 /* CARDS */
 .card{
-    background:rgba(255,255,255,0.96);
-    border-radius:22px;
-    padding:32px;
+    background:white;
+    border-radius:26px;
+    padding:36px;
     box-shadow:
-        0 12px 30px rgba(0,0,0,0.1),
-        0 4px 10px rgba(0,0,0,0.05);
+        0 16px 40px rgba(0,0,0,0.1),
+        0 6px 14px rgba(0,0,0,0.05);
     transition:0.3s;
 }
 .card:hover{
     transform:translateY(-6px);
-    box-shadow:
-        0 20px 50px rgba(0,0,0,0.15);
 }
 
 .card h3{
-    font-size:1.6rem;
-    margin-bottom:20px;
+    font-size:1.7rem;
+    margin-bottom:22px;
     color:var(--green-main);
 }
 
 /* STATS */
 .big{
-    font-size:52px;
+    font-size:56px;
     font-weight:700;
     color:var(--accent);
-    margin-bottom:12px;
+    margin-bottom:14px;
 }
 
 .stat-line{
-    margin-top:6px;
+    margin-top:8px;
     font-size:15px;
 }
 
 .level{
     display:inline-block;
-    margin-top:10px;
-    padding:6px 16px;
+    margin-top:14px;
+    padding:8px 20px;
     background:var(--green-main);
     color:white;
-    border-radius:16px;
+    border-radius:20px;
     font-weight:600;
-    font-size:0.95rem;
 }
 
 /* TABLE */
 table{
     width:100%;
     border-collapse:collapse;
-    margin-top:16px;
+    margin-top:18px;
     font-size:14px;
     overflow:hidden;
-    border-radius:14px;
+    border-radius:16px;
 }
 
 thead{
@@ -134,7 +131,7 @@ thead{
 }
 
 th,td{
-    padding:12px 12px;
+    padding:14px;
     text-align:left;
 }
 
@@ -142,17 +139,24 @@ tbody tr{
     transition:0.2s;
 }
 tbody tr:hover{
-    background:var(--green-light);
+    background:var(--green-soft);
 }
 
-/* FOOT NOTE */
+.empty{
+    text-align:center;
+    font-size:14px;
+    padding:20px;
+    color:#666;
+}
+
+/* NOTE */
 .note{
-    margin-top:16px;
+    margin-top:18px;
     font-size:13px;
-    background:#e5fff3;
+    background:var(--green-soft);
     border-left:5px solid var(--green-main);
-    padding:12px 14px;
-    border-radius:12px;
+    padding:14px 16px;
+    border-radius:14px;
 }
 </style>
 </head>
@@ -161,19 +165,20 @@ tbody tr:hover{
 
 <header class="topbar">
     <h2 id="username">User</h2>
-    <button class="btn" onclick="location.href='index.html'">Home</button>
+    <button class="btn" onclick="location.href='index.html'">Logout</button>
 </header>
 
 <main class="container">
 
-    <!-- STATS CARD -->
+    <!-- ECO STATS -->
     <section class="card">
         <h3>Your Eco Impact</h3>
 
         <div id="points" class="big">0</div>
 
         <div class="stat-line">
-            Total Waste Added: <strong id="weight">0 g</strong>
+            Total Waste Deposited:
+            <strong id="weight">0 g</strong>
         </div>
 
         <div class="stat-line">
@@ -182,11 +187,11 @@ tbody tr:hover{
         </div>
 
         <div class="note">
-            Points are awarded automatically when you dispose waste using the smart bin.
+            EcoPoints are awarded automatically when you dispose waste using the smart EcoSafar bin.
         </div>
     </section>
 
-    <!-- HISTORY CARD -->
+    <!-- HISTORY -->
     <section class="card">
         <h3>Disposal History</h3>
 
@@ -195,10 +200,12 @@ tbody tr:hover{
                 <tr>
                     <th>Date</th>
                     <th>Weight (g)</th>
-                    <th>Eco Points</th>
+                    <th>EcoPoints</th>
                 </tr>
             </thead>
-            <tbody id="history"></tbody>
+            <tbody id="history">
+                <tr><td colspan="3" class="empty">No disposal records yet</td></tr>
+            </tbody>
         </table>
     </section>
 
@@ -211,22 +218,16 @@ import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12
 
 const firebaseConfig = {
   apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
-  authDomain: "ecosafar-b8e9b.firebaseapp.com",
   databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
-  projectId: "ecosafar-b8e9b",
-  storageBucket: "ecosafar-b8e9b.firebasestorage.app",
-  messagingSenderId: "277553134320",
-  appId: "1:277553134320:web:efd3d87dab7d925825a035"
+  projectId: "ecosafar-b8e9b"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const params = new URLSearchParams(window.location.search);
-const uid = params.get("uid");
-
+const uid = new URLSearchParams(window.location.search).get("uid");
 if(!uid){
-    alert("No UID provided");
+    alert("UID missing");
     throw new Error("UID missing");
 }
 
@@ -238,9 +239,9 @@ onValue(userRef,(snapshot)=>{
     const d = snapshot.val();
 
     document.getElementById("username").innerText = d.name;
-    document.getElementById("points").innerText = d.points || 0;
-    document.getElementById("weight").innerText = (d.totalWeight || 0) + " g";
-    document.getElementById("level").innerText = getLevel(d.points || 0);
+    document.getElementById("points").innerText = d.Ecopoints ?? 0;
+    document.getElementById("weight").innerText = (d.TotalWeight ?? 0) + " g";
+    document.getElementById("level").innerText = getLevel(d.Ecopoints ?? 0);
 
     const tbody = document.getElementById("history");
     tbody.innerHTML = "";
@@ -248,19 +249,22 @@ onValue(userRef,(snapshot)=>{
     if(d.history){
         Object.values(d.history).reverse().forEach(h=>{
             tbody.innerHTML += `
-                <tr>
-                    <td>${h.date}</td>
-                    <td>${h.weight}</td>
-                    <td>${h.points}</td>
-                </tr>`;
+            <tr>
+                <td>${h.date}</td>
+                <td>${h.weight}</td>
+                <td>${h.points}</td>
+            </tr>`;
         });
+    } else {
+        tbody.innerHTML =
+            `<tr><td colspan="3" class="empty">No disposal records yet</td></tr>`;
     }
 });
 
 function getLevel(p){
-    if(p>=1000) return "Platinum";
-    if(p>=500) return "Gold";
-    if(p>=200) return "Silver";
+    if(p >= 1000) return "Platinum";
+    if(p >= 500) return "Gold";
+    if(p >= 200) return "Silver";
     return "Bronze";
 }
 </script>
