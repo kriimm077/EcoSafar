@@ -1,3 +1,8 @@
+<script>
+if (sessionStorage.getItem("ecosafar_admin") !== "true") {
+    window.location.href = "AdminLogin.html";
+}
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,11 +16,9 @@
 :root {
     --green-900: #0b3d0f;
     --green-700: #145A13;
-    --green-500: #2e7d32;
     --accent: #2ecc71;
 }
 
-/* RESET */
 * {
     margin: 0;
     padding: 0;
@@ -29,10 +32,8 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    padding: 20px;
 }
 
-/* CARD */
 .card {
     background: rgba(255, 255, 255, 0.96);
     padding: 48px 42px;
@@ -40,44 +41,31 @@ body {
     width: 420px;
     box-shadow: 0 18px 40px rgba(0, 0, 0, 0.09);
     text-align: center;
-    backdrop-filter: blur(10px);
 }
 
-/* LOGO BOX */
 .logo-box {
     display: inline-block;
     padding: 18px;
     border-radius: 22px;
     background: rgba(255, 255, 255, 0.32);
-    backdrop-filter: blur(10px);
-    margin: 0 auto 24px auto;
+    margin-bottom: 24px;
 }
 
 .logo-box img {
-    width: 125px;
-    height: auto;
-    mix-blend-mode: multiply;
-    opacity: 0.93;
-    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
-    /* Cute floating animation */
-    animation: cuteFloat 4s ease-in-out infinite;
+    width: 120px;
+    animation: float 4s ease-in-out infinite;
 }
 
-/* CUTE FLOATING ANIMATION */
-@keyframes cuteFloat {
-    0% { transform: translateY(0) rotate(0deg) scale(1); }
-    25% { transform: translateY(-10px) rotate(-3deg) scale(1.05); }
-    50% { transform: translateY(-5px) rotate(3deg) scale(1.08); }
-    75% { transform: translateY(-12px) rotate(-2deg) scale(1.03); }
-    100% { transform: translateY(0) rotate(0deg) scale(1); }
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
 }
 
-/* TITLE */
 .title {
     font-size: 30px;
     font-weight: 800;
     color: var(--green-700);
-    margin-bottom: 6px;
 }
 
 .subtitle {
@@ -86,35 +74,23 @@ body {
     margin-bottom: 28px;
 }
 
-/* INPUT LABEL */
 label {
     display: block;
-    font-weight: 500;
-    font-size: 14px;
     text-align: left;
     margin-top: 18px;
-    color: #2a3a30;
+    font-size: 14px;
+    font-weight: 500;
 }
 
-/* INPUT BOXES */
 input {
     width: 100%;
-    padding: 13px 14px;
+    padding: 13px;
     margin-top: 6px;
     border-radius: 12px;
     border: 1px solid #c8d8cc;
     font-size: 15px;
-    background: #ffffff;
-    transition: 0.25s;
 }
 
-input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 6px rgba(46, 204, 113, 0.4);
-    outline: none;
-}
-
-/* PRIMARY BUTTON */
 .btn {
     margin-top: 30px;
     width: 100%;
@@ -126,36 +102,24 @@ input:focus {
     font-weight: 600;
     border-radius: 14px;
     cursor: pointer;
-    box-shadow: 0 8px 18px rgba(15, 122, 82, 0.25);
-    transition: all 0.25s ease;
 }
 
 .btn:hover {
     background: var(--accent);
-    transform: translateY(-2px);
-    box-shadow: 0 14px 28px rgba(15, 122, 82, 0.28);
 }
 
-/* SECONDARY BUTTON */
 .btn-secondary {
     margin-top: 14px;
     width: 100%;
     padding: 13px;
-    font-size: 15px;
-    font-weight: 600;
     background: transparent;
     border: 2px solid var(--green-700);
-    border-radius: 14px;
     color: var(--green-700);
+    font-weight: 600;
+    border-radius: 14px;
     cursor: pointer;
-    transition: 0.25s ease;
 }
 
-.btn-secondary:hover {
-    background: rgba(20, 90, 19, 0.12);
-}
-
-/* ERROR BOX */
 .error-box {
     display: none;
     background: #ffe7e7;
@@ -164,14 +128,6 @@ input:focus {
     border-radius: 12px;
     margin-top: 18px;
     font-size: 14px;
-    border-left: 4px solid #ff6f6f;
-}
-
-/* DEMO */
-.demo {
-    margin-top: 18px;
-    font-size: 13px;
-    color: #555;
 }
 </style>
 </head>
@@ -196,18 +152,18 @@ input:focus {
     <button class="btn" id="adminLogin">Sign In</button>
     <button class="btn-secondary" onclick="location.href='index.html'">Home</button>
 
-    <p class="demo">Demo: <b>admin / admin</b></p>
-
     <div class="error-box" id="errorBox">Incorrect username or password.</div>
+
 </div>
 
 <script>
-document.getElementById('adminLogin').onclick = () => {
-    const u = document.getElementById('adminUser').value.trim();
-    const p = document.getElementById('adminPass').value.trim();
-    const errorBox = document.getElementById('errorBox');
+document.getElementById("adminLogin").onclick = () => {
+    const u = document.getElementById("adminUser").value.trim();
+    const p = document.getElementById("adminPass").value.trim();
+    const errorBox = document.getElementById("errorBox");
 
     if (u === "admin" && p === "admin") {
+        sessionStorage.setItem("ecosafar_admin", "true");
         window.location.href = "AdminDash.html";
     } else {
         errorBox.style.display = "block";
