@@ -5,12 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • User Registration</title>
 
+<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-/* Reset and basic styling */
+/* Reset & Basics */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -18,7 +21,7 @@
     font-family: 'Inter', sans-serif;
 }
 
-body{
+body {
     background: linear-gradient(135deg, #e8f6ef, #dff3ea);
     min-height: 100vh;
     display: flex;
@@ -27,7 +30,8 @@ body{
     padding: 20px;
 }
 
-.card{
+/* Card */
+.card {
     background: #fff;
     width: 420px;
     padding: 50px 35px;
@@ -37,12 +41,12 @@ body{
     transition: all 0.3s ease;
 }
 
-.card:hover{
+.card:hover {
     transform: translateY(-5px);
     box-shadow: 0 25px 60px rgba(0,0,0,0.15);
 }
 
-/* Animated logo */
+/* Logo Animation */
 .logo {
     width: 120px;
     height: 120px;
@@ -63,19 +67,21 @@ body{
     50% { transform: translateY(-8px); }
 }
 
-h2{
+/* Headings */
+h2 {
     color: #145A13;
     font-size: 28px;
     margin-bottom: 8px;
 }
 
-.subtitle{
+.subtitle {
     font-size: 14px;
     color: #4f5e57;
     margin-bottom: 30px;
 }
 
-label{
+/* Form Fields */
+label {
     font-weight: 600;
     margin-bottom: 6px;
     display: block;
@@ -83,7 +89,7 @@ label{
     text-align: left;
 }
 
-input, select{
+input, select {
     width: 100%;
     padding: 14px 16px;
     border-radius: 12px;
@@ -93,13 +99,14 @@ input, select{
     transition: border 0.3s, box-shadow 0.3s;
 }
 
-input:focus, select:focus{
+input:focus, select:focus {
     outline: none;
     border-color: #145A13;
     box-shadow: 0 0 6px rgba(20,90,19,0.2);
 }
 
-button{
+/* Button */
+button {
     width: 100%;
     padding: 15px;
     border: none;
@@ -113,19 +120,20 @@ button{
     margin-bottom: 12px;
 }
 
-button:hover{
+button:hover {
     background: #0f450f;
     box-shadow: 0 5px 15px rgba(20,90,19,0.4);
 }
 
-.msg{
+/* Messages */
+.msg {
     margin-top: 18px;
     font-weight: 600;
     font-size: 14px;
 }
 
-.error{ color: #c40000; }
-.success{ color: #145A13; }
+.error { color: #c40000; }
+.success { color: #145A13; }
 </style>
 </head>
 
@@ -135,6 +143,10 @@ button:hover{
     <img src="logo.png" alt="EcoSafar Logo" class="logo">
     <h2>User Registration</h2>
     <p class="subtitle">Create your EcoSafar account</p>
+
+    <!-- Form Fields -->
+    <label for="name">Full Name</label>
+    <input id="name" placeholder="Enter your full name">
 
     <label for="city">City</label>
     <select id="city">
@@ -156,6 +168,7 @@ button:hover{
 </div>
 
 <script>
+// Firebase Initialization
 firebase.initializeApp({
   apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
   databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
@@ -163,13 +176,15 @@ firebase.initializeApp({
 });
 const db = firebase.database();
 
-function register(){
+// Registration Function
+function register() {
+    const name = document.getElementById("name").value.trim();
     const city = document.getElementById("city").value;
     const uid = document.getElementById("uid").value.trim().toUpperCase();
     const password = document.getElementById("password").value;
     const msg = document.getElementById("msg");
 
-    if(!city || !uid || !password){
+    if (!name || !city || !uid || !password) {
         msg.innerHTML = "<span class='error'>All fields are required</span>";
         return;
     }
@@ -177,21 +192,22 @@ function register(){
     const ref = db.ref(`admins/${city}/users/${uid}`);
 
     ref.once("value", snap => {
-        if(snap.exists()){
+        if (snap.exists()) {
             msg.innerHTML = "<span class='error'>User already exists</span>";
             return;
         }
 
         ref.set({
+            name: name,
             password: password,
             Ecopoints: 0,
             TotalWeight: 0
-        }).then(()=>{
+        }).then(() => {
             msg.innerHTML = "<span class='success'>Registration successful</span>";
-            setTimeout(()=>{
+            setTimeout(() => {
                 window.location.href = "UserLogin.html";
-            },1500);
-        }).catch(err=>{
+            }, 1500);
+        }).catch(err => {
             msg.innerHTML = "<span class='error'>Error: " + err.message + "</span>";
         });
     });
@@ -200,4 +216,3 @@ function register(){
 
 </body>
 </html>
-
