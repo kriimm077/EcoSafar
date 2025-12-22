@@ -65,22 +65,15 @@ body{
   border-radius:24px;
   font-weight:600;
   cursor:pointer;
-  transition:0.25s;
 }
 
-.btn:hover{
-  background:#0fcf7d;
-}
-
-/* LAYOUT */
 .container{
   padding:32px;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
   gap:28px;
 }
 
-/* CARD */
 .card{
   background:white;
   border-radius:20px;
@@ -96,7 +89,6 @@ body{
   padding-bottom:8px;
 }
 
-/* ALERTS */
 #alerts li{
   list-style:none;
   background:var(--green-light);
@@ -106,7 +98,6 @@ body{
   font-size:14px;
 }
 
-/* TABLE */
 table{
   width:100%;
   border-collapse:collapse;
@@ -131,23 +122,6 @@ tbody tr{
 tbody tr:hover{
   background:#f3fbf7;
 }
-
-.dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  display:inline-block;
-  margin-right:6px;
-}
-
-/* OPERATIONS */
-.operations button{
-  width:100%;
-  margin-bottom:12px;
-  padding:12px;
-  font-weight:600;
-  border-radius:12px;
-}
 </style>
 </head>
 
@@ -155,7 +129,7 @@ tbody tr:hover{
 
 <header class="topbar">
   <div class="brand">
-    <img src="logo.png" alt="EcoSafar Logo">
+    <img src="logo.png">
     <h1>EcoSafar Admin Panel</h1>
   </div>
   <button class="btn" onclick="location.href='index.html'">Home</button>
@@ -163,143 +137,112 @@ tbody tr:hover{
 
 <main class="container">
 
-  <!-- ALERTS -->
-  <section class="card">
-    <h3>System Alerts</h3>
-    <ul id="alerts">
-      <li>Loading alerts...</li>
-    </ul>
-  </section>
+<!-- ALERTS -->
+<section class="card">
+  <h3>System Alerts</h3>
+  <ul id="alerts">
+    <li>Loading alerts...</li>
+  </ul>
+</section>
 
-  <!-- SECTIONS TABLE -->
-  <section class="card">
-    <h3>Waste Collection Status</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Section</th>
-          <th>Bin ID</th>
-          <th>Total Waste (g)</th>
-          <th>Fill Level</th>
-          <th>Last Update</th>
-        </tr>
-      </thead>
-      <tbody id="sectionTable"></tbody>
-    </table>
-  </section>
+<!-- USERS / CITY TABLE -->
+<section class="card">
+  <h3>User & City Waste Data</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>City</th>
+        <th>Total Waste (g)</th>
+        <th>Eco Points</th>
+      </tr>
+    </thead>
+    <tbody id="userTable"></tbody>
+  </table>
+</section>
 
-  <!-- OPERATIONS -->
-  <section class="card operations">
-    <h3>Operations</h3>
-    <button class="btn" onclick="simulateBinFull()">Simulate Bin Full</button>
-    <button class="btn" onclick="downloadCSV()">Download CSV Report</button>
-  </section>
+<!-- OPERATIONS -->
+<section class="card">
+  <h3>Operations</h3>
+  <button class="btn" onclick="downloadCSV()">Download CSV Report</button>
+</section>
 
 </main>
 
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 <script>
-// 🔑 Your Firebase config
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-  projectId: "YOUR_PROJECT"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-/* UTILITY */
-function dotColor(fill){
-  if(fill < 40) return "#5cb85c";
-  if(fill < 80) return "#f0ad4e";
-  return "#d9534f";
-}
-
-/* SECTIONS TABLE */
-db.ref("sections").on("value", snap=>{
-  const tbody = document.getElementById("sectionTable");
-  tbody.innerHTML = "";
-
-  snap.forEach(c=>{
-    const s = c.val();
-    const lastUpdate = typeof s.last === "number" ? new Date(s.last).toLocaleString() : s.last;
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td><strong>${s.section}</strong></td>
-      <td>${s.bin}</td>
-      <td>${s.waste}</td>
-      <td><span class="dot" style="background:${dotColor(s.fill)}"></span>${s.fill}%</td>
-      <td>${lastUpdate}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-});
-
-/* ALERTS LIST */
-db.ref("alerts").on("value", snap=>{
+/* LOAD ALERTS */
+async function loadAlerts(){
   const ul = document.getElementById("alerts");
   ul.innerHTML = "";
-  if(!snap.exists()){
-    ul.innerHTML="<li>No active alerts</li>";
-    return;
-  }
-  snap.forEach(c=>{
-    const a = c.val();
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>${a.section}:</strong> ${a.message}`;
-    ul.appendChild(li);
-  });
-});
 
-/* SIMULATION */
-function simulateBinFull(){
-  db.ref("alerts").push({
-    section:"Block A1",
-    message:"Bin reached 95% capacity — collection required",
-    timestamp:Date.now()
-  });
-  alert("Simulation sent!");
+  try{
+    const res = await fetch("/api/alerts");
+    const data = await res.json();
+
+    if(data.length === 0){
+      ul.innerHTML = "<li>No active alerts</li>";
+      return;
+    }
+
+    data.forEach(a=>{
+      const li = document.createElement("li");
+      li.innerHTML = `<strong>${a.city || "General"}:</strong> ${a.message}`;
+      ul.appendChild(li);
+    });
+
+  }catch{
+    ul.innerHTML = "<li>Error loading alerts</li>";
+  }
+}
+
+/* LOAD USERS */
+async function loadUsers(){
+  const tbody = document.getElementById("userTable");
+  tbody.innerHTML = "";
+
+  try{
+    const res = await fetch("/api/residents");
+    const users = await res.json();
+
+    users.forEach(u=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${u.name}</td>
+        <td>${u.city || "—"}</td>
+        <td>${u.TotalWeight}</td>
+        <td>${u.Ecopoints}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+  }catch{
+    tbody.innerHTML = "<tr><td colspan='4'>Failed to load data</td></tr>";
+  }
 }
 
 /* CSV DOWNLOAD */
 async function downloadCSV(){
-  try{
-    const snapshot = await db.ref("sections").once("value");
-    if(!snapshot.exists()){
-      alert("No section data to download!");
-      return;
-    }
+  const res = await fetch("/api/residents");
+  const users = await res.json();
 
-    let csv = "Section,Bin ID,Total Waste (g),Fill Level (%),Last Update\n";
+  let csv = "Name,City,Total Waste (g),Eco Points\n";
+  users.forEach(u=>{
+    csv += `${u.name},${u.city},${u.TotalWeight},${u.Ecopoints}\n`;
+  });
 
-    snapshot.forEach(c=>{
-      const s = c.val();
-      const lastUpdate = typeof s.last === "number" ? new Date(s.last).toLocaleString() : s.last;
-      csv += `${s.section},${s.bin},${s.waste},${s.fill},${lastUpdate}\n`;
-    });
-
-    const blob = new Blob([csv], {type:"text/csv"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "EcoSafar_Admin_Report.csv";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-  } catch(err){
-    console.error(err);
-    alert("Failed to generate CSV!");
-  }
+  const blob = new Blob([csv], {type:"text/csv"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "EcoSafar_Report.csv";
+  a.click();
+  URL.revokeObjectURL(url);
 }
+
+/* INIT */
+loadAlerts();
+loadUsers();
 </script>
 
 </body>
 </html>
-
