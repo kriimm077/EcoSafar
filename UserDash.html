@@ -6,252 +6,91 @@
 <title>EcoSafar • User Dashboard</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<style>
-:root{
-    --green-dark:#0b3d0f;
-    --green-main:#145A13;
-    --accent:#2ecc71;
-    --bg:#f4f9f3;
-    --card-shadow: rgba(0,0,0,0.15);
-    --font-color:#2d3a2d;
-}
-
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;}
-body{
-    background:linear-gradient(135deg,#dff3ea,#c9ebd9);
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    padding:40px 0;
-}
-
-.card{
-    background:white;
-    width:480px;
-    max-width:95%;
-    padding:40px 30px;
-    border-radius:28px;
-    box-shadow:0 15px 40px var(--card-shadow);
-    text-align:center;
-    transition:transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover{
-    transform:translateY(-5px);
-    box-shadow:0 25px 60px var(--card-shadow);
-}
-
-.logo{
-    width:100px;
-    margin-bottom:20px;
-    animation:float 4s ease-in-out infinite;
-}
-
-@keyframes float{
-    0%{transform:translateY(0)}
-    50%{transform:translateY(-8px)}
-    100%{transform:translateY(0)}
-}
-
-h2{
-    color:var(--green-main);
-    margin-bottom:8px;
-    font-weight:700;
-    font-size:24px;
-}
-
-h3{
-    color:var(--font-color);
-    margin-bottom:16px;
-    font-weight:600;
-    font-size:18px;
-}
-
-p{
-    font-size:15px;
-    color:#4f5e57;
-    margin-bottom:24px;
-}
-
-.stats{
-    display:flex;
-    justify-content:space-between;
-    gap:15px;
-    flex-wrap:wrap;
-    margin-bottom:30px;
-}
-
-.stat-box{
-    flex:1;
-    background:#eef9f1;
-    padding:16px 20px;
-    border-radius:14px;
-    min-width:120px;
-    transition:background 0.3s ease, transform 0.3s ease;
-    cursor:default;
-}
-
-.stat-box:hover{
-    background:var(--accent);
-    color:white;
-    transform:translateY(-3px);
-}
-
-.stat-title{
-    font-size:13px;
-    color:#4f5e57;
-    margin-bottom:6px;
-}
-
-.stat-value{
-    font-size:20px;
-    font-weight:700;
-    color:var(--green-main);
-}
-
-.stat-box:hover .stat-value{
-    color:white;
-}
-
-.stat-box:hover .stat-title{
-    color:white;
-}
-
-/* HISTORY SECTION */
-.history-container{
-    background:#f0f8f0;
-    border-radius:16px;
-    padding:20px;
-    max-height:200px;
-    overflow-y:auto;
-    text-align:left;
-}
-
-.history-container h4{
-    font-size:16px;
-    color:var(--green-dark);
-    margin-bottom:12px;
-    font-weight:600;
-}
-
-.history-item{
-    font-size:14px;
-    padding:8px 10px;
-    margin-bottom:6px;
-    border-left:4px solid var(--accent);
-    background:#eef9f1;
-    border-radius:6px;
-}
-
-.history-item:last-child{
-    margin-bottom:0;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
+
+<body class="dashboard-bg">
 
 <div class="card">
     <img src="logo.png" class="logo" alt="EcoSafar Logo">
-    <h2>Welcome, <span id="userName">User</span>!</h2>
-    <h3>EcoSafar Dashboard</h3>
-    <p>Your RFID UID: <span id="userUID">----</span></p>
+
+    <h2>Welcome, <span id="userName">User</span></h2>
+    <p>Your RFID UID: <strong id="userUID">----</strong></p>
 
     <div class="stats">
         <div class="stat-box">
-            <div class="stat-title">Ecopoints</div>
+            <div class="stat-title">EcoPoints</div>
             <div class="stat-value" id="userPoints">0</div>
         </div>
+
         <div class="stat-box">
-            <div class="stat-title">Total Weight (kg)</div>
+            <div class="stat-title">Total Waste (kg)</div>
             <div class="stat-value" id="userWeight">0</div>
+        </div>
+
+        <div class="stat-box highlight">
+            <div class="stat-title">Redeem Value</div>
+            <div class="stat-value">₹<span id="moneyValue">0</span></div>
         </div>
     </div>
 
+    <button class="btn redeem-btn" onclick="redeemPoints()">
+        Convert EcoPoints to Money
+    </button>
+
     <div class="history-container">
         <h4>History</h4>
-        <div id="historyList">
-            <!-- History items will be inserted here -->
-        </div>
+        <div id="historyList"></div>
     </div>
 </div>
 
 <script>
-/* 🔥 FIREBASE CONFIG */
-const firebaseConfig = {
-  apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
-  databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
-  projectId: "ecosafar-3da96"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+const params = new URLSearchParams(window.location.search);
+const username = params.get("uid");
 
-/* 🔐 Default users if Firebase not available */
-const defaultUsers = {
-    "BF604DEE": {name:"Het", Ecopoints:0, TotalWeight:0, history: ["Scanned 5kg waste","Redeemed 10 points"]},
-    "BF305EEE": {name:"Krima", Ecopoints:0, TotalWeight:0, history: ["Scanned 3kg waste","Redeemed 5 points"]},
-    "9FDF4DEE": {name:"Heer", Ecopoints:0, TotalWeight:0, history: ["Scanned 8kg waste"]},
-    "8FC14DEE": {name:"Krish", Ecopoints:0, TotalWeight:0, history: ["Scanned 2kg waste","Redeemed 2 points"]}
-};
+document.getElementById("userUID").innerText = username || "----";
 
-/* Get UID from URL */
-const urlParams = new URLSearchParams(window.location.search);
-const uid = (urlParams.get('uid') || '').trim().toUpperCase();
-document.getElementById("userUID").innerText = uid || "----";
+const RATE = 10;
 
-/* Display user info */
-function loadUser(uid){
-    if(!uid){
-        document.getElementById("userName").innerText = "Guest";
-        return;
-    }
+async function loadUser() {
+    const res = await fetch(`/api/user/${username}`);
+    const data = await res.json();
 
-    db.ref("users/" + uid).once("value")
-    .then(snapshot => {
-        let user;
-        if(snapshot.exists()){
-            user = snapshot.val();
-        } else if(defaultUsers[uid]){
-            user = defaultUsers[uid];
-        } else {
-            user = {name:"Unknown", Ecopoints:0, TotalWeight:0, history:[]};
-        }
+    document.getElementById("userName").innerText = data.user.username;
+    document.getElementById("userPoints").innerText = data.user.points;
+    document.getElementById("userWeight").innerText = data.user.totalWeight;
+    document.getElementById("moneyValue").innerText =
+        Math.floor(data.user.points / RATE);
 
-        document.getElementById("userName").innerText = user.name;
-        document.getElementById("userPoints").innerText = user.Ecopoints;
-        document.getElementById("userWeight").innerText = user.TotalWeight;
+    const history = document.getElementById("historyList");
+    history.innerHTML = "";
 
-        const historyList = document.getElementById("historyList");
-        historyList.innerHTML = "";
-        if(user.history && user.history.length>0){
-            user.history.slice().reverse().forEach(item=>{
-                const div = document.createElement("div");
-                div.className = "history-item";
-                div.innerText = item;
-                historyList.appendChild(div);
-            });
-        } else {
-            historyList.innerHTML = "<div class='history-item'>No history available</div>";
-        }
-    })
-    .catch(err=>{
-        console.error(err);
-        if(defaultUsers[uid]){
-            const user = defaultUsers[uid];
-            document.getElementById("userName").innerText = user.name;
-            document.getElementById("userPoints").innerText = user.Ecopoints;
-            document.getElementById("userWeight").innerText = user.TotalWeight;
-        } else {
-            document.getElementById("userName").innerText = "Unknown";
-        }
+    data.history.forEach(h => {
+        const div = document.createElement("div");
+        div.className = "history-item";
+        div.innerText = `${h.date} — ${h.weight}kg → ${h.points} pts`;
+        history.appendChild(div);
     });
 }
 
-loadUser(uid);
+async function redeemPoints() {
+    const res = await fetch("/api/redeem", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({ username })
+    });
+
+    const data = await res.json();
+
+    if(data.error){
+        alert(data.error);
+    } else {
+        alert(`Redeemed ₹${data.amount}`);
+        loadUser();
+    }
+}
+
+if(username) loadUser();
 </script>
 
 </body>
