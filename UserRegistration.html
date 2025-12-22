@@ -9,8 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* Reset & Basics */
+/* Reset & Base Styles */
 * { box-sizing: border-box; margin:0; padding:0; font-family:'Inter',sans-serif; }
+
 body {
     background: linear-gradient(135deg,#e8f6ef,#dff3ea);
     min-height:100vh;
@@ -19,7 +20,8 @@ body {
     align-items:center;
     padding:20px;
 }
-/* Card */
+
+/* Card Container */
 .card {
     background:#fff;
     width:420px;
@@ -29,10 +31,15 @@ body {
     text-align:center;
     transition:all 0.3s ease;
 }
-.card:hover { transform:translateY(-5px); box-shadow:0 25px 60px rgba(0,0,0,0.15); }
+.card:hover {
+    transform:translateY(-5px);
+    box-shadow:0 25px 60px rgba(0,0,0,0.15);
+}
+
 /* Logo Animation */
 .logo {
-    width:120px; height:120px;
+    width:120px;
+    height:120px;
     margin:0 auto 20px;
     display:block;
     border-radius:16px;
@@ -57,9 +64,9 @@ input, select{
     font-size:14px;
     transition:border 0.3s,box-shadow 0.3s;
 }
-input:focus, select:focus { outline:none; border-color:#145A13; box-shadow:0 0 6px rgba(20,90,19,0.2); }
+input:focus, select:focus{outline:none;border-color:#145A13;box-shadow:0 0 6px rgba(20,90,19,0.2);}
 
-/* Button */
+/* Button with Glow & Click Animation */
 button{
     width:100%;
     padding:15px;
@@ -70,10 +77,24 @@ button{
     font-size:16px;
     font-weight:600;
     cursor:pointer;
-    transition:all 0.25s ease,box-shadow 0.25s ease;
+    transition:all 0.25s ease, box-shadow 0.25s ease, transform 0.1s ease;
     margin-bottom:12px;
+    position:relative;
+    overflow:hidden;
 }
-button:hover{ background:#0f450f; box-shadow:0 5px 15px rgba(20,90,19,0.4); }
+button:hover{
+    background:#0f450f;
+    box-shadow: 0 0 20px #145A13, 0 0 40px #145A13, 0 5px 15px rgba(20,90,19,0.4);
+}
+button:active{
+    transform: scale(0.97);
+    box-shadow: 0 0 25px #145A13, 0 0 50px #145A13, 0 4px 10px rgba(20,90,19,0.4);
+}
+button:disabled{
+    background:#999;
+    cursor:not-allowed;
+    box-shadow:none;
+}
 
 /* Messages */
 .msg{ margin-top:18px; font-weight:600; font-size:14px; }
@@ -100,43 +121,65 @@ button:hover{ background:#0f450f; box-shadow:0 5px 15px rgba(20,90,19,0.4); }
     </select>
 
     <label for="uid">RFID UID</label>
-    <input id="uid" placeholder="Enter RFID UID">
+    <input id="uid" placeholder="Enter RFID UID (Alphanumeric)">
 
     <label for="password">Password</label>
-    <input id="password" type="password" placeholder="Enter password">
+    <input id="password" type="password" placeholder="Enter password (min 4 chars)">
 
-    <button onclick="register()">Register</button>
+    <button id="registerBtn" onclick="register()">Register</button>
     <div id="msg" class="msg"></div>
 </div>
 
 <script>
-async function register(){
+async function register() {
     const name = document.getElementById("name").value.trim();
     const city = document.getElementById("city").value;
     const username = document.getElementById("uid").value.trim().toUpperCase();
     const password = document.getElementById("password").value;
     const msg = document.getElementById("msg");
+    const btn = document.getElementById("registerBtn");
 
+    // Reset message
+    msg.innerHTML = "";
+
+    // Validation
     if(!name || !city || !username || !password){
         msg.innerHTML = "<span class='error'>All fields are required</span>";
         return;
     }
 
+    if(!/^[A-Z0-9]+$/.test(username)){
+        msg.innerHTML = "<span class='error'>RFID UID must be alphanumeric (letters & numbers only)</span>";
+        return;
+    }
+
+    if(password.length < 4){
+        msg.innerHTML = "<span class='error'>Password must be at least 4 characters</span>";
+        return;
+    }
+
+    // Disable button during submission
+    btn.disabled = true;
+
     try {
-        const res = await fetch('/api/register',{
+        const response = await fetch('/api/register', {
             method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({name, username, password})
+            headers:{ 'Content-Type':'application/json' },
+            body: JSON.stringify({ name, username, password, city })
         });
-        const data = await res.json();
+        const data = await response.json();
+
         if(data.error){
-            msg.innerHTML = "<span class='error'>"+data.error+"</span>";
+            msg.innerHTML = `<span class='error'>${data.error}</span>`;
         } else {
             msg.innerHTML = "<span class='success'>Registration successful!</span>";
             setTimeout(()=>{ window.location.href="UserLogin.html"; },1500);
         }
+
     } catch(err){
-        msg.innerHTML = "<span class='error'>"+err.message+"</span>";
+        msg.innerHTML = `<span class='error'>${err.message}</span>`;
+    } finally {
+        btn.disabled = false;
     }
 }
 </script>
