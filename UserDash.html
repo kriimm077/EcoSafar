@@ -6,91 +6,209 @@
 <title>EcoSafar • User Dashboard</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+
+<style>
+:root{
+  --green-dark:#0b3d0f;
+  --green-main:#145A13;
+  --accent:#2ecc71;
+  --bg:#eaf6ea;
+}
+
+*{box-sizing:border-box;font-family:Inter,sans-serif;}
+
+body{
+  margin:0;
+  background:linear-gradient(135deg,#dff3ea,#c9ebd9);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:40px 0;
+}
+
+/* CARD */
+.card{
+  background:#fff;
+  width:420px;
+  max-width:95%;
+  padding:35px 28px;
+  border-radius:26px;
+  box-shadow:0 18px 45px rgba(0,0,0,0.18);
+  text-align:center;
+}
+
+/* LOGO */
+.logo{
+  width:110px;
+  margin-bottom:16px;
+}
+
+/* TITLES */
+h2{
+  color:var(--green-main);
+  margin-bottom:6px;
+}
+
+.uid{
+  font-size:14px;
+  margin-bottom:22px;
+  color:#4f5e57;
+}
+
+/* STATS */
+.stats{
+  display:flex;
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.stat{
+  flex:1;
+  background:#eef9f1;
+  padding:14px;
+  border-radius:14px;
+}
+
+.stat h4{
+  font-size:13px;
+  margin-bottom:6px;
+  color:#4f5e57;
+}
+
+.stat div{
+  font-size:20px;
+  font-weight:700;
+  color:var(--green-main);
+}
+
+/* CONVERT */
+.convert-box{
+  background:#f0faf3;
+  padding:16px;
+  border-radius:14px;
+  margin-bottom:22px;
+}
+
+.convert-box p{
+  margin:6px 0;
+  font-weight:600;
+}
+
+.btn{
+  margin-top:10px;
+  padding:12px;
+  width:100%;
+  border:none;
+  border-radius:14px;
+  background:var(--green-main);
+  color:white;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.btn:hover{
+  background:var(--accent);
+}
+
+/* HISTORY */
+.history{
+  text-align:left;
+}
+
+.history h3{
+  margin-bottom:10px;
+  color:var(--green-dark);
+}
+
+.history-item{
+  background:#eef9f1;
+  padding:8px 10px;
+  border-left:4px solid var(--accent);
+  border-radius:6px;
+  font-size:14px;
+  margin-bottom:6px;
+}
+</style>
 </head>
 
-<body class="dashboard-bg">
+<body>
 
 <div class="card">
-    <img src="logo.png" class="logo" alt="EcoSafar Logo">
+  <img src="logo.png" class="logo">
+  <h2>Welcome, <span id="userName">User</span></h2>
+  <div class="uid">RFID UID: <b id="userUID">----</b></div>
 
-    <h2>Welcome, <span id="userName">User</span></h2>
-    <p>Your RFID UID: <strong id="userUID">----</strong></p>
-
-    <div class="stats">
-        <div class="stat-box">
-            <div class="stat-title">EcoPoints</div>
-            <div class="stat-value" id="userPoints">0</div>
-        </div>
-
-        <div class="stat-box">
-            <div class="stat-title">Total Waste (kg)</div>
-            <div class="stat-value" id="userWeight">0</div>
-        </div>
-
-        <div class="stat-box highlight">
-            <div class="stat-title">Redeem Value</div>
-            <div class="stat-value">₹<span id="moneyValue">0</span></div>
-        </div>
+  <div class="stats">
+    <div class="stat">
+      <h4>EcoPoints</h4>
+      <div id="points">0</div>
     </div>
-
-    <button class="btn redeem-btn" onclick="redeemPoints()">
-        Convert EcoPoints to Money
-    </button>
-
-    <div class="history-container">
-        <h4>History</h4>
-        <div id="historyList"></div>
+    <div class="stat">
+      <h4>Total Waste (kg)</h4>
+      <div id="weight">0</div>
     </div>
+  </div>
+
+  <div class="convert-box">
+    <p>Redeem Value</p>
+    <p>₹ <span id="money">0</span></p>
+    <button class="btn" onclick="convert()">Convert EcoPoints to Money</button>
+  </div>
+
+  <div class="history">
+    <h3>History</h3>
+    <div id="historyList"></div>
+  </div>
 </div>
 
 <script>
+/* MOCK DATA (works on GitHub Pages) */
+const users = {
+  "BF604DEE": {
+    name:"Het",
+    points:40,
+    weight:18,
+    history:[
+      "Disposed 5kg waste (+5 pts)",
+      "Disposed 8kg waste (+8 pts)",
+      "Disposed 5kg waste (+5 pts)"
+    ]
+  }
+};
+
+/* UID from URL */
 const params = new URLSearchParams(window.location.search);
-const username = params.get("uid");
+const uid = (params.get("uid") || "").toUpperCase();
 
-document.getElementById("userUID").innerText = username || "----";
+document.getElementById("userUID").innerText = uid || "----";
 
-const RATE = 10;
+const user = users[uid] || {name:"User",points:0,weight:0,history:[]};
 
-async function loadUser() {
-    const res = await fetch(`/api/user/${username}`);
-    const data = await res.json();
+document.getElementById("userName").innerText = user.name;
+document.getElementById("points").innerText = user.points;
+document.getElementById("weight").innerText = user.weight;
 
-    document.getElementById("userName").innerText = data.user.username;
-    document.getElementById("userPoints").innerText = data.user.points;
-    document.getElementById("userWeight").innerText = data.user.totalWeight;
-    document.getElementById("moneyValue").innerText =
-        Math.floor(data.user.points / RATE);
-
-    const history = document.getElementById("historyList");
-    history.innerHTML = "";
-
-    data.history.forEach(h => {
-        const div = document.createElement("div");
-        div.className = "history-item";
-        div.innerText = `${h.date} — ${h.weight}kg → ${h.points} pts`;
-        history.appendChild(div);
-    });
+/* HISTORY */
+const historyList = document.getElementById("historyList");
+if(user.history.length){
+  user.history.reverse().forEach(h=>{
+    const div=document.createElement("div");
+    div.className="history-item";
+    div.innerText=h;
+    historyList.appendChild(div);
+  });
+}else{
+  historyList.innerHTML="<div class='history-item'>No history yet</div>";
 }
 
-async function redeemPoints() {
-    const res = await fetch("/api/redeem", {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ username })
-    });
-
-    const data = await res.json();
-
-    if(data.error){
-        alert(data.error);
-    } else {
-        alert(`Redeemed ₹${data.amount}`);
-        loadUser();
-    }
+/* CONVERT BUTTON */
+function convert(){
+  const points = parseInt(document.getElementById("points").innerText);
+  const money = points * 1; // 1 point = ₹1
+  document.getElementById("money").innerText = money;
 }
-
-if(username) loadUser();
 </script>
 
 </body>
