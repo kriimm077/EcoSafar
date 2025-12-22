@@ -10,11 +10,12 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-/* Reset some default styles */
+/* Reset and basic styling */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Inter', sans-serif;
 }
 
 body{
@@ -23,32 +24,52 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Inter', sans-serif;
+    padding: 20px;
 }
 
 .card{
     background: #fff;
-    width: 400px;
-    padding: 40px 30px;
+    width: 420px;
+    padding: 50px 35px;
     border-radius: 24px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+    text-align: center;
     transition: all 0.3s ease;
 }
 
 .card:hover{
     transform: translateY(-5px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+}
+
+/* Animated logo */
+.logo {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    display: block;
+    border-radius: 16px;
+    object-fit: contain;
+    animation: logo-pulse 2s infinite ease-in-out, logo-float 3s infinite ease-in-out;
+}
+
+@keyframes logo-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes logo-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
 }
 
 h2{
-    text-align: center;
     color: #145A13;
-    font-size: 26px;
+    font-size: 28px;
     margin-bottom: 8px;
 }
 
 .subtitle{
-    text-align: center;
     font-size: 14px;
     color: #4f5e57;
     margin-bottom: 30px;
@@ -59,6 +80,7 @@ label{
     margin-bottom: 6px;
     display: block;
     color: #333;
+    text-align: left;
 }
 
 input, select{
@@ -68,52 +90,49 @@ input, select{
     border: 1px solid #cfded5;
     margin-bottom: 18px;
     font-size: 14px;
-    transition: border 0.3s;
+    transition: border 0.3s, box-shadow 0.3s;
 }
 
 input:focus, select:focus{
     outline: none;
     border-color: #145A13;
-    box-shadow: 0 0 5px rgba(20, 90, 19, 0.2);
+    box-shadow: 0 0 6px rgba(20,90,19,0.2);
 }
 
 button{
     width: 100%;
     padding: 15px;
     border: none;
-    border-radius: 14px;
+    border-radius: 16px;
     background: #145A13;
     color: #fff;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.25s ease, box-shadow 0.25s ease;
+    margin-bottom: 12px;
 }
 
 button:hover{
     background: #0f450f;
+    box-shadow: 0 5px 15px rgba(20,90,19,0.4);
 }
 
 .msg{
     margin-top: 18px;
-    text-align: center;
     font-weight: 600;
     font-size: 14px;
 }
 
-.error{
-    color: #c40000;
-}
-
-.success{
-    color: #145A13;
-}
+.error{ color: #c40000; }
+.success{ color: #145A13; }
 </style>
 </head>
 
 <body>
 
 <div class="card">
+    <img src="16af927d-1d6f-4f3b-b242-f23dbf3b306e.png" alt="EcoSafar Logo" class="logo">
     <h2>User Registration</h2>
     <p class="subtitle">Create your EcoSafar account</p>
 
