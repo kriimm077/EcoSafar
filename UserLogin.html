@@ -10,116 +10,148 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-:root{
-    --primary:#145A13;
-    --accent:#2ecc71;
-    --bg:#eef9f1;
-    --text-muted:#5f6f66;
+:root {
+    --primary: #145A13;
+    --accent: #2ecc71;
+    --bg: #eef9f1;
+    --text-muted: #5f6f66;
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Inter,sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
 }
 
-body{
-    background:linear-gradient(135deg,#e8f6ef,#dff3ea);
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+body {
+    background: linear-gradient(135deg, #e8f6ef, #dff3ea);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
-.card{
-    background:#fff;
-    width:420px;
-    padding:44px;
-    border-radius:28px;
-    box-shadow:0 25px 60px rgba(0,0,0,0.12);
+.card {
+    background: #fff;
+    width: 420px;
+    padding: 50px 35px;
+    border-radius: 24px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.12);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-h2{
-    text-align:center;
-    color:var(--primary);
-    margin-bottom:6px;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.15);
 }
 
-.subtitle{
-    text-align:center;
-    font-size:14px;
-    color:var(--text-muted);
-    margin-bottom:28px;
+/* Animated, bigger logo */
+.logo {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 20px;
+    display: block;
+    border-radius: 16px;
+    object-fit: contain;
+    animation: logo-pulse 2s infinite ease-in-out, logo-float 3s infinite ease-in-out;
 }
 
-label{
-    font-weight:600;
-    margin-bottom:6px;
-    display:block;
-    color:#2f3e36;
+@keyframes logo-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
 }
 
-input, select{
-    width:100%;
-    padding:14px 16px;
-    border-radius:14px;
-    border:1px solid #cfded5;
-    margin-bottom:18px;
-    font-size:15px;
+@keyframes logo-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
 }
 
-input:focus, select:focus{
-    outline:none;
-    border-color:var(--accent);
-    box-shadow:0 0 6px rgba(46,204,113,0.35);
+h2 {
+    color: var(--primary);
+    font-size: 28px;
+    margin-bottom: 6px;
 }
 
-button{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:16px;
-    background:var(--primary);
-    color:#fff;
-    font-size:16px;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.25s ease;
+.subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 28px;
 }
 
-button:hover{
-    transform:translateY(-2px);
-    background:#1a7a1f;
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #2f3e36;
+    text-align: left;
 }
 
-.register-btn{
-    margin-top:12px;
-    background:var(--accent);
-    color:#0b3d0f;
+input, select {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid #cfded5;
+    margin-bottom: 18px;
+    font-size: 15px;
+    transition: border 0.3s, box-shadow 0.3s;
 }
 
-.register-btn:hover{
-    background:#28b463;
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 6px rgba(46,204,113,0.35);
 }
 
-.msg{
-    margin-top:18px;
-    text-align:center;
-    font-weight:600;
-    font-size:14px;
+button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 16px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease, box-shadow 0.25s ease;
+    margin-bottom: 12px;
 }
 
-.error{ color:#c40000; }
-.success{ color:#145A13; }
+button:hover {
+    transform: translateY(-2px);
+    background: #1a7a1f;
+    box-shadow: 0 5px 15px rgba(20,90,19,0.4);
+}
+
+.register-btn {
+    background: var(--accent);
+    color: #0b3d0f;
+}
+
+.register-btn:hover {
+    background: #28b463;
+    box-shadow: 0 5px 15px rgba(46,204,113,0.4);
+}
+
+.msg {
+    margin-top: 18px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.error { color: #c40000; }
+.success { color: var(--primary); }
 </style>
 </head>
 
 <body>
 
 <div class="card">
+    <img src="16af927d-1d6f-4f3b-b242-f23dbf3b306e.png" alt="EcoSafar Logo" class="logo">
     <h2>User Login</h2>
-    <p class="subtitle">City • RFID • Password</p>
+    <p class="subtitle">City • RFID UID • Password</p>
 
     <label for="city">City</label>
     <select id="city">
@@ -166,7 +198,7 @@ function login(){
 
     const ref = db.ref(`admins/${city}/users/${uid}`);
 
-    ref.once("value", snap=>{
+    ref.once("value", snap => {
         btn.disabled = false;
 
         if(!snap.exists()){
@@ -181,9 +213,9 @@ function login(){
 
         msg.innerHTML = "<span class='success'>Login successful</span>";
 
-        setTimeout(()=>{
+        setTimeout(() => {
             window.location.href = `UserDash.html?city=${city}&uid=${uid}`;
-        },1200);
+        }, 1200);
     });
 }
 
