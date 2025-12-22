@@ -1,8 +1,3 @@
-<script>
-if (sessionStorage.getItem("ecosafar_admin") !== "true") {
-    window.location.href = "AdminLogin.html";
-}
-</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,19 +30,17 @@ body {
 }
 
 .card {
-    background: rgba(255, 255, 255, 0.96);
+    background: rgba(255,255,255,0.96);
     padding: 48px 42px;
     border-radius: 28px;
     width: 420px;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.09);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.09);
     text-align: center;
 }
 
 .logo-box {
-    display: inline-block;
     padding: 18px;
     border-radius: 22px;
-    background: rgba(255, 255, 255, 0.32);
     margin-bottom: 24px;
 }
 
@@ -82,7 +75,7 @@ label {
     font-weight: 500;
 }
 
-input {
+input, select {
     width: 100%;
     padding: 13px;
     margin-top: 6px;
@@ -108,18 +101,6 @@ input {
     background: var(--accent);
 }
 
-.btn-secondary {
-    margin-top: 14px;
-    width: 100%;
-    padding: 13px;
-    background: transparent;
-    border: 2px solid var(--green-700);
-    color: var(--green-700);
-    font-weight: 600;
-    border-radius: 14px;
-    cursor: pointer;
-}
-
 .error-box {
     display: none;
     background: #ffe7e7;
@@ -141,34 +122,57 @@ input {
     </div>
 
     <h2 class="title">Admin Login</h2>
-    <p class="subtitle">Access EcoSafar Control Panel</p>
+    <p class="subtitle">City Control Panel Access</p>
 
-    <label>Username</label>
-    <input id="adminUser" placeholder="admin">
+    <label>City</label>
+    <select id="city">
+        <option value="">Select City</option>
+        <option value="Anand">Anand</option>
+        <option value="Ahmedabad">Ahmedabad</option>
+        <option value="Surat">Surat</option>
+    </select>
+
+    <label>Admin ID</label>
+    <input id="adminUser" placeholder="Enter Admin ID">
 
     <label>Password</label>
-    <input id="adminPass" type="password" placeholder="admin">
+    <input id="adminPass" type="password" placeholder="Enter Password">
 
-    <button class="btn" id="adminLogin">Sign In</button>
-    <button class="btn-secondary" onclick="location.href='index.html'">Home</button>
+    <button class="btn" onclick="loginAdmin()">Sign In</button>
 
-    <div class="error-box" id="errorBox">Incorrect username or password.</div>
+    <div class="error-box" id="errorBox">Invalid city or credentials</div>
 
 </div>
 
 <script>
-document.getElementById("adminLogin").onclick = () => {
-    const u = document.getElementById("adminUser").value.trim();
-    const p = document.getElementById("adminPass").value.trim();
+function loginAdmin() {
+    const city = document.getElementById("city").value;
+    const user = document.getElementById("adminUser").value.trim();
+    const pass = document.getElementById("adminPass").value.trim();
     const errorBox = document.getElementById("errorBox");
 
-    if (u === "admin" && p === "admin") {
+    errorBox.style.display = "none";
+
+    // City-based admin credentials (demo)
+    const admins = {
+        Anand: { id: "anand_admin", pass: "anand@123" },
+        Ahmedabad: { id: "amd_admin", pass: "amd@123" },
+        Surat: { id: "surat_admin", pass: "surat@123" }
+    };
+
+    if (!city || !admins[city]) {
+        errorBox.style.display = "block";
+        return;
+    }
+
+    if (user === admins[city].id && pass === admins[city].pass) {
         sessionStorage.setItem("ecosafar_admin", "true");
+        sessionStorage.setItem("ecosafar_admin_city", city);
         window.location.href = "AdminDash.html";
     } else {
         errorBox.style.display = "block";
     }
-};
+}
 </script>
 
 </body>
