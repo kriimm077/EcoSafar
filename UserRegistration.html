@@ -7,7 +7,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Firebase SDK -->
+<!-- Firebase SDK (Compat) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -23,13 +23,13 @@ body{
 .card{
   background:#fff;
   width:420px;
-  padding:50px 35px;
+  padding:45px 35px;
   border-radius:24px;
   box-shadow:0 20px 50px rgba(0,0,0,.12);
 }
 h2{color:#145A13;text-align:center;margin-bottom:6px;}
 .subtitle{text-align:center;color:#555;margin-bottom:25px;}
-label{font-weight:600;margin-top:10px;display:block;}
+label{font-weight:600;margin-top:12px;display:block;}
 input,select{
   width:100%;
   padding:14px;
@@ -40,7 +40,7 @@ input,select{
 button{
   width:100%;
   padding:15px;
-  margin-top:20px;
+  margin-top:22px;
   background:#145A13;
   color:white;
   border:none;
@@ -50,19 +50,20 @@ button{
   cursor:pointer;
 }
 button:hover{background:#0f450f;}
-.msg{margin-top:15px;font-weight:600;text-align:center;}
+.msg{margin-top:16px;font-weight:600;text-align:center;}
 .error{color:#c40000;}
 .success{color:#145A13;}
 </style>
 </head>
 
 <body>
+
 <div class="card">
   <h2>User Registration</h2>
   <p class="subtitle">Create your EcoSafar account</p>
 
   <label>Full Name</label>
-  <input id="name">
+  <input id="name" placeholder="Enter full name">
 
   <label>City</label>
   <select id="city">
@@ -73,17 +74,18 @@ button:hover{background:#0f450f;}
   </select>
 
   <label>RFID UID</label>
-  <input id="uid">
+  <input id="uid" placeholder="Scan or enter UID">
 
   <label>Password</label>
-  <input id="password" type="password">
+  <input id="password" type="password" placeholder="Create password">
 
-  <button onclick="register()">Register</button>
+  <button onclick="registerUser()">Register</button>
+
   <div id="msg" class="msg"></div>
 </div>
 
 <script>
-/* 🔴 REPLACE WITH YOUR REAL FIREBASE CONFIG */
+/* 🔴 REPLACE WITH YOUR FIREBASE DETAILS */
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -94,15 +96,17 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-async function register(){
-  const name = nameEl.value.trim();
-  const city = cityEl.value;
-  const uid = uidEl.value.trim().toUpperCase();
-  const pass = passwordEl.value;
+function registerUser(){
+  const name = document.getElementById("name").value.trim();
+  const city = document.getElementById("city").value;
+  const uid = document.getElementById("uid").value.trim().toUpperCase();
+  const password = document.getElementById("password").value;
   const msg = document.getElementById("msg");
 
-  if(!name || !city || !uid || !pass){
-    msg.innerHTML = "<span class='error'>All fields required</span>";
+  msg.innerHTML = "";
+
+  if(!name || !city || !uid || !password){
+    msg.innerHTML = "<span class='error'>All fields are required</span>";
     return;
   }
 
@@ -111,30 +115,33 @@ async function register(){
     return;
   }
 
-  const ref = db.ref("users/" + uid);
-  const snap = await ref.get();
+  const userRef = db.ref("users/" + uid);
 
-  if(snap.exists()){
-    msg.innerHTML = "<span class='error'>RFID already registered</span>";
-    return;
-  }
-
-  await ref.set({
-    name,
-    city,
-    password: pass,
-    EcoPoints: 0,
-    TotalWeight: 0
-  });
-
-  msg.innerHTML = "<span class='success'>Registration successful</span>";
-  setTimeout(()=>location.href="UserLogin.html",1500);
+  userRef.once("value")
+    .then(snapshot=>{
+      if(snapshot.exists()){
+        msg.innerHTML = "<span class='error'>RFID already registered</span>";
+      } else {
+        userRef.set({
+          name: name,
+          city: city,
+          password: password,
+          EcoPoints: 0,
+          TotalWeight: 0,
+          createdAt: new Date().toISOString()
+        }).then(()=>{
+          msg.innerHTML = "<span class='success'>Registration successful</span>";
+          setTimeout(()=>{
+            window.location.href = "UserLogin.html";
+          },1500);
+        });
+      }
+    })
+    .catch(error=>{
+      msg.innerHTML = "<span class='error'>" + error.message + "</span>";
+    });
 }
-
-const nameEl = document.getElementById("name");
-const cityEl = document.getElementById("city");
-const uidEl = document.getElementById("uid");
-const passwordEl = document.getElementById("password");
 </script>
+
 </body>
 </html>
