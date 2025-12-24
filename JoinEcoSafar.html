@@ -1,132 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Join EcoSafar</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Join EcoSafar</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Inter", sans-serif;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  font-family:"Inter",sans-serif;
+}
 
-    body {
-      margin: 0;
-      background: linear-gradient(145deg, #f4fcf4, #e8f5ea);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #123a2d;
-    }
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(160deg,#eafaf0,#f4fff7);
+  color:#0f3d2e;
+}
 
-    .card {
-      background: #ffffff;
-      padding: 36px;
-      border-radius: 24px;
-      width: 100%;
-      max-width: 420px;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
-    }
+.card{
+  width:100%;
+  max-width:420px;
+  background:#fff;
+  padding:36px 30px;
+  border-radius:22px;
+  box-shadow:0 18px 45px rgba(0,0,0,0.12);
+}
 
-    h2 {
-      text-align: center;
-      color: #0f6046;
-      margin-bottom: 6px;
-    }
+h2{
+  text-align:center;
+  margin:0;
+  color:#0f7a52;
+  font-weight:700;
+}
 
-    .quote {
-      text-align: center;
-      font-size: 0.95rem;
-      opacity: 0.75;
-      margin-bottom: 26px;
-    }
+.quote{
+  text-align:center;
+  margin:8px 0 28px;
+  font-size:0.95rem;
+  opacity:0.75;
+}
 
-    label {
-      display: block;
-      margin-top: 14px;
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
+label{
+  font-weight:600;
+  font-size:0.9rem;
+  margin-top:14px;
+  display:block;
+}
 
-    input, textarea {
-      width: 100%;
-      margin-top: 6px;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid #cfe6d8;
-      outline: none;
-      font-size: 0.95rem;
-    }
+input,select,textarea{
+  width:100%;
+  margin-top:6px;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #d7eadf;
+  font-size:0.95rem;
+  outline:none;
+  background:#fafffc;
+}
 
-    textarea {
-      resize: none;
-    }
+select{
+  appearance:none;
+}
 
-    button {
-      width: 100%;
-      margin-top: 22px;
-      background: #0f7a52;
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 14px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: 0.25s ease;
-    }
+textarea{
+  resize:none;
+}
 
-    button:hover {
-      background: #0ec772;
-    }
+button{
+  width:100%;
+  margin-top:26px;
+  padding:15px;
+  border:none;
+  border-radius:16px;
+  background:#0f7a52;
+  color:#fff;
+  font-size:1rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.25s ease;
+}
 
-    .success {
-      display: none;
-      text-align: center;
-      margin-top: 22px;
-      color: #0f6046;
-      font-weight: 600;
-      line-height: 1.4;
-    }
-  </style>
+button:hover{
+  background:#12b377;
+}
+
+.success{
+  display:none;
+  margin-top:26px;
+  padding:18px;
+  border-radius:16px;
+  background:#e8fff2;
+  border:1px solid #bfe8d2;
+  text-align:center;
+  font-weight:600;
+  color:#0f6046;
+  line-height:1.5;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="card">
-    <h2>Join EcoSafar 🌱</h2>
-    <p class="quote">
-      Take your first step towards a cleaner, smarter, and sustainable future.
-    </p>
+<div class="card">
+  <h2>Join EcoSafar 🌱</h2>
+  <p class="quote">
+    Your journey towards smarter and sustainable waste management starts here.
+  </p>
 
-    <form onsubmit="event.preventDefault(); showMessage();">
-      <label for="name">Full Name</label>
-      <input id="name" type="text" placeholder="Enter your full name" required>
+  <form onsubmit="handleRegister(event)">
+    
+    <label>Full Name</label>
+    <input type="text" placeholder="Enter your full name" required>
 
-      <label for="city">City</label>
-      <input id="city" type="text" placeholder="Enter your city" required>
+    <label>City</label>
+    <select required>
+      <option value="" disabled selected>Select your city</option>
+      <option>Anand</option>
+      <option>Ahmedabad</option>
+      <option>Surat</option>
+    </select>
 
-      <label for="address">Address</label>
-      <textarea id="address" rows="3" placeholder="Enter your complete address" required></textarea>
+    <label>Address</label>
+    <textarea rows="3" placeholder="Enter your complete address" required></textarea>
 
-      <button type="submit">Register</button>
-    </form>
+    <button type="submit">Register</button>
+  </form>
 
-    <div class="success" id="successMsg">
-      ✅ Your RFID tag will be generated and delivered to your address within the next  
-      <b>7 working days</b>.
-    </div>
+  <div class="success" id="successMsg">
+    ✅ Registration successful! <br>
+    Your RFID tag will be generated and delivered within  
+    <b>7 working days</b>.
   </div>
+</div>
 
-  <script>
-    function showMessage() {
-      document.getElementById("successMsg").style.display = "block";
-    }
-  </script>
+<script>
+function handleRegister(e){
+  e.preventDefault();
+
+  document.getElementById("successMsg").style.display="block";
+
+  // Redirect after 2.5 seconds
+  setTimeout(()=>{
+    window.location.href="index.html";
+  },2500);
+}
+</script>
 
 </body>
 </html>
