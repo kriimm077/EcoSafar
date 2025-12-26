@@ -67,15 +67,14 @@ input,select{width:100%;padding:12px;margin-top:6px;border-radius:10px;border:1p
 </div>
 
 <script>
-  // 🔌 Your actual Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
     authDomain: "ecosafar-3da96.firebaseapp.com",
     databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
     projectId: "ecosafar-3da96",
     storageBucket: "ecosafar-3da96.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    messagingSenderId: "277553134320",
+    appId: "1:277553134320:web:efd3d87dab7d925825a035"
   };
 
   firebase.initializeApp(firebaseConfig);
@@ -101,7 +100,8 @@ input,select{width:100%;padding:12px;margin-top:6px;border-radius:10px;border:1p
         return;
       }
       const admin = snapshot.val();
-      if (admin.adminId === user && admin.password === pass) {
+      
+      if (admin.adminID === user && admin.password === pass) {
         sessionStorage.setItem("ecosafar_admin", "true");
         sessionStorage.setItem("ecosafar_admin_city", city);
         window.location.href = "AdminDash.html";
