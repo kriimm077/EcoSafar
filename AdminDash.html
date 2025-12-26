@@ -5,243 +5,299 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • Admin Dashboard</title>
 
+<!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
 :root{
+  --green:#0f7a52;
   --green-dark:#0f4d3f;
-  --green-main:#0f7a52;
-  --green-light:#eaf8f1;
-  --danger:#d9534f;
-  --warn:#f0ad4e;
-  --ok:#5cb85c;
+  --yellow:#f2b705;
+  --red:#d84343;
+  --bg:#f4faf7;
+  --card:#ffffff;
 }
 
 *{
-  margin:0;
-  padding:0;
   box-sizing:border-box;
+  margin:0;
   font-family:Inter,sans-serif;
 }
 
 body{
-  background:#f0f9f4;
-  color:#2c2c2c;
+  background:var(--bg);
+  padding:32px;
+  color:#333;
 }
 
-/* TOP BAR */
-.topbar{
-  background:#ffffff;
-  padding:16px 28px;
+/* ================= HEADER ================= */
+.header{
   display:flex;
+  align-items:center;
   justify-content:space-between;
-  align-items:center;
-  box-shadow:0 4px 16px rgba(0,0,0,0.08);
-  position:sticky;
-  top:0;
-  z-index:10;
+  margin-bottom:32px;
 }
 
-.brand{
+.header-left{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:14px;
 }
 
-.brand img{
-  height:40px;
+.logo{
+  height:42px;
+  animation:logoDance 3s infinite ease-in-out;
 }
 
-.brand h1{
+@keyframes logoDance{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(6px)}
+  50%{transform:translateX(-6px)}
+  75%{transform:scale(1.06)}
+}
+
+h1{
   font-size:22px;
+  font-weight:700;
   color:var(--green-dark);
 }
 
-.btn{
-  background:var(--green-main);
-  color:white;
-  border:none;
-  padding:10px 22px;
-  border-radius:24px;
-  font-weight:600;
-  cursor:pointer;
+.subtitle{
+  font-size:13px;
+  color:#666;
 }
 
-.container{
-  padding:32px;
+/* ================= GRID ================= */
+.grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+  grid-template-columns:1fr 1fr;
   gap:28px;
 }
 
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr}
+}
+
+/* ================= CARD ================= */
 .card{
-  background:white;
-  border-radius:20px;
-  padding:24px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.1);
+  background:var(--card);
+  border-radius:18px;
+  padding:26px;
+  box-shadow:0 10px 25px rgba(0,0,0,.07);
 }
 
-.card h3{
-  margin-bottom:14px;
+.card-title{
+  font-size:17px;
+  font-weight:700;
   color:var(--green-dark);
-  font-size:18px;
-  border-bottom:1px solid #e0ece6;
-  padding-bottom:8px;
+  margin-bottom:18px;
 }
 
-#alerts li{
-  list-style:none;
-  background:var(--green-light);
-  padding:10px 12px;
-  border-radius:10px;
-  margin-bottom:10px;
+/* ================= BIN STATUS ================= */
+.stat{
+  display:flex;
+  justify-content:space-between;
   font-size:14px;
+  margin-bottom:10px;
 }
 
+.bar{
+  height:14px;
+  background:#e4f2ec;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.bar-fill{
+  height:100%;
+  width:0%;
+  transition:.4s;
+}
+
+/* ================= TABLE ================= */
 table{
   width:100%;
   border-collapse:collapse;
   font-size:14px;
-  margin-top:10px;
 }
 
 thead{
-  background:var(--green-main);
-  color:white;
+  background:#f2f8f5;
 }
 
 th,td{
-  padding:12px;
+  padding:10px;
   text-align:left;
 }
 
-tbody tr{
-  border-bottom:1px solid #edf4ef;
+th{
+  font-weight:600;
+  color:var(--green-dark);
 }
 
-tbody tr:hover{
-  background:#f3fbf7;
+tbody tr:not(:last-child){
+  border-bottom:1px solid #eee;
+}
+
+.rank{
+  font-weight:600;
+  color:var(--green);
+}
+
+/* ================= LOGOUT ================= */
+.logout{
+  background:var(--green);
+  color:#fff;
+  border:none;
+  padding:8px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+.logout:hover{
+  background:var(--green-dark);
 }
 </style>
 </head>
 
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    <img src="logo.png">
-    <h1>EcoSafar Admin Panel</h1>
+<!-- ================= HEADER ================= -->
+<div class="header">
+  <div class="header-left">
+    <img src="logo.png" class="logo">
+    <div>
+      <h1>EcoSafar Admin Dashboard</h1>
+      <div class="subtitle" id="citySubtitle"></div>
+    </div>
   </div>
-  <button class="btn" onclick="location.href='index.html'">Home</button>
-</header>
+  <button class="logout" onclick="logout()">Logout</button>
+</div>
 
-<main class="container">
+<!-- ================= CONTENT ================= -->
+<div class="grid">
 
-<!-- ALERTS -->
-<section class="card">
-  <h3>System Alerts</h3>
-  <ul id="alerts">
-    <li>Loading alerts...</li>
-  </ul>
-</section>
+  <!-- BIN STATUS -->
+  <div class="card">
+    <div class="card-title" id="binTitle"></div>
 
-<!-- USERS / CITY TABLE -->
-<section class="card">
-  <h3>User & City Waste Data</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>User</th>
-        <th>City</th>
-        <th>Total Waste (g)</th>
-        <th>Eco Points</th>
-      </tr>
-    </thead>
-    <tbody id="userTable"></tbody>
-  </table>
-</section>
+    <div class="stat">
+      <span>Fill Level</span>
+      <strong id="fillText">--%</strong>
+    </div>
 
-<!-- OPERATIONS -->
-<section class="card">
-  <h3>Operations</h3>
-  <button class="btn" onclick="downloadCSV()">Download CSV Report</button>
-</section>
+    <div class="bar">
+      <div id="fillBar" class="bar-fill"></div>
+    </div>
 
-</main>
+    <div class="stat" style="margin-top:14px">
+      <span>Total Waste Collected</span>
+      <strong id="binWeight">-- kg</strong>
+    </div>
+  </div>
+
+  <!-- USER TABLE -->
+  <div class="card">
+    <div class="card-title">👥 City User Leaderboard</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Total Weight (g)</th>
+          <th>Eco Points</th>
+        </tr>
+      </thead>
+      <tbody id="userTable"></tbody>
+    </table>
+  </div>
+
+</div>
 
 <script>
-/* LOAD ALERTS */
-async function loadAlerts(){
-  const ul = document.getElementById("alerts");
-  ul.innerHTML = "";
+/* ================= AUTH PROTECTION ================= */
+if(sessionStorage.getItem("ecosafar_admin") !== "true"){
+  window.location.href = "AdminLogin.html";
+}
 
-  try{
-    const res = await fetch("/api/alerts");
-    const data = await res.json();
+/* ================= FIREBASE ================= */
+firebase.initializeApp({
+  apiKey:"AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
+  databaseURL:"https://ecosafar-3da96-default-rtdb.firebaseio.com",
+  projectId:"ecosafar-3da96"
+});
 
-    if(data.length === 0){
-      ul.innerHTML = "<li>No active alerts</li>";
-      return;
+const db = firebase.database();
+
+/* ================= CURRENT CITY ================= */
+const currentCity = sessionStorage.getItem("ecosafar_admin_city");
+if(!currentCity){
+  window.location.href = "AdminLogin.html";
+}
+
+/* ================= UI TEXT ================= */
+citySubtitle.innerText = "City Monitoring • " + currentCity;
+binTitle.innerText = "🗑 " + currentCity + " Dustbin Status";
+
+/* ================= BIN DATA ================= */
+db.ref("bins/" + currentCity).on("value", snap=>{
+  if(!snap.exists()) return;
+
+  const d = snap.val();
+  const fill = d.fillPercentage || 0;
+
+  fillText.innerText = fill + "%";
+  binWeight.innerText =
+    ((d.TotalWeight || 0) / 1000).toFixed(2) + " kg";
+
+  fillBar.style.width = fill + "%";
+  fillBar.style.background =
+    fill > 85 ? "var(--red)" :
+    fill > 65 ? "var(--yellow)" :
+    "var(--green)";
+});
+
+/* ================= USERS ================= */
+db.ref("users").on("value", snap=>{
+  let users = [];
+
+  snap.forEach(u=>{
+    const user = u.val();
+    if(user.city === currentCity){
+      users.push(user);
     }
-
-    data.forEach(a=>{
-      const li = document.createElement("li");
-      li.innerHTML = `<strong>${a.city || "General"}:</strong> ${a.message}`;
-      ul.appendChild(li);
-    });
-
-  }catch{
-    ul.innerHTML = "<li>Error loading alerts</li>";
-  }
-}
-
-/* LOAD USERS */
-async function loadUsers(){
-  const tbody = document.getElementById("userTable");
-  tbody.innerHTML = "";
-
-  try{
-    const res = await fetch("/api/residents");
-    const users = await res.json();
-
-    users.forEach(u=>{
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${u.name}</td>
-        <td>${u.city || "—"}</td>
-        <td>${u.TotalWeight}</td>
-        <td>${u.Ecopoints}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-  }catch{
-    tbody.innerHTML = "<tr><td colspan='4'>Failed to load data</td></tr>";
-  }
-}
-
-/* CSV DOWNLOAD */
-async function downloadCSV(){
-  const res = await fetch("/api/residents");
-  const users = await res.json();
-
-  let csv = "Name,City,Total Waste (g),Eco Points\n";
-  users.forEach(u=>{
-    csv += `${u.name},${u.city},${u.TotalWeight},${u.Ecopoints}\n`;
   });
 
-  const blob = new Blob([csv], {type:"text/csv"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "EcoSafar_Report.csv";
-  a.click();
-  URL.revokeObjectURL(url);
-}
+  users.sort((a,b)=>(b.Ecopoints||0)-(a.Ecopoints||0));
+  userTable.innerHTML = "";
 
-/* INIT */
-loadAlerts();
-loadUsers();
+  users.forEach((u,i)=>{
+    userTable.innerHTML += `
+      <tr>
+        <td class="rank">${i+1}</td>
+        <td>${u.name || "-"}</td>
+        <td>${u.TotalWeight || 0}</td>
+        <td>${u.Ecopoints || 0}</td>
+      </tr>
+    `;
+  });
+
+  if(users.length === 0){
+    userTable.innerHTML =
+      "<tr><td colspan='4'>No users found</td></tr>";
+  }
+});
+
+/* ================= LOGOUT ================= */
+function logout(){
+  sessionStorage.clear();
+  window.location.href = "AdminLogin.html";
+}
 </script>
 
 </body>
