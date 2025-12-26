@@ -7,81 +7,86 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
 :root {
-  --green-700:#145A13;
-  --accent:#2ecc71;
+  --green-700: #145A13;
+  --accent: #2ecc71;
 }
-*{margin:0;padding:0;box-sizing:border-box;font-family:"Inter",sans-serif;}
-body{
-  background:linear-gradient(135deg,#e1f3e7,#d6efe1);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
 }
-.card{
-  background:#fff;
-  padding:40px 30px;
-  border-radius:20px;
-  width:360px;
-  box-shadow:0 15px 35px rgba(0,0,0,0.1);
-  text-align:center;
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg,#e1f3e7,#d6efe1);
 }
-.logo-box img{
-  width:90px;
-  margin-bottom:15px;
+.card {
+  width: 360px;
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
 }
-.title{
-  font-size:26px;
-  font-weight:700;
-  color:var(--green-700);
+.logo-box img {
+  width: 90px;
+  margin-bottom: 12px;
 }
-.subtitle{
-  font-size:13px;
-  color:#4f5e57;
-  margin-bottom:20px;
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--green-700);
 }
-label{
-  display:block;
-  text-align:left;
-  margin-top:15px;
-  font-size:13px;
-  font-weight:500;
+.subtitle {
+  font-size: 13px;
+  color: #4f5e57;
+  margin-bottom: 20px;
 }
-input,select{
-  width:100%;
-  padding:12px;
-  margin-top:6px;
-  border-radius:10px;
-  border:1px solid #c8d8cc;
-  font-size:14px;
+label {
+  display: block;
+  text-align: left;
+  margin-top: 15px;
+  font-size: 13px;
+  font-weight: 500;
 }
-.btn{
-  margin-top:25px;
-  width:100%;
-  padding:12px;
-  background:var(--green-700);
-  color:#fff;
-  border:none;
-  font-size:16px;
-  font-weight:600;
-  border-radius:12px;
-  cursor:pointer;
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border-radius: 10px;
+  border: 1px solid #c8d8cc;
 }
-.btn:hover{background:var(--accent);}
-.error-box{
-  display:none;
-  background:#ffe7e7;
-  color:#c40000;
-  padding:10px;
-  border-radius:10px;
-  margin-top:15px;
-  font-size:13px;
+.btn {
+  width: 100%;
+  margin-top: 25px;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: var(--green-700);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn:hover {
+  background: var(--accent);
+}
+.error-box {
+  display: none;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  background: #ffe7e7;
+  color: #c40000;
+  font-size: 13px;
 }
 </style>
 </head>
@@ -99,8 +104,8 @@ input,select{
   <label>City</label>
   <select id="city">
     <option value="">Select City</option>
-    <option value="Ahmedabad">Ahmedabad</option>
     <option value="Anand">Anand</option>
+    <option value="Ahmedabad">Ahmedabad</option>
     <option value="Surat">Surat</option>
   </select>
 
@@ -112,25 +117,22 @@ input,select{
 
   <button class="btn" onclick="loginAdmin()">Sign In</button>
 
-  <div class="error-box" id="errorBox"></div>
+  <div class="error-box" id="errorBox">Invalid credentials</div>
 </div>
 
 <script>
-/* 🔥 YOUR FIREBASE CONFIG */
+/* 🔥 USE SAME FIREBASE PROJECT AS YOUR DATABASE SCREENSHOT */
 const firebaseConfig = {
   apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
-  authDomain: "ecosafar-3da96.firebaseapp.com",
-  databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
-  projectId: "ecosafar-3da96",
-  storageBucket: "ecosafar-3da96.appspot.com",
-  messagingSenderId: "277553134320",
-  appId: "1:277553134320:web:efd3d87dab7d925825a035"
+  authDomain: "ecosafar-b8e9b.firebaseapp.com",
+  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
+  projectId: "ecosafar-b8e9b",
+  storageBucket: "ecosafar-b8e9b.appspot.com"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* ✅ LOGIN FUNCTION */
 function loginAdmin() {
   const city = document.getElementById("city").value;
   const user = document.getElementById("adminUser").value.trim();
@@ -155,7 +157,6 @@ function loginAdmin() {
 
       const admin = snapshot.val();
 
-      // 🔑 MATCHES YOUR FIREBASE KEYS EXACTLY
       if (admin.adminID === user && admin.Password === pass) {
         sessionStorage.setItem("ecosafar_admin", "true");
         sessionStorage.setItem("ecosafar_admin_city", city);
@@ -166,9 +167,9 @@ function loginAdmin() {
       }
     })
     .catch(err => {
+      console.error(err);
       errorBox.style.display = "block";
       errorBox.textContent = "Database error";
-      console.error(err);
     });
 }
 </script>
