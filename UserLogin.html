@@ -6,54 +6,82 @@
 <title>EcoSafar • User Login</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-:root {
-    --primary: #145A13;
-    --accent: #2ecc71;
-    --bg: #eef9f1;
-    --text-muted: #5f6f66;
+body{
+  background:linear-gradient(135deg,#e8f6ef,#dff3ea);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Inter,sans-serif;
 }
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
-body { background: linear-gradient(135deg,#e8f6ef,#dff3ea); min-height:100vh; display:flex; justify-content:center; align-items:center; padding:20px; }
-.card { background:#fff; width:420px; padding:50px 35px; border-radius:24px; box-shadow:0 25px 60px rgba(0,0,0,0.12); text-align:center; }
-.logo { width:120px; height:120px; margin:0 auto 20px; display:block; border-radius:16px; object-fit:contain; animation: logo-pulse 2s infinite ease-in-out, logo-float 3s infinite ease-in-out; }
-@keyframes logo-pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
-@keyframes logo-float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
-h2 { color: var(--primary); font-size:28px; margin-bottom:6px; }
-.subtitle { font-size:14px; color:var(--text-muted); margin-bottom:28px; }
-label { font-weight:600; margin-bottom:6px; display:block; text-align:left; color:#2f3e36; }
-input, select { width:100%; padding:14px 16px; border-radius:12px; border:1px solid #cfded5; margin-bottom:18px; font-size:15px; }
-input:focus, select:focus { outline:none; border-color: var(--accent); box-shadow:0 0 6px rgba(46,204,113,0.35); }
-button { width:100%; padding:15px; border:none; border-radius:16px; background: var(--primary); color:#fff; font-size:16px; font-weight:600; cursor:pointer; margin-bottom:12px; }
-button:hover { background:#1a7a1f; }
-.register-btn { background: var(--accent); color:#0b3d0f; }
-.register-btn:hover { background:#28b463; }
-.msg { margin-top:18px; font-weight:600; font-size:14px; }
-.error { color:#c40000; }
-.success { color: var(--primary); }
+.card{
+  background:#fff;
+  width:420px;
+  padding:45px 35px;
+  border-radius:24px;
+  box-shadow:0 25px 60px rgba(0,0,0,.12);
+  text-align:center;
+}
+.logo{
+  width:120px;
+  animation:float 3s infinite ease-in-out;
+}
+@keyframes float{
+  50%{transform:translateY(-8px)}
+}
+label{text-align:left;display:block;font-weight:600;margin-top:12px;}
+input,select{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid #cfded5;
+  margin-top:6px;
+}
+button{
+  width:100%;
+  padding:15px;
+  margin-top:22px;
+  background:#145A13;
+  color:white;
+  border:none;
+  border-radius:16px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
+.msg{margin-top:14px;font-weight:600}
+.error{color:#c40000}
+.success{color:#145A13}
 </style>
 </head>
 
 <body>
 
 <div class="card">
-    <img src="logo.png" alt="EcoSafar Logo" class="logo">
-    <h2>User Login</h2>
-    <p class="subtitle">Access your EcoSafar account</p>
+  <img src="logo.png" class="logo">
+  <h2>User Login</h2>
 
-    <label for="uid">RFID UID</label>
-    <input id="uid" placeholder="BF604DEE">
+  <label>City</label>
+  <select id="city">
+    <option value="">Select City</option>
+    <option>Anand</option>
+    <option>Ahmedabad</option>
+    <option>Surat</option>
+  </select>
 
-    <label for="password">Password</label>
-    <input id="password" type="password" placeholder="Enter your password">
+  <label>RFID UID</label>
+  <input id="uid" placeholder="BF604DEE">
 
-    <button id="loginBtn" onclick="login()">Login</button>
-    <button class="register-btn" onclick="goRegister()">New User? Register</button>
+  <label>Password</label>
+  <input id="password" type="password">
 
-    <div id="msg" class="msg"></div>
+  <button onclick="login()">Login</button>
+  <div id="msg" class="msg"></div>
 </div>
 
 <script>
@@ -66,54 +94,39 @@ firebase.initializeApp({
 const db = firebase.database();
 
 function login(){
-    const uid = document.getElementById("uid").value.trim().toUpperCase();
-    const password = document.getElementById("password").value.trim();
-    const msg = document.getElementById("msg");
-    const btn = document.getElementById("loginBtn");
+  const city = city.value;
+  const uid = uid.value.trim().toUpperCase();
+  const password = document.getElementById("password").value;
+  const msg = document.getElementById("msg");
 
-    msg.innerHTML = "";
-    if(!uid || !password){
-        msg.innerHTML = "<span class='error'>Please fill all fields</span>";
-        return;
+  if(!city || !uid || !password){
+    msg.innerHTML="<span class='error'>Fill all fields</span>";
+    return;
+  }
+
+  db.ref("users/" + uid).once("value").then(snap=>{
+    if(!snap.exists()){
+      msg.innerHTML="<span class='error'>RFID not registered</span>";
+      return;
     }
 
-    btn.disabled = true;
-    msg.innerHTML = "Checking credentials...";
+    const user = snap.val();
 
-    // ✅ Correct path for registered users
-    const ref = db.ref(`users/${uid}`);
+    if(user.city !== city){
+      msg.innerHTML="<span class='error'>Wrong city</span>";
+      return;
+    }
 
-    ref.once("value").then(snap=>{
-        btn.disabled = false;
-        if(!snap.exists()){
-            msg.innerHTML = "<span class='error'>User not registered</span>";
-            return;
-        }
+    if(user.password !== password){
+      msg.innerHTML="<span class='error'>Incorrect password</span>";
+      return;
+    }
 
-        const user = snap.val();
-        if(user.password !== password){
-            msg.innerHTML = "<span class='error'>Incorrect password</span>";
-            return;
-        }
-
-        msg.innerHTML = "<span class='success'>Login successful ✔</span>";
-
-        // Save user UID in sessionStorage for dashboard access
-        sessionStorage.setItem("ecosafar_user", uid);
-        sessionStorage.setItem("ecosafar_user_city", user.city);
-
-        setTimeout(()=>{
-            window.location.href = "UserDash.html"; // your user dashboard
-        },1200);
-    }).catch(err=>{
-        btn.disabled = false;
-        console.error(err);
-        msg.innerHTML = "<span class='error'>Database error</span>";
-    });
-}
-
-function goRegister(){
-    window.location.href = "UserRegistration.html";
+    msg.innerHTML="<span class='success'>Login successful ✔</span>";
+    setTimeout(()=>{
+      location.href = `UserDash.html?uid=${uid}&city=${city}`;
+    },1200);
+  });
 }
 </script>
 
