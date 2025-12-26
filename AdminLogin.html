@@ -7,6 +7,9 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <style>
 :root {
     --green-900: #0b3d0f;
@@ -36,12 +39,6 @@ body {
     width: 420px;
     box-shadow: 0 18px 40px rgba(0,0,0,0.09);
     text-align: center;
-}
-
-.logo-box {
-    padding: 18px;
-    border-radius: 22px;
-    margin-bottom: 24px;
 }
 
 .logo-box img {
@@ -117,9 +114,7 @@ input, select {
 
 <div class="card">
 
-    <div class="logo-box">
-        <img src="logo.png" alt="EcoSafar Logo">
-    </div>
+    <img src="logo.png" alt="EcoSafar Logo">
 
     <h2 class="title">Admin Login</h2>
     <p class="subtitle">City Control Panel Access</p>
@@ -140,11 +135,21 @@ input, select {
 
     <button class="btn" onclick="loginAdmin()">Sign In</button>
 
-    <div class="error-box" id="errorBox">Invalid city or credentials</div>
+    <div class="error-box" id="errorBox">Invalid credentials</div>
 
 </div>
 
 <script>
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+  projectId: "YOUR_PROJECT",
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
 function loginAdmin() {
     const city = document.getElementById("city").value;
     const user = document.getElementById("adminUser").value.trim();
@@ -153,25 +158,27 @@ function loginAdmin() {
 
     errorBox.style.display = "none";
 
-    // City-based admin credentials (demo)
-    const admins = {
-        Anand: { id: "anand_admin", pass: "anand@123" },
-        Ahmedabad: { id: "amd_admin", pass: "amd@123" },
-        Surat: { id: "surat_admin", pass: "surat@123" }
-    };
-
-    if (!city || !admins[city]) {
+    if (!city || !user || !pass) {
         errorBox.style.display = "block";
         return;
     }
 
-    if (user === admins[city].id && pass === admins[city].pass) {
-        sessionStorage.setItem("ecosafar_admin", "true");
-        sessionStorage.setItem("ecosafar_admin_city", city);
-        window.location.href = "AdminDash.html";
-    } else {
-        errorBox.style.display = "block";
-    }
+    db.ref("admins/" + city).once("value").then(snapshot => {
+        if (!snapshot.exists()) {
+            errorBox.style.display = "block";
+            return;
+        }
+
+        const admin = snapshot.val();
+
+        if (admin.adminId === user && admin.password === pass) {
+            sessionStorage.setItem("ecosafar_admin", "true");
+            sessionStorage.setItem("ecosafar_admin_city", city);
+            window.location.href = "AdminDash.html";
+        } else {
+            errorBox.style.display = "block";
+        }
+    });
 }
 </script>
 
