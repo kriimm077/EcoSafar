@@ -3,16 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EcoSafar • Smart Waste Management</title>
+<title>EcoSafar • Smart Waste Ecosystem</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --primary:#145A13;
-  --accent:#2ecc71;
-  --bg:#eef9f1;
-  --text:#2f3e36;
+  --green:#1b7a3c;
+  --green-light:#2ecc71;
+  --dark:#0f1f16;
+  --muted:#6c7c73;
+  --bg1:#e8f6ef;
+  --bg2:#d6f0e1;
 }
 
 *{
@@ -23,134 +25,176 @@
 }
 
 body{
-  background:linear-gradient(135deg,#e8f6ef,#dff3ea);
+  background:
+    radial-gradient(circle at top right, rgba(46,204,113,.25), transparent 55%),
+    linear-gradient(135deg,var(--bg1),var(--bg2));
   min-height:100vh;
+  color:var(--dark);
 }
 
-/* ---------- NAV ---------- */
-nav{
+/* ---------- HEADER ---------- */
+header{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:18px 40px;
+  padding:22px 56px;
 }
 
 .brand{
   display:flex;
   align-items:center;
-  gap:12px;
+  gap:14px;
 }
 
 .brand img{
-  width:48px;
+  width:52px;
   animation:float 3s ease-in-out infinite;
 }
 
-.brand span{
-  font-size:22px;
-  font-weight:700;
-  color:var(--primary);
+.brand h1{
+  font-size:24px;
+  font-weight:800;
+  color:var(--green);
 }
 
 @keyframes float{
   0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-6px)}
+  50%{transform:translateY(-7px)}
 }
 
 /* ---------- HERO ---------- */
 .hero{
   display:grid;
-  grid-template-columns:1.1fr 1fr;
-  gap:40px;
-  padding:60px 60px 40px;
+  grid-template-columns:1.15fr 1fr;
+  gap:50px;
+  padding:70px 70px 40px;
   align-items:center;
 }
 
-.left h1{
-  font-size:44px;
-  line-height:1.2;
-  color:#1f2f28;
-  margin-bottom:14px;
+/* LEFT */
+.left h2{
+  font-size:48px;
+  line-height:1.15;
+  font-weight:800;
+  margin-bottom:18px;
 }
 
-.left h1 span{
-  color:var(--primary);
+.left h2 span{
+  color:var(--green);
 }
 
 .left p{
   font-size:16px;
-  color:#5f6f66;
+  color:var(--muted);
   max-width:520px;
-  margin-bottom:26px;
+  margin-bottom:34px;
+}
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+  margin-bottom:38px;
+}
+
+.feature{
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(10px);
+  padding:14px 16px;
+  border-radius:14px;
+  font-size:14px;
+  font-weight:600;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
 .btn{
-  padding:14px 28px;
-  background:var(--primary);
-  color:#fff;
+  padding:16px 34px;
   border:none;
-  border-radius:18px;
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--green),var(--green-light));
+  color:#fff;
   font-size:16px;
-  font-weight:600;
+  font-weight:700;
   cursor:pointer;
+  box-shadow:0 12px 30px rgba(27,122,60,.35);
   transition:.25s ease;
 }
 
 .btn:hover{
-  background:var(--accent);
-  color:#0b3d0f;
-  transform:translateY(-2px);
+  transform:translateY(-3px);
+  box-shadow:0 18px 40px rgba(27,122,60,.45);
 }
 
-/* ---------- RIGHT IMAGE ---------- */
+/* RIGHT */
 .right{
-  display:flex;
-  justify-content:center;
+  position:relative;
+  padding:26px;
+  border-radius:28px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.45),rgba(255,255,255,.15));
+  backdrop-filter:blur(14px);
+  box-shadow:0 30px 70px rgba(0,0,0,.18);
+}
+
+.right::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius:30px;
+  background:linear-gradient(135deg,rgba(46,204,113,.4),transparent);
+  z-index:-1;
 }
 
 .right img{
   width:100%;
-  max-width:520px;
-  border-radius:24px;
-  box-shadow:0 25px 60px rgba(0,0,0,.15);
+  border-radius:22px;
+  mix-blend-mode:multiply;
 }
 
 /* ---------- RESPONSIVE ---------- */
-@media(max-width:900px){
+@media(max-width:1000px){
   .hero{
     grid-template-columns:1fr;
-    padding:40px 24px;
+    padding:50px 26px;
     text-align:center;
   }
-  .left p{margin:auto auto 26px;}
+  .left p{margin:0 auto 34px;}
+  .features{grid-template-columns:1fr;}
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAV -->
-<nav>
+<header>
   <div class="brand">
     <img src="logo.png" alt="EcoSafar Logo">
-    <span>EcoSafar</span>
+    <h1>EcoSafar</h1>
   </div>
-</nav>
+</header>
 
-<!-- HERO -->
 <section class="hero">
 
-  <!-- LEFT CONTENT -->
+  <!-- LEFT -->
   <div class="left">
-    <h1>Smart Waste.<br><span>Greener Future.</span></h1>
+    <h2>Smart Waste,<br><span>Real Impact.</span></h2>
+
     <p>
-      EcoSafar is an intelligent waste-management system that tracks waste,
-      rewards eco-friendly actions, and connects smart dustbins to a live dashboard.
+      EcoSafar connects smart dustbins, RFID users, and real-time analytics
+      to reward responsible waste disposal and build greener cities.
     </p>
+
+    <div class="features">
+      <div class="feature">🪪 RFID-based User Identification</div>
+      <div class="feature">⚖ Real-time Weight Tracking</div>
+      <div class="feature">🌱 EcoPoints & Rewards</div>
+      <div class="feature">📡 ESP32 → Cloud Sync</div>
+    </div>
+
     <button class="btn" onclick="goLogin()">Go to Dashboard</button>
   </div>
 
-  <!-- RIGHT FLOW IMAGE -->
+  <!-- RIGHT -->
   <div class="right">
     <img src="flow.png" alt="EcoSafar System Flow">
   </div>
