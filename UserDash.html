@@ -25,7 +25,6 @@ body{
   min-height:100vh;
   display:flex;
   justify-content:center;
-  align-items:flex-start;
   padding:40px 0;
 }
 
@@ -41,13 +40,12 @@ body{
 .logo{width:110px;margin-bottom:16px;}
 
 h2{color:var(--green-main);margin-bottom:6px;}
-
 .uid{font-size:14px;margin-bottom:22px;color:#4f5e57;}
 
 .stats{
   display:flex;
   gap:12px;
-  margin-bottom:20px;
+  margin-bottom:22px;
 }
 
 .stat{
@@ -64,7 +62,7 @@ h2{color:var(--green-main);margin-bottom:6px;}
 }
 
 .stat div{
-  font-size:20px;
+  font-size:22px;
   font-weight:700;
   color:var(--green-main);
 }
@@ -73,7 +71,7 @@ h2{color:var(--green-main);margin-bottom:6px;}
   background:#f0faf3;
   padding:16px;
   border-radius:14px;
-  margin-bottom:22px;
+  margin-bottom:24px;
 }
 
 .convert-box p{
@@ -81,27 +79,34 @@ h2{color:var(--green-main);margin-bottom:6px;}
   font-weight:600;
 }
 
-.btn{
-  margin-top:10px;
-  padding:12px;
+.history{text-align:left;}
+.history h3{margin-bottom:12px;color:var(--green-dark);}
+
+table{
   width:100%;
-  border:none;
-  border-radius:14px;
-  background:var(--green-main);
-  color:white;
-  font-size:15px;
-  font-weight:600;
+  border-collapse:collapse;
+  font-size:14px;
 }
 
-.history{text-align:left;}
-.history h3{margin-bottom:10px;color:var(--green-dark);}
-.history-item{
+th,td{
+  padding:8px;
+  text-align:center;
+}
+
+th{
+  background:#e6f4ea;
+  color:#145A13;
+}
+
+tr:nth-child(even){
+  background:#f5fbf7;
+}
+
+.empty{
   background:#eef9f1;
-  padding:8px 10px;
-  border-left:4px solid var(--accent);
-  border-radius:6px;
+  padding:10px;
+  border-radius:8px;
   font-size:14px;
-  margin-bottom:6px;
 }
 </style>
 </head>
@@ -110,16 +115,17 @@ h2{color:var(--green-main);margin-bottom:6px;}
 
 <div class="card">
   <img src="logo.png" class="logo">
+
   <h2>Welcome, <span id="userName">---</span></h2>
   <div class="uid">RFID UID: <b id="userUID">----</b></div>
 
   <div class="stats">
     <div class="stat">
-      <h4>EcoPoints</h4>
+      <h4>Total EcoPoints</h4>
       <div id="points">0</div>
     </div>
     <div class="stat">
-      <h4>Total Waste (grams)</h4>
+      <h4>Total Waste (g)</h4>
       <div id="weight">0</div>
     </div>
   </div>
@@ -127,14 +133,12 @@ h2{color:var(--green-main);margin-bottom:6px;}
   <div class="convert-box">
     <p>Redeem Value</p>
     <p>₹ <span id="money">0</span></p>
-    <button class="btn" onclick="convert()">Convert</button>
+    <p style="font-size:12px;color:#555;">(100g = ₹10)</p>
   </div>
 
   <div class="history">
-    <h3>History</h3>
-    <div id="historyList">
-      <div class="history-item">Live data from ESP32</div>
-    </div>
+    <h3>Transaction History</h3>
+    <div id="historyList" class="empty">Waiting for ESP32 data…</div>
   </div>
 </div>
 
@@ -151,36 +155,52 @@ const db = firebase.database();
 /* ---------- GET UID FROM URL ---------- */
 const params = new URLSearchParams(window.location.search);
 const uid = (params.get("uid") || "").toUpperCase();
-
 document.getElementById("userUID").innerText = uid || "----";
 
-/* ---------- READ USER DATA ---------- */
+/* ---------- LIVE USER DATA ---------- */
 if(uid){
 
-  db.ref(`users/${uid}`).on("value", snapshot => {
+  db.ref("users/" + uid).on("value", snap => {
 
-    if(!snapshot.exists()) return;
+    if(!snap.exists()) return;
 
-    const data = snapshot.val();
+    const data = snap.val();
 
-    const name = data.name || "User";
-    const totalWeight = parseFloat(data.TotalWeight || 0); // grams
+    document.getElementById("userName").innerText = data.name || "User";
+    document.getElementById("weight").innerText = data.totalWeight || 0;
+    document.getElementById("points").innerText = data.totalEcoPoints || 0;
+    document.getElementById("money").innerText = data.totalEcoPoints || 0;
 
-    const ecoPoints = Math.floor(totalWeight / 10);
-    const money = ecoPoints; // ₹1 per EcoPoint
+    const history = data.history || {};
+    const entries = Object.values(history).reverse();
 
-    document.getElementById("userName").innerText = name;
-    document.getElementById("weight").innerText = totalWeight;
-    document.getElementById("points").innerText = ecoPoints;
-    document.getElementById("money").innerText = money;
+    const historyDiv = document.getElementById("historyList");
 
+    if(entries.length === 0){
+      historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
+      return;
+    }
+
+    let html = `
+      <table>
+        <tr>
+          <th>#</th>
+          <th>Waste (g)</th>
+          <th>EcoPoints</th>
+        </tr>`;
+
+    entries.forEach((e,i)=>{
+      html += `
+        <tr>
+          <td>${i+1}</td>
+          <td>${e.weight}</td>
+          <td>+${e.ecoPoints}</td>
+        </tr>`;
+    });
+
+    html += "</table>";
+    historyDiv.innerHTML = html;
   });
-}
-
-/* ---------- CONVERT BUTTON ---------- */
-function convert(){
-  const points = parseInt(document.getElementById("points").innerText);
-  document.getElementById("money").innerText = points;
 }
 </script>
 
