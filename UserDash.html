@@ -7,12 +7,14 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <style>
 :root{
   --green-dark:#0b3d0f;
   --green-main:#145A13;
   --accent:#2ecc71;
-  --bg:#eaf6ea;
 }
 
 *{box-sizing:border-box;font-family:Inter,sans-serif;}
@@ -27,36 +29,21 @@ body{
   padding:40px 0;
 }
 
-/* CARD */
 .card{
   background:#fff;
   width:420px;
-  max-width:95%;
   padding:35px 28px;
   border-radius:26px;
-  box-shadow:0 18px 45px rgba(0,0,0,0.18);
+  box-shadow:0 18px 45px rgba(0,0,0,.18);
   text-align:center;
 }
 
-/* LOGO */
-.logo{
-  width:110px;
-  margin-bottom:16px;
-}
+.logo{width:110px;margin-bottom:16px;}
 
-/* TITLES */
-h2{
-  color:var(--green-main);
-  margin-bottom:6px;
-}
+h2{color:var(--green-main);margin-bottom:6px;}
 
-.uid{
-  font-size:14px;
-  margin-bottom:22px;
-  color:#4f5e57;
-}
+.uid{font-size:14px;margin-bottom:22px;color:#4f5e57;}
 
-/* STATS */
 .stats{
   display:flex;
   gap:12px;
@@ -82,7 +69,6 @@ h2{
   color:var(--green-main);
 }
 
-/* CONVERT */
 .convert-box{
   background:#f0faf3;
   padding:16px;
@@ -105,23 +91,10 @@ h2{
   color:white;
   font-size:15px;
   font-weight:600;
-  cursor:pointer;
 }
 
-.btn:hover{
-  background:var(--accent);
-}
-
-/* HISTORY */
-.history{
-  text-align:left;
-}
-
-.history h3{
-  margin-bottom:10px;
-  color:var(--green-dark);
-}
-
+.history{text-align:left;}
+.history h3{margin-bottom:10px;color:var(--green-dark);}
 .history-item{
   background:#eef9f1;
   padding:8px 10px;
@@ -137,7 +110,7 @@ h2{
 
 <div class="card">
   <img src="logo.png" class="logo">
-  <h2>Welcome, <span id="userName">User</span></h2>
+  <h2>Welcome, <span id="userName">---</span></h2>
   <div class="uid">RFID UID: <b id="userUID">----</b></div>
 
   <div class="stats">
@@ -146,7 +119,7 @@ h2{
       <div id="points">0</div>
     </div>
     <div class="stat">
-      <h4>Total Waste (kg)</h4>
+      <h4>Total Waste (grams)</h4>
       <div id="weight">0</div>
     </div>
   </div>
@@ -154,60 +127,60 @@ h2{
   <div class="convert-box">
     <p>Redeem Value</p>
     <p>₹ <span id="money">0</span></p>
-    <button class="btn" onclick="convert()">Convert EcoPoints to Money</button>
+    <button class="btn" onclick="convert()">Convert</button>
   </div>
 
   <div class="history">
     <h3>History</h3>
-    <div id="historyList"></div>
+    <div id="historyList">
+      <div class="history-item">Live data from ESP32</div>
+    </div>
   </div>
 </div>
 
 <script>
-/* MOCK DATA (works on GitHub Pages) */
-const users = {
-  "BF604DEE": {
-    name:"Het",
-    points:40,
-    weight:18,
-    history:[
-      "Disposed 5kg waste (+5 pts)",
-      "Disposed 8kg waste (+8 pts)",
-      "Disposed 5kg waste (+5 pts)"
-    ]
-  }
-};
+/* ---------- FIREBASE INIT ---------- */
+firebase.initializeApp({
+  apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
+  databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
+  projectId: "ecosafar-3da96"
+});
 
-/* UID from URL */
+const db = firebase.database();
+
+/* ---------- GET UID FROM URL ---------- */
 const params = new URLSearchParams(window.location.search);
 const uid = (params.get("uid") || "").toUpperCase();
 
 document.getElementById("userUID").innerText = uid || "----";
 
-const user = users[uid] || {name:"User",points:0,weight:0,history:[]};
+/* ---------- READ USER DATA ---------- */
+if(uid){
 
-document.getElementById("userName").innerText = user.name;
-document.getElementById("points").innerText = user.points;
-document.getElementById("weight").innerText = user.weight;
+  db.ref(`users/${uid}`).on("value", snapshot => {
 
-/* HISTORY */
-const historyList = document.getElementById("historyList");
-if(user.history.length){
-  user.history.reverse().forEach(h=>{
-    const div=document.createElement("div");
-    div.className="history-item";
-    div.innerText=h;
-    historyList.appendChild(div);
+    if(!snapshot.exists()) return;
+
+    const data = snapshot.val();
+
+    const name = data.name || "User";
+    const totalWeight = parseFloat(data.TotalWeight || 0); // grams
+
+    const ecoPoints = Math.floor(totalWeight / 10);
+    const money = ecoPoints; // ₹1 per EcoPoint
+
+    document.getElementById("userName").innerText = name;
+    document.getElementById("weight").innerText = totalWeight;
+    document.getElementById("points").innerText = ecoPoints;
+    document.getElementById("money").innerText = money;
+
   });
-}else{
-  historyList.innerHTML="<div class='history-item'>No history yet</div>";
 }
 
-/* CONVERT BUTTON */
+/* ---------- CONVERT BUTTON ---------- */
 function convert(){
   const points = parseInt(document.getElementById("points").innerText);
-  const money = points * 1; // 1 point = ₹1
-  document.getElementById("money").innerText = money;
+  document.getElementById("money").innerText = points;
 }
 </script>
 
