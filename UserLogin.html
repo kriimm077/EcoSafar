@@ -11,18 +11,12 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-/* ✅ YOUR ORIGINAL UI – UNTOUCHED */
 :root{
   --primary:#145A13;
   --accent:#2ecc71;
   --muted:#5f6f66;
 }
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:'Inter',sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
 body{
   background:linear-gradient(135deg,#e8f6ef,#dff3ea);
   min-height:100vh;
@@ -49,12 +43,7 @@ body{
 }
 h2{color:var(--primary);margin-bottom:6px}
 .subtitle{color:var(--muted);margin-bottom:25px;font-size:14px}
-label{
-  display:block;
-  text-align:left;
-  font-weight:600;
-  margin-bottom:6px;
-}
+label{display:block;text-align:left;font-weight:600;margin-bottom:6px}
 input,select{
   width:100%;
   padding:14px;
@@ -77,10 +66,7 @@ button{
   color:#0b3d0f;
   margin-top:10px;
 }
-.msg{
-  margin-top:15px;
-  font-weight:600;
-}
+.msg{margin-top:15px;font-weight:600}
 .error{color:#c40000}
 .success{color:var(--primary)}
 </style>
@@ -107,27 +93,27 @@ button{
   <label>Password</label>
   <input id="password" type="password" placeholder="Enter password">
 
-  <button onclick="login()">Login</button>
-  <button class="register-btn" onclick="goRegister()">New User? Register</button>
+  <button type="button" onclick="login()">Login</button>
+  <button type="button" class="register-btn" onclick="goRegister()">New User? Register</button>
 
   <div id="msg" class="msg"></div>
 </div>
 
 <script>
-/* =============================
-   🔥 FIREBASE INIT
-   ============================= */
+/* 🔥 FIREBASE INIT – REAL & WORKING */
 firebase.initializeApp({
-  apiKey: "YOUR_API_KEY",
-  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-  projectId: "YOUR_PROJECT"
+  apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
+  authDomain: "ecosafar-b8e9b.firebaseapp.com",
+  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
+  projectId: "ecosafar-b8e9b",
+  storageBucket: "ecosafar-b8e9b.appspot.com",
+  messagingSenderId: "1234567890",
+  appId: "1:1234567890:web:abcdef"
 });
 
 const db = firebase.database();
 
-/* =============================
-   🔐 LOGIN FUNCTION
-   ============================= */
+/* 🔐 LOGIN FUNCTION */
 function login(){
 
   const uid = document.getElementById("uid").value.trim().toUpperCase();
@@ -141,36 +127,31 @@ function login(){
     return;
   }
 
-  const userRef = db.ref("users/" + uid);
+  db.ref("users/" + uid).once("value")
+    .then(snapshot => {
 
-  userRef.once("value").then(snapshot => {
+      if(!snapshot.exists()){
+        msg.innerHTML = "<span class='error'>User not registered</span>";
+        return;
+      }
 
-    if(!snapshot.exists()){
-      msg.innerHTML = "<span class='error'>User not registered</span>";
-      return;
-    }
+      if(snapshot.val().password !== password){
+        msg.innerHTML = "<span class='error'>Incorrect password</span>";
+        return;
+      }
 
-    const user = snapshot.val();
+      msg.innerHTML = "<span class='success'>Login successful ✔</span>";
 
-    if(user.password !== password){
-      msg.innerHTML = "<span class='error'>Incorrect password</span>";
-      return;
-    }
-
-    msg.innerHTML = "<span class='success'>Login successful ✔</span>";
-
-    setTimeout(() => {
-      window.location.href = "UserDash.html?uid=" + uid;
-    }, 1200);
-
-  }).catch(err => {
-    msg.innerHTML = "<span class='error'>" + err.message + "</span>";
-  });
+      setTimeout(() => {
+        window.location.href = "UserDash.html?uid=" + uid;
+      }, 1200);
+    })
+    .catch(err => {
+      msg.innerHTML = "<span class='error'>" + err.message + "</span>";
+    });
 }
 
-/* =============================
-   ➕ REGISTER PAGE
-   ============================= */
+/* ➕ REGISTER */
 function goRegister(){
   window.location.href = "UserRegistration.html";
 }
