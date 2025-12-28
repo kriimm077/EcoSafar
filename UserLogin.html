@@ -1,3 +1,5 @@
+//user login
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +13,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-/* 🔒 ORIGINAL DESIGN — UNTOUCHED */
 :root{
   --primary:#145A13;
   --accent:#2ecc71;
@@ -114,22 +115,21 @@ button{
 </div>
 
 <script>
-/* ✅ ONLY LOGIC FIXED — NO UI CHANGES */
-
+/* ---------- FIREBASE INIT ---------- */
 firebase.initializeApp({
   apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
-  authDomain: "ecosafar-b8e9b.firebaseapp.com",
-  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
-  projectId: "ecosafar-b8e9b"
+  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com"
+  projectId: "ecosafar-3da96"
 });
 
 const db = firebase.database();
 
+/* ---------- LOGIN FUNCTION ---------- */
 function login(){
 
   const city = document.getElementById("city").value;
   const uid = document.getElementById("uid").value.trim().toUpperCase();
-  const password = document.getElementById("password").value.trim();
+  const password = document.getElementById("password").value;
   const msg = document.getElementById("msg");
 
   msg.innerHTML = "";
@@ -139,29 +139,29 @@ function login(){
     return;
   }
 
-  db.ref("users/" + uid).once("value")
-    .then(snapshot => {
+  const ref = db.ref(`users/${uid}`);
 
-      if(!snapshot.exists()){
-        msg.innerHTML = "<span class='error'>User not registered</span>";
-        return;
-      }
+  ref.once("value").then(snapshot => {
 
-      if(snapshot.val().password !== password){
-        msg.innerHTML = "<span class='error'>Incorrect password</span>";
-        return;
-      }
+    if(!snapshot.exists()){
+      msg.innerHTML = "<span class='error'>User not registered</span>";
+      return;
+    }
 
-      msg.innerHTML = "<span class='success'>Login successful ✔</span>";
+    if(snapshot.val().password !== password){
+      msg.innerHTML = "<span class='error'>Incorrect password</span>";
+      return;
+    }
 
-      setTimeout(() => {
-        window.location.href = `UserDash.html?uid=${uid}`;
-      }, 1200);
+    msg.innerHTML = "<span class='success'>Login successful ✔</span>";
 
-    })
-    .catch(err => {
-      msg.innerHTML = "<span class='error'>" + err.message + "</span>";
-    });
+    setTimeout(() => {
+      window.location.href = `UserDash.html?city=${city}&uid=${uid}`;
+    }, 1200);
+
+  }).catch(err => {
+    msg.innerHTML = "<span class='error'>" + err.message + "</span>";
+  });
 }
 
 function goRegister(){
