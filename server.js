@@ -1,211 +1,211 @@
-const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoSafar • User Dashboard</title>
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-/* ---------------- MIDDLEWARE ---------------- */
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'public-static')));
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-/* ---------------- DATABASE ---------------- */
-const db = new sqlite3.Database('./ecosafar.db', (err) => {
-  if (err) console.error('Database error:', err.message);
-  else console.log('Connected to EcoSafar DB');
+<style>
+:root{
+  --green-dark:#0b3d0f;
+  --green-main:#145A13;
+  --accent:#2ecc71;
+}
+
+*{box-sizing:border-box;font-family:Inter,sans-serif;}
+
+body{
+  margin:0;
+  background:linear-gradient(135deg,#dff3ea,#c9ebd9);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  padding:40px 0;
+}
+
+.card{
+  background:#fff;
+  width:420px;
+  padding:35px 28px;
+  border-radius:26px;
+  box-shadow:0 18px 45px rgba(0,0,0,.18);
+  text-align:center;
+}
+
+.logo{width:110px;margin-bottom:16px;}
+
+h2{color:var(--green-main);margin-bottom:6px;}
+.uid{font-size:14px;margin-bottom:22px;color:#4f5e57;}
+
+.stats{
+  display:flex;
+  gap:12px;
+  margin-bottom:22px;
+}
+
+.stat{
+  flex:1;
+  background:#eef9f1;
+  padding:14px;
+  border-radius:14px;
+}
+
+.stat h4{
+  font-size:13px;
+  margin-bottom:6px;
+  color:#4f5e57;
+}
+
+.stat div{
+  font-size:22px;
+  font-weight:700;
+  color:var(--green-main);
+}
+
+.convert-box{
+  background:#f0faf3;
+  padding:16px;
+  border-radius:14px;
+  margin-bottom:24px;
+}
+
+.convert-box p{
+  margin:6px 0;
+  font-weight:600;
+}
+
+.history{text-align:left;}
+.history h3{margin-bottom:12px;color:var(--green-dark);}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+
+th,td{
+  padding:8px;
+  text-align:center;
+}
+
+th{
+  background:#e6f4ea;
+  color:#145A13;
+}
+
+tr:nth-child(even){
+  background:#f5fbf7;
+}
+
+.empty{
+  background:#eef9f1;
+  padding:10px;
+  border-radius:8px;
+  font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <img src="logo.png" class="logo">
+
+  <h2>Welcome, <span id="userName">---</span></h2>
+  <div class="uid">RFID UID: <b id="userUID">----</b></div>
+
+  <div class="stats">
+    <div class="stat">
+      <h4>Total EcoPoints</h4>
+      <div id="points">0</div>
+    </div>
+    <div class="stat">
+      <h4>Total Waste (g)</h4>
+      <div id="weight">0</div>
+    </div>
+  </div>
+
+  <div class="convert-box">
+    <p>Redeem Value</p>
+    <p>₹ <span id="money">0</span></p>
+    <p style="font-size:12px;color:#555;">(100g = ₹10)</p>
+  </div>
+
+  <div class="history">
+    <h3>Transaction History</h3>
+    <div id="historyList" class="empty">Waiting for ESP32 data…</div>
+  </div>
+</div>
+
+<script>
+/* ---------- FIREBASE INIT ---------- */
+firebase.initializeApp({
+  apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
+  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com/"
 });
 
-db.serialize(() => {
-  db.run(`
-    CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      username TEXT UNIQUE,
-      password TEXT,
-      points INTEGER DEFAULT 0,
-      totalWeight REAL DEFAULT 0
-    )
-  `);
+const db = firebase.database();
 
-  db.run(`
-    CREATE TABLE IF NOT EXISTS history (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      userId INTEGER,
-      date TEXT,
-      weight REAL,
-      points INTEGER,
-      FOREIGN KEY (userId) REFERENCES users(id)
-    )
-  `);
+/* ---------- GET UID FROM URL ---------- */
+const params = new URLSearchParams(window.location.search);
+const uid = (params.get("uid") || "").toUpperCase();
+document.getElementById("userUID").innerText = uid || "----";
 
-  db.run(`
-    CREATE TABLE IF NOT EXISTS alerts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      message TEXT,
-      createdAt TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
+/* ---------- FUNCTION TO LOAD USER DATA ---------- */
+function loadUserData() {
+  if(!uid) return;
 
-  /* Default Admin */
-  db.run(
-    `INSERT OR IGNORE INTO users (username, password) VALUES (?, ?)`,
-    ['admin', 'admin123']
-  );
-});
+  db.ref("users/" + uid).on("value", snap => {
+    if(!snap.exists()) return;
 
-/* ---------------- AUTH ---------------- */
+    const data = snap.val();
 
-// LOGIN
-app.post('/api/login', (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password)
-    return res.status(400).json({ error: 'Username and password required' });
+    document.getElementById("userName").innerText = data.name || "User";
+    document.getElementById("weight").innerText = data.TotalWeight || 0;
+    document.getElementById("points").innerText = data.Ecopoints || 0;
+    document.getElementById("money").innerText = ((data.TotalWeight || 0)/100*10).toFixed(2);
 
-  db.get(
-    `SELECT id, username, points, totalWeight 
-     FROM users 
-     WHERE username = ? AND password = ?`,
-    [username, password],
-    (err, row) => {
-      if (err) return res.status(500).json({ error: err.message });
-      if (!row) return res.status(401).json({ error: 'Invalid credentials' });
-      res.json({ user: row });
+    const history = data.history || {};
+    const entries = Object.values(history).reverse();
+
+    const historyDiv = document.getElementById("historyList");
+
+    if(entries.length === 0){
+      historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
+      return;
     }
-  );
-});
 
-// REGISTER
-app.post('/api/register', (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password)
-    return res.status(400).json({ error: 'Username and password required' });
+    let html = `
+      <table>
+        <tr>
+          <th>#</th>
+          <th>Waste (g)</th>
+          <th>EcoPoints</th>
+        </tr>`;
 
-  db.run(
-    `INSERT INTO users (username, password) VALUES (?, ?)`,
-    [username, password],
-    function (err) {
-      if (err) return res.status(409).json({ error: 'User already exists' });
-      res.json({ id: this.lastID });
-    }
-  );
-});
+    entries.forEach((e,i)=>{
+      html += `
+        <tr>
+          <td>${i+1}</td>
+          <td>${e.weight}</td>
+          <td>+${e.ecoPoints}</td>
+        </tr>`;
+    });
 
-/* ---------------- RFID / DISPOSAL ---------------- */
+    html += "</table>";
+    historyDiv.innerHTML = html;
+  });
+}
 
-app.post('/api/dispose', (req, res) => {
-  const { username, weight } = req.body;
+/* ---------- CALL FUNCTION ---------- */
+loadUserData();
+</script>
 
-  if (!username || typeof weight !== 'number')
-    return res.status(400).json({ error: 'Username and numeric weight required' });
-
-  const points = Math.max(1, Math.round(weight / 10));
-  const date = new Date().toISOString().slice(0, 10);
-
-  db.get(
-    `SELECT id FROM users WHERE username = ?`,
-    [username],
-    (err, user) => {
-      if (err) return res.status(500).json({ error: err.message });
-      if (!user) return res.status(404).json({ error: 'User not found' });
-
-      db.run(
-        `INSERT INTO history (userId, date, weight, points)
-         VALUES (?, ?, ?, ?)`,
-        [user.id, date, weight, points]
-      );
-
-      db.run(
-        `UPDATE users
-         SET points = points + ?, totalWeight = totalWeight + ?
-         WHERE id = ?`,
-        [points, weight, user.id]
-      );
-
-      res.json({
-        success: true,
-        added: { weight, points }
-      });
-    }
-  );
-});
-
-/* ---------------- USER DATA ---------------- */
-
-app.get('/api/user/:username', (req, res) => {
-  const { username } = req.params;
-
-  db.get(
-    `SELECT id, username, points, totalWeight
-     FROM users WHERE username = ?`,
-    [username],
-    (err, user) => {
-      if (err) return res.status(500).json({ error: err.message });
-      if (!user) return res.status(404).json({ error: 'User not found' });
-
-      db.all(
-        `SELECT date, weight, points
-         FROM history
-         WHERE userId = ?
-         ORDER BY id DESC`,
-        [user.id],
-        (err, history) => {
-          if (err) return res.status(500).json({ error: err.message });
-          res.json({ user, history });
-        }
-      );
-    }
-  );
-});
-
-// ALL RESIDENTS (ADMIN)
-app.get('/api/residents', (req, res) => {
-  db.all(
-    `SELECT username, totalWeight, points FROM users`,
-    [],
-    (err, rows) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json(rows);
-    }
-  );
-});
-
-/* ---------------- ALERTS ---------------- */
-
-app.post('/api/alerts', (req, res) => {
-  const { message } = req.body;
-  if (!message) return res.status(400).json({ error: 'Message required' });
-
-  db.run(
-    `INSERT INTO alerts (message) VALUES (?)`,
-    [message],
-    function (err) {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: this.lastID });
-    }
-  );
-});
-
-app.get('/api/alerts', (req, res) => {
-  db.all(
-    `SELECT id, message, createdAt
-     FROM alerts
-     ORDER BY id DESC
-     LIMIT 50`,
-    [],
-    (err, rows) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json(rows);
-    }
-  );
-});
-
-/* ---------------- FALLBACK ---------------- */
-app.get('*', (req, res) => {
-  res.sendFile(
-    path.join(__dirname, '..', 'public-static', 'index.html')
-  );
-});
-
-/* ---------------- START SERVER ---------------- */
-app.listen(PORT, () => {
-  console.log(`✅ EcoSafar server running on http://localhost:${PORT}`);
-});
+</body>
+</html>
