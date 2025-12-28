@@ -5,78 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • User Dashboard</title>
 
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 <style>
-/* 🔒 ORIGINAL DASHBOARD UI — UNTOUCHED */
-:root{
-  --green-dark:#0b3d0f;
-  --green-main:#145A13;
-  --accent:#2ecc71;
-}
-*{box-sizing:border-box;font-family:Inter,sans-serif;}
+/* ⚠️ KEEP / REPLACE WITH YOUR EXISTING UI CSS */
 body{
   margin:0;
-  background:linear-gradient(135deg,#dff3ea,#c9ebd9);
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  padding:40px 0;
+  font-family:Inter, sans-serif;
+  background:#f2f7f4;
+}
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:30px;
 }
 .card{
   background:#fff;
-  width:420px;
-  padding:35px 28px;
-  border-radius:26px;
-  box-shadow:0 18px 45px rgba(0,0,0,.18);
-  text-align:center;
+  border-radius:18px;
+  padding:25px;
+  margin-bottom:20px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
 }
-.logo{width:110px;margin-bottom:16px;}
-h2{color:var(--green-main);margin-bottom:6px;}
-.uid{font-size:14px;margin-bottom:22px;color:#4f5e57;}
-.stats{display:flex;gap:12px;margin-bottom:22px;}
-.stat{
-  flex:1;
-  background:#eef9f1;
-  padding:14px;
-  border-radius:14px;
-}
-.stat h4{
-  font-size:13px;
-  margin-bottom:6px;
-  color:#4f5e57;
-}
-.stat div{
+.title{
   font-size:22px;
   font-weight:700;
-  color:var(--green-main);
+  color:#145A13;
 }
-.convert-box{
-  background:#f0faf3;
-  padding:16px;
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+}
+.stat-box{
+  padding:20px;
   border-radius:14px;
-  margin-bottom:24px;
+  background:#e9f6ee;
 }
-.convert-box p{margin:6px 0;font-weight:600;}
-.history{text-align:left;}
-.history h3{margin-bottom:12px;color:var(--green-dark);}
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14px;
+.stat-label{
+  font-size:13px;
+  color:#5f6f66;
 }
-th,td{padding:8px;text-align:center;}
-th{background:#e6f4ea;color:#145A13;}
-tr:nth-child(even){background:#f5fbf7;}
-.empty{
-  background:#eef9f1;
-  padding:10px;
-  border-radius:8px;
+.stat-value{
+  font-size:26px;
+  font-weight:700;
+  margin-top:5px;
+}
+.history-item{
+  display:flex;
+  justify-content:space-between;
+  padding:12px 0;
+  border-bottom:1px solid #e0e0e0;
   font-size:14px;
 }
 </style>
@@ -84,109 +62,125 @@ tr:nth-child(even){background:#f5fbf7;}
 
 <body>
 
-<div class="card">
-  <img src="logo.png" class="logo">
+<div class="container">
 
-  <h2>Welcome, <span id="userName">---</span></h2>
-  <div class="uid">RFID UID: <b id="userUID">----</b></div>
+  <!-- USER INFO -->
+  <div class="card">
+    <div class="title">Welcome, <span id="userName">---</span></div>
+  </div>
 
-  <div class="stats">
-    <div class="stat">
-      <h4>Total EcoPoints</h4>
-      <div id="points">0</div>
+  <!-- STATS -->
+  <div class="card stats">
+    <div class="stat-box">
+      <div class="stat-label">EcoPoints</div>
+      <div class="stat-value" id="ecoPoints">0</div>
     </div>
-    <div class="stat">
-      <h4>Total Waste (g)</h4>
-      <div id="weight">0</div>
+
+    <div class="stat-box">
+      <div class="stat-label">Total Waste Collected</div>
+      <div class="stat-value"><span id="totalWeight">0</span> g</div>
     </div>
   </div>
 
-  <div class="convert-box">
-    <p>Redeem Value</p>
-    <p>₹ <span id="money">0</span></p>
-    <p style="font-size:12px;color:#555;">(100g = ₹10)</p>
+  <!-- HISTORY -->
+  <div class="card">
+    <div class="title">Recycling History</div>
+    <div id="historyList"></div>
   </div>
 
-  <div class="history">
-    <h3>Transaction History</h3>
-    <div id="historyList" class="empty">Loading…</div>
-  </div>
 </div>
 
-<script>
-/* ---------- FIREBASE INIT (SAME PROJECT) ---------- */
-firebase.initializeApp({
-  apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
+<!-- 🔥 FIREBASE LOGIC (DO NOT TOUCH UI ABOVE) -->
+<script type="module">
+
+/* =============================
+   1️⃣ FIREBASE IMPORTS
+   ============================= */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+/* =============================
+   2️⃣ FIREBASE CONFIG
+   ============================= */
+const firebaseConfig = {
+  apiKey:"AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
   authDomain: "ecosafar-b8e9b.firebaseapp.com",
-  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
-  projectId: "ecosafar-b8e9b"
-});
+  databaseURL:https://ecosafar-b8e9b-default-rtdb.firebaseio.com/,
+  projectId: “ecosafar-b8e9b",
+  storageBucket: “ecosafar-b8e9b.firebasestorage.app",
+  messagingSenderId: "277553134320",
+  appId: “1:277553134320:web:efd3d87dab7d925825a035"
+};
 
-const db = firebase.database();
+/* =============================
+   3️⃣ INITIALIZE
+   ============================= */
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-/* ---------- GET UID FROM LOGIN ---------- */
+/* =============================
+   4️⃣ GET UID FROM LOGIN
+   ============================= */
 const params = new URLSearchParams(window.location.search);
 const uid = params.get("uid");
 
-if(!uid){
+if (!uid) {
   alert("Login required");
   window.location.href = "UserLogin.html";
 }
 
-/* ---------- ELEMENTS ---------- */
-const userNameEl = document.getElementById("userName");
-const userUIDEl = document.getElementById("userUID");
-const pointsEl = document.getElementById("points");
-const weightEl = document.getElementById("weight");
-const moneyEl = document.getElementById("money");
-const historyDiv = document.getElementById("historyList");
+/* =============================
+   5️⃣ USER MAIN DATA
+   ============================= */
+const userRef = ref(db, `users/${uid}`);
 
-/* ---------- LOAD USER ---------- */
-db.ref("users/" + uid).on("value", snap => {
-  if(!snap.exists()) return;
+onValue(userRef, (snapshot) => {
+  if (!snapshot.exists()) return;
 
-  const d = snap.val();
-  userUIDEl.innerText = uid;
-  userNameEl.innerText = d.name || "User";
-  pointsEl.innerText = d.points || 0;
-  weightEl.innerText = d.totalWeight || 0;
-  moneyEl.innerText = ((d.totalWeight || 0) / 100 * 10).toFixed(2);
+  const data = snapshot.val();
+
+  document.getElementById("userName").innerText =
+    data.name || "---";
+
+  document.getElementById("ecoPoints").innerText =
+    data.EcoPoints || 0;
+
+  document.getElementById("totalWeight").innerText =
+    data.TotalWeight || 0;
 });
 
-/* ---------- LOAD HISTORY ---------- */
-db.ref("history/" + uid).on("value", snap => {
+/* =============================
+   6️⃣ HISTORY DATA
+   ============================= */
+const historyRef = ref(db, `users/${uid}/history`);
 
-  const h = snap.val();
+onValue(historyRef, (snapshot) => {
 
-  if(!h){
-    historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
+  const historyList = document.getElementById("historyList");
+  historyList.innerHTML = "";
+
+  if (!snapshot.exists()) {
+    historyList.innerHTML = "<p>No history yet</p>";
     return;
   }
 
-  let rows = "";
-  let i = 1;
+  snapshot.forEach(child => {
 
-  Object.values(h).reverse().forEach(e => {
-    rows += `
-      <tr>
-        <td>${i++}</td>
-        <td>${e.weight}</td>
-        <td>+${e.points}</td>
-      </tr>
+    const h = child.val();
+
+    const div = document.createElement("div");
+    div.className = "history-item";
+
+    div.innerHTML = `
+      <span>${h.type || "Waste"}</span>
+      <span>${h.weight || 0} g</span>
+      <span>${h.time || ""}</span>
     `;
-  });
 
-  historyDiv.innerHTML = `
-    <table>
-      <tr>
-        <th>#</th>
-        <th>Waste (g)</th>
-        <th>EcoPoints</th>
-      </tr>
-      ${rows}
-    </table>
-  `;
+    historyList.prepend(div); // latest on top
+  });
 });
+
 </script>
 
 </body>
