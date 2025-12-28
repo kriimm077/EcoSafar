@@ -23,34 +23,46 @@ const weightEl = document.getElementById("weight");
 const moneyEl = document.getElementById("money");
 const historyDiv = document.getElementById("historyList");
 
+// ---------- TRACK CURRENT LISTENERS ----------
+let currentUserRef = null;
+let historyRef = null;
+
 // ---------- LISTEN FOR LAST SCANNED UID ----------
 db.ref("lastActiveUID").on("value", snap => {
   const uid = snap.val();
-  
-  if(uid){
-    userUIDEl.innerText = uid;
-    loadUserData(uid);
-  } else {
-    resetDashboard();
-  }
+  if(uid) loadUserData(uid);
+  else resetDashboard();
 });
 
 // ---------- FUNCTION TO LOAD USER DATA ----------
 function loadUserData(uid){
-  db.ref("users/" + uid).on("value", snap => {
+  // Detach previous listeners if exist
+  if(currentUserRef) currentUserRef.off();
+  if(historyRef) historyRef.off();
+
+  // Set new references
+  currentUserRef = db.ref("users/" + uid);
+  historyRef = db.ref("history/" + uid);
+
+  // Listen to user data
+  currentUserRef.on("value", snap => {
     if(!snap.exists()){
       resetDashboard();
       return;
     }
 
-    const data = snap.val();
-    userNameEl.innerText = data.name || "User";
-    weightEl.innerText = data.TotalWeight || 0;
-    pointsEl.innerText = data.Ecopoints || 0;
-    moneyEl.innerText = ((data.TotalWeight || 0)/100*10).toFixed(2);
+    const d = snap.val();
+    userUIDEl.innerText = uid;
+    userNameEl.innerText = d.name || "User";
+    weightEl.innerText = d.totalWeight || 0;
+    pointsEl.innerText = d.points || 0;
+    moneyEl.innerText = ((d.totalWeight || 0) / 100 * 10).toFixed(2);
+  });
 
-    const history = data.history || {};
-    const entries = Object.values(history).reverse();
+  // Listen to user transaction history
+  historyRef.on("value", snap => {
+    const h = snap.val() || {};
+    const entries = Object.values(h).reverse();
 
     if(entries.length === 0){
       historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
@@ -58,17 +70,13 @@ function loadUserData(uid){
     }
 
     let html = `<table>
-      <tr>
-        <th>#</th>
-        <th>Waste (g)</th>
-        <th>EcoPoints</th>
-      </tr>`;
+      <tr><th>#</th><th>Waste (g)</th><th>EcoPoints</th></tr>`;
 
     entries.forEach((e, i) => {
       html += `<tr>
         <td>${i+1}</td>
         <td>${e.weight}</td>
-        <td>+${e.ecoPoints}</td>
+        <td>+${e.points}</td>
       </tr>`;
     });
 
