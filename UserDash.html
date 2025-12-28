@@ -5,16 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • User Dashboard</title>
 
+<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
+/* 🔒 ORIGINAL DASHBOARD UI — UNTOUCHED */
+:root{
+  --green-dark:#0b3d0f;
+  --green-main:#145A13;
+  --accent:#2ecc71;
+}
+*{box-sizing:border-box;font-family:Inter,sans-serif;}
 body{
   margin:0;
-  font-family:Inter,sans-serif;
   background:linear-gradient(135deg,#dff3ea,#c9ebd9);
+  min-height:100vh;
   display:flex;
   justify-content:center;
   padding:40px 0;
@@ -22,31 +31,90 @@ body{
 .card{
   background:#fff;
   width:420px;
-  padding:30px;
-  border-radius:22px;
+  padding:35px 28px;
+  border-radius:26px;
+  box-shadow:0 18px 45px rgba(0,0,0,.18);
   text-align:center;
 }
-.stat{background:#eef9f1;padding:12px;border-radius:12px;margin:10px 0;}
-.empty{background:#eef9f1;padding:10px;border-radius:8px;}
+.logo{width:110px;margin-bottom:16px;}
+h2{color:var(--green-main);margin-bottom:6px;}
+.uid{font-size:14px;margin-bottom:22px;color:#4f5e57;}
+.stats{display:flex;gap:12px;margin-bottom:22px;}
+.stat{
+  flex:1;
+  background:#eef9f1;
+  padding:14px;
+  border-radius:14px;
+}
+.stat h4{
+  font-size:13px;
+  margin-bottom:6px;
+  color:#4f5e57;
+}
+.stat div{
+  font-size:22px;
+  font-weight:700;
+  color:var(--green-main);
+}
+.convert-box{
+  background:#f0faf3;
+  padding:16px;
+  border-radius:14px;
+  margin-bottom:24px;
+}
+.convert-box p{margin:6px 0;font-weight:600;}
+.history{text-align:left;}
+.history h3{margin-bottom:12px;color:var(--green-dark);}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+th,td{padding:8px;text-align:center;}
+th{background:#e6f4ea;color:#145A13;}
+tr:nth-child(even){background:#f5fbf7;}
+.empty{
+  background:#eef9f1;
+  padding:10px;
+  border-radius:8px;
+  font-size:14px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="card">
+  <img src="logo.png" class="logo">
+
   <h2>Welcome, <span id="userName">---</span></h2>
-  <p>UID: <b id="userUID">----</b></p>
+  <div class="uid">RFID UID: <b id="userUID">----</b></div>
 
-  <div class="stat">EcoPoints: <b id="points">0</b></div>
-  <div class="stat">Total Waste: <b id="weight">0</b> g</div>
-  <div class="stat">Redeem ₹ <b id="money">0</b></div>
+  <div class="stats">
+    <div class="stat">
+      <h4>Total EcoPoints</h4>
+      <div id="points">0</div>
+    </div>
+    <div class="stat">
+      <h4>Total Waste (g)</h4>
+      <div id="weight">0</div>
+    </div>
+  </div>
 
-  <h3>History</h3>
-  <div id="historyList" class="empty">Loading…</div>
+  <div class="convert-box">
+    <p>Redeem Value</p>
+    <p>₹ <span id="money">0</span></p>
+    <p style="font-size:12px;color:#555;">(100g = ₹10)</p>
+  </div>
+
+  <div class="history">
+    <h3>Transaction History</h3>
+    <div id="historyList" class="empty">Loading…</div>
+  </div>
 </div>
 
 <script>
-/* ---------- FIREBASE ---------- */
+/* ---------- FIREBASE INIT (SAME PROJECT) ---------- */
 firebase.initializeApp({
   apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
   authDomain: "ecosafar-b8e9b.firebaseapp.com",
@@ -56,7 +124,7 @@ firebase.initializeApp({
 
 const db = firebase.database();
 
-/* ---------- GET UID FROM URL ---------- */
+/* ---------- GET UID FROM LOGIN ---------- */
 const params = new URLSearchParams(window.location.search);
 const uid = params.get("uid");
 
@@ -66,45 +134,58 @@ if(!uid){
 }
 
 /* ---------- ELEMENTS ---------- */
-const userName = document.getElementById("userName");
-const userUID  = document.getElementById("userUID");
-const points   = document.getElementById("points");
-const weight   = document.getElementById("weight");
-const money    = document.getElementById("money");
-const history  = document.getElementById("historyList");
+const userNameEl = document.getElementById("userName");
+const userUIDEl = document.getElementById("userUID");
+const pointsEl = document.getElementById("points");
+const weightEl = document.getElementById("weight");
+const moneyEl = document.getElementById("money");
+const historyDiv = document.getElementById("historyList");
 
-/* ---------- LOAD USER DATA ---------- */
+/* ---------- LOAD USER ---------- */
 db.ref("users/" + uid).on("value", snap => {
   if(!snap.exists()) return;
 
   const d = snap.val();
-  userUID.innerText = uid;
-  userName.innerText = d.name || "User";
-  points.innerText = d.points || 0;
-  weight.innerText = d.totalWeight || 0;
-  money.innerText = ((d.totalWeight || 0) / 100 * 10).toFixed(2);
+  userUIDEl.innerText = uid;
+  userNameEl.innerText = d.name || "User";
+  pointsEl.innerText = d.points || 0;
+  weightEl.innerText = d.totalWeight || 0;
+  moneyEl.innerText = ((d.totalWeight || 0) / 100 * 10).toFixed(2);
 });
 
 /* ---------- LOAD HISTORY ---------- */
 db.ref("history/" + uid).on("value", snap => {
+
   const h = snap.val();
 
   if(!h){
-    history.innerHTML = "<div class='empty'>No transactions yet</div>";
+    historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
     return;
   }
 
-  let html = "<table width='100%'>";
-  Object.values(h).reverse().forEach((e,i)=>{
-    html += `<tr>
-      <td>${i+1}</td>
-      <td>${e.weight} g</td>
-      <td>+${e.points}</td>
-    </tr>`;
-  });
-  html += "</table>";
+  let rows = "";
+  let i = 1;
 
-  history.innerHTML = html;
+  Object.values(h).reverse().forEach(e => {
+    rows += `
+      <tr>
+        <td>${i++}</td>
+        <td>${e.weight}</td>
+        <td>+${e.points}</td>
+      </tr>
+    `;
+  });
+
+  historyDiv.innerHTML = `
+    <table>
+      <tr>
+        <th>#</th>
+        <th>Waste (g)</th>
+        <th>EcoPoints</th>
+      </tr>
+      ${rows}
+    </table>
+  `;
 });
 </script>
 
