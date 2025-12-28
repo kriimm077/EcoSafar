@@ -1,21 +1,23 @@
-// firebase_dashboard.js
-
 // ---------- FIREBASE CONFIG ----------
-const firebaseConfig = {
+firebase.initializeApp({
   apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
   authDomain: "ecosafar-b8e9b.firebaseapp.com",
-  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com/",
-  projectId: "ecosafar-b8e9b",
-  storageBucket: "ecosafar-3da96.firebasestorage.app",
-  messagingSenderId: "972209472560",
-  appId: "1:972209472560:web:39fcc096311b3006c6d9f5"
-};
+  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
+  projectId: "ecosafar-b8e9b"
+});
 
-// ---------- INITIALIZE FIREBASE ----------
-firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ---------- GET DASHBOARD ELEMENTS ----------
+// ---------- GET UID FROM URL ----------
+const params = new URLSearchParams(window.location.search);
+const uid = params.get("uid");
+
+if(!uid){
+  alert("UID missing. Please login again.");
+  window.location.href = "UserLogin.html";
+}
+
+// ---------- ELEMENTS ----------
 const userNameEl = document.getElementById("userName");
 const userUIDEl = document.getElementById("userUID");
 const pointsEl = document.getElementById("points");
@@ -23,74 +25,56 @@ const weightEl = document.getElementById("weight");
 const moneyEl = document.getElementById("money");
 const historyDiv = document.getElementById("historyList");
 
-// ---------- TRACK CURRENT LISTENERS ----------
-let currentUserRef = null;
-let historyRef = null;
+// ---------- LOAD USER DATA ----------
+db.ref("users/" + uid).on("value", snap => {
 
-// ---------- LISTEN FOR LAST SCANNED UID ----------
-db.ref("lastActiveUID").on("value", snap => {
-  const uid = snap.val();
-  if(uid) loadUserData(uid);
-  else resetDashboard();
+  if(!snap.exists()){
+    alert("User not found");
+    return;
+  }
+
+  const d = snap.val();
+
+  userUIDEl.innerText = uid;
+  userNameEl.innerText = d.name || "User";
+  pointsEl.innerText = d.Ecopoints || 0;
+  weightEl.innerText = d.TotalWeight || 0;
+
+  const money = ((d.TotalWeight || 0) / 100) * 10;
+  moneyEl.innerText = money.toFixed(2);
 });
 
-// ---------- FUNCTION TO LOAD USER DATA ----------
-function loadUserData(uid){
-  // Detach previous listeners if exist
-  if(currentUserRef) currentUserRef.off();
-  if(historyRef) historyRef.off();
+// ---------- LOAD HISTORY ----------
+db.ref("history/" + uid).on("value", snap => {
 
-  // Set new references
-  currentUserRef = db.ref("users/" + uid);
-  historyRef = db.ref("history/" + uid);
+  const h = snap.val();
 
-  // Listen to user data
-  currentUserRef.on("value", snap => {
-    if(!snap.exists()){
-      resetDashboard();
-      return;
-    }
+  if(!h){
+    historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
+    return;
+  }
 
-    const d = snap.val();
-    userUIDEl.innerText = uid;
-    userNameEl.innerText = d.name || "User";
-    weightEl.innerText = d.totalWeight || 0;
-    pointsEl.innerText = d.points || 0;
-    moneyEl.innerText = ((d.totalWeight || 0) / 100 * 10).toFixed(2);
-  });
+  let rows = "";
+  let i = 1;
 
-  // Listen to user transaction history
-  historyRef.on("value", snap => {
-    const h = snap.val() || {};
-    const entries = Object.values(h).reverse();
-
-    if(entries.length === 0){
-      historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
-      return;
-    }
-
-    let html = `<table>
-      <tr><th>#</th><th>Waste (g)</th><th>EcoPoints</th></tr>`;
-
-    entries.forEach((e, i) => {
-      html += `<tr>
-        <td>${i+1}</td>
+  Object.values(h).reverse().forEach(e => {
+    rows += `
+      <tr>
+        <td>${i++}</td>
         <td>${e.weight}</td>
         <td>+${e.points}</td>
-      </tr>`;
-    });
-
-    html += "</table>";
-    historyDiv.innerHTML = html;
+      </tr>
+    `;
   });
-}
 
-// ---------- FUNCTION TO RESET DASHBOARD ----------
-function resetDashboard(){
-  userUIDEl.innerText = "----";
-  userNameEl.innerText = "---";
-  weightEl.innerText = 0;
-  pointsEl.innerText = 0;
-  moneyEl.innerText = 0;
-  historyDiv.innerHTML = "<div class='empty'>Waiting for ESP32 data…</div>";
-}
+  historyDiv.innerHTML = `
+    <table>
+      <tr>
+        <th>#</th>
+        <th>Waste (g)</th>
+        <th>EcoPoints</th>
+      </tr>
+      ${rows}
+    </table>
+  `;
+});
