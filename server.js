@@ -152,15 +152,25 @@ firebase.initializeApp({
 
 const db = firebase.database();
 
-/* ---------- GET UID FROM URL ---------- */
-const params = new URLSearchParams(window.location.search);
-const uid = (params.get("uid") || "").toUpperCase();
-document.getElementById("userUID").innerText = uid || "----";
+/* ---------- AUTO READ LAST ACTIVE UID ---------- */
+db.ref("lastActiveUID").on("value", snap => {
+  const uid = snap.val();
+  const uidDisplay = document.getElementById("userUID");
+  if(uid){
+    uidDisplay.innerText = uid;
+    loadUserData(uid);
+  } else {
+    uidDisplay.innerText = "----";
+    document.getElementById("userName").innerText = "---";
+    document.getElementById("weight").innerText = 0;
+    document.getElementById("points").innerText = 0;
+    document.getElementById("money").innerText = 0;
+    document.getElementById("historyList").innerHTML = "<div class='empty'>Waiting for ESP32 data…</div>";
+  }
+});
 
-/* ---------- FUNCTION TO LOAD USER DATA ---------- */
-function loadUserData() {
-  if(!uid) return;
-
+/* ---------- LOAD USER DATA ---------- */
+function loadUserData(uid){
   db.ref("users/" + uid).on("value", snap => {
     if(!snap.exists()) return;
 
@@ -202,9 +212,6 @@ function loadUserData() {
     historyDiv.innerHTML = html;
   });
 }
-
-/* ---------- CALL FUNCTION ---------- */
-loadUserData();
 </script>
 
 </body>
