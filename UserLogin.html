@@ -1,5 +1,3 @@
-//user login
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -118,7 +116,7 @@ button{
 /* ---------- FIREBASE INIT ---------- */
 firebase.initializeApp({
   apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
-  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com"
+  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com/",
   projectId: "ecosafar-3da96"
 });
 
@@ -129,7 +127,7 @@ function login(){
 
   const city = document.getElementById("city").value;
   const uid = document.getElementById("uid").value.trim().toUpperCase();
-  const password = document.getElementById("password").value;
+  const password = document.getElementById("password").value.trim(); // ✅ trim password
   const msg = document.getElementById("msg");
 
   msg.innerHTML = "";
@@ -148,7 +146,9 @@ function login(){
       return;
     }
 
-    if(snapshot.val().password !== password){
+    const user = snapshot.val();
+
+    if(user.password !== password){
       msg.innerHTML = "<span class='error'>Incorrect password</span>";
       return;
     }
