@@ -11,7 +11,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-/* 🔒 ORIGINAL DESIGN — UNTOUCHED */
+/* ✅ YOUR ORIGINAL UI – UNTOUCHED */
 :root{
   --primary:#145A13;
   --accent:#2ecc71;
@@ -107,63 +107,70 @@ button{
   <label>Password</label>
   <input id="password" type="password" placeholder="Enter password">
 
-  <button type="button" onclick="login()">Login</button>
-  <button class="register-btn" type="button" onclick="goRegister()">New User? Register</button>
+  <button onclick="login()">Login</button>
+  <button class="register-btn" onclick="goRegister()">New User? Register</button>
 
   <div id="msg" class="msg"></div>
 </div>
 
 <script>
-/* ✅ ONLY LOGIC FIXED — NO UI CHANGES */
-
+/* =============================
+   🔥 FIREBASE INIT
+   ============================= */
 firebase.initializeApp({
-  apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
-  authDomain: "ecosafar-b8e9b.firebaseapp.com",
-  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
-  projectId: "ecosafar-b8e9b"
+  apiKey: "YOUR_API_KEY",
+  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+  projectId: "YOUR_PROJECT"
 });
 
 const db = firebase.database();
 
+/* =============================
+   🔐 LOGIN FUNCTION
+   ============================= */
 function login(){
 
-  const city = document.getElementById("city").value;
   const uid = document.getElementById("uid").value.trim().toUpperCase();
-  const password = document.getElementById("password").value.trim();
+  const password = document.getElementById("password").value;
   const msg = document.getElementById("msg");
 
   msg.innerHTML = "";
 
-  if(!city || !uid || !password){
+  if(!uid || !password){
     msg.innerHTML = "<span class='error'>All fields required</span>";
     return;
   }
 
-  db.ref("users/" + uid).once("value")
-    .then(snapshot => {
+  const userRef = db.ref("users/" + uid);
 
-      if(!snapshot.exists()){
-        msg.innerHTML = "<span class='error'>User not registered</span>";
-        return;
-      }
+  userRef.once("value").then(snapshot => {
 
-      if(snapshot.val().password !== password){
-        msg.innerHTML = "<span class='error'>Incorrect password</span>";
-        return;
-      }
+    if(!snapshot.exists()){
+      msg.innerHTML = "<span class='error'>User not registered</span>";
+      return;
+    }
 
-      msg.innerHTML = "<span class='success'>Login successful ✔</span>";
+    const user = snapshot.val();
 
-      setTimeout(() => {
-        window.location.href = `UserDash.html?uid=${uid}`;
-      }, 1200);
+    if(user.password !== password){
+      msg.innerHTML = "<span class='error'>Incorrect password</span>";
+      return;
+    }
 
-    })
-    .catch(err => {
-      msg.innerHTML = "<span class='error'>" + err.message + "</span>";
-    });
+    msg.innerHTML = "<span class='success'>Login successful ✔</span>";
+
+    setTimeout(() => {
+      window.location.href = "UserDash.html?uid=" + uid;
+    }, 1200);
+
+  }).catch(err => {
+    msg.innerHTML = "<span class='error'>" + err.message + "</span>";
+  });
 }
 
+/* =============================
+   ➕ REGISTER PAGE
+   ============================= */
 function goRegister(){
   window.location.href = "UserRegistration.html";
 }
