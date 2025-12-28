@@ -6,7 +6,7 @@ const firebaseConfig = {
   authDomain: "ecosafar-b8e9b.firebaseapp.com",
   databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com/",
   projectId: "ecosafar-b8e9b",
-  storageBucket: "ecosafar-b8e9b.appspot.com",
+  storageBucket: "ecosafar-3da96.firebasestorage.app",
   messagingSenderId: "972209472560",
   appId: "1:972209472560:web:39fcc096311b3006c6d9f5"
 };
