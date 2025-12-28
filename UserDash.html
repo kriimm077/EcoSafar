@@ -1,5 +1,3 @@
-//user dashboard
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,10 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • User Dashboard</title>
 
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -68,20 +64,21 @@ tr:nth-child(even){background:#f5fbf7;}
 
   <div class="history">
     <h3>Transaction History</h3>
-    <div id="historyList" class="empty">Waiting for ESP32 data…</div>
+    <div id="historyList" class="empty">Waiting for data…</div>
   </div>
 </div>
 
 <script>
   // ---------- FIREBASE INIT ----------
   const firebaseConfig = {
-    apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
-    authDomain: "ecosafar-b8e9b.firebaseapp.com",
-    databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
-    projectId: "ecosafar-b8e9b",
-    storageBucket: "ecosafar-b8e9b.appspot.com",
-    messagingSenderId: "1234567890",
-    appId: "1:1234567890:web:abcdefg"
+    apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
+    authDomain: "ecosafar-3da96.firebaseapp.com",
+    databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
+    projectId: "ecosafar-3da96",
+    storageBucket: "ecosafar-3da96.firebasestorage.app",
+    messagingSenderId: "972209472560",
+    appId: "1:972209472560:web:39fcc096311b3006c6d9f5",
+    measurementId: "G-JLB46QCM2G"
   };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
@@ -94,34 +91,33 @@ tr:nth-child(even){background:#f5fbf7;}
   const moneyEl = document.getElementById("money");
   const historyDiv = document.getElementById("historyList");
 
-  let currentUserRef = null;
-  let historyRef = null;
+  // ---------- GET UID FROM URL ----------
+  const urlParams = new URLSearchParams(window.location.search);
+  const uid = urlParams.get("uid");
 
-  // ---------- LISTEN FOR LAST ACTIVE UID ----------
-  db.ref("lastActiveUID").on("value", snap => {
-    const uid = snap.val();
-    if(uid) loadUserData(uid);
-    else resetDashboard();
-  });
+  if(uid){
+    loadUserData(uid);
+  } else {
+    resetDashboard();
+  }
 
   // ---------- LOAD USER DATA ----------
   function loadUserData(uid){
-    if(currentUserRef) currentUserRef.off();
-    if(historyRef) historyRef.off();
+    const userRef = db.ref("users/" + uid);
+    const historyRef = db.ref("history/" + uid);
 
-    currentUserRef = db.ref("users/" + uid);
-    historyRef = db.ref("history/" + uid);
-
-    currentUserRef.on("value", snap => {
+    // USER INFO
+    userRef.on("value", snap => {
       if(!snap.exists()){ resetDashboard(); return; }
       const d = snap.val();
       userUIDEl.innerText = uid;
       userNameEl.innerText = d.name || "User";
       weightEl.innerText = d.totalWeight || 0;
-      pointsEl.innerText = d.points || 0;
+      pointsEl.innerText = d.EcoPoints || 0;
       moneyEl.innerText = ((d.totalWeight || 0)/100*10).toFixed(2);
     });
 
+    // HISTORY
     historyRef.on("value", snap => {
       const h = snap.val() || {};
       const entries = Object.values(h).reverse();
@@ -151,7 +147,7 @@ tr:nth-child(even){background:#f5fbf7;}
     weightEl.innerText = 0;
     pointsEl.innerText = 0;
     moneyEl.innerText = 0;
-    historyDiv.innerHTML = "<div class='empty'>Waiting for ESP32 data…</div>";
+    historyDiv.innerHTML = "<div class='empty'>Waiting for data…</div>";
   }
 </script>
 
