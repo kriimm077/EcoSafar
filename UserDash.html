@@ -1,115 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EcoSafar • User Dashboard</title>
+  <title>User Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<style>
-:root{
-  --green-dark:#0b3d0f;
-  --green-main:#145A13;
-  --accent:#2ecc71;
-}
-*{box-sizing:border-box;font-family:Inter,sans-serif;}
-body{
-  margin:0;
-  background:linear-gradient(135deg,#dff3ea,#c9ebd9);
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  padding:40px 0;
-}
-.card{
-  background:#fff;
-  width:420px;
-  padding:35px 28px;
-  border-radius:26px;
-  box-shadow:0 18px 45px rgba(0,0,0,.18);
-  text-align:center;
-}
-.logo{width:110px;margin-bottom:16px;}
-h2{color:var(--green-main);margin-bottom:6px;}
-.uid{font-size:14px;margin-bottom:22px;color:#4f5e57;}
-.stats{display:flex;gap:12px;margin-bottom:22px;}
-.stat{
-  flex:1;
-  background:#eef9f1;
-  padding:14px;
-  border-radius:14px;
-}
-.stat h4{
-  font-size:13px;
-  margin-bottom:6px;
-  color:#4f5e57;
-}
-.stat div{
-  font-size:22px;
-  font-weight:700;
-  color:var(--green-main);
-}
-.convert-box{
-  background:#f0faf3;
-  padding:16px;
-  border-radius:14px;
-  margin-bottom:24px;
-}
-.convert-box p{margin:6px 0;font-weight:600;}
-.history{text-align:left;}
-.history h3{margin-bottom:12px;color:var(--green-dark);}
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14px;
-}
-th,td{padding:8px;text-align:center;}
-th{background:#e6f4ea;color:#145A13;}
-tr:nth-child(even){background:#f5fbf7;}
-.empty{
-  background:#eef9f1;
-  padding:10px;
-  border-radius:8px;
-  font-size:14px;
-}
-</style>
+  <style>
+    body { font-family: Arial; }
+    table { width: 100%; border-collapse: collapse; }
+    td,th { border:1px solid #000; padding:8px; text-align:center; }
+  </style>
 </head>
-
 <body>
 
-<div class="card">
-  <img src="logo.png" class="logo">
+<h2>EcoSafar – User Dashboard</h2>
 
-  <h2>Welcome, <span id="userName">---</span></h2>
-  <div class="uid">RFID UID: <b id="userUID">----</b></div>
+<p><b>UID:</b> <span id="uid"></span></p>
+<p><b>Name:</b> <span id="name"></span></p>
+<p><b>Total Weight:</b> <span id="weight"></span> g</p>
+<p><b>EcoPoints:</b> <span id="points"></span></p>
+<p><b>Money:</b> ₹<span id="money"></span></p>
 
-  <div class="stats">
-    <div class="stat">
-      <h4>Total EcoPoints</h4>
-      <div id="points">0</div>
-    </div>
-    <div class="stat">
-      <h4>Total Waste (g)</h4>
-      <div id="weight">0</div>
-    </div>
-  </div>
+<h3>Transaction History</h3>
+<div id="history"></div>
 
-  <div class="convert-box">
-    <p>Redeem Value</p>
-    <p>₹ <span id="money">0</span></p>
-    <p style="font-size:12px;color:#555;">(100g = ₹10)</p>
-  </div>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
+  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
+  projectId: "ecosafar-b8e9b"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-  <div class="history">
-    <h3>Transaction History</h3>
-    <div id="historyList" class="empty">Loading history…</div>
-  </div>
-</div>
+let uid = localStorage.getItem("uid");
+if(!uid){
+  alert("Login first");
+  window.location.href = "index.html";
+}
 
-<script src="UserDash.js"></script>
+document.getElementById("uid").innerText = uid;
+
+// 🔥 REAL TIME USER DATA
+db.ref("users/" + uid).on("value", snap=>{
+  const d = snap.val();
+  if(!d) return;
+
+  document.getElementById("name").innerText = d.name || "User";
+  document.getElementById("weight").innerText = d.TotalWeight || 0;
+  document.getElementById("points").innerText = d.Ecopoints || 0;
+  document.getElementById("money").innerText =
+    ((d.TotalWeight || 0) / 100 * 10).toFixed(2);
+});
+
+// 🔥 REAL TIME HISTORY
+db.ref("history/" + uid).limitToLast(10).on("value", snap=>{
+  if(!snap.exists()){
+    document.getElementById("history").innerHTML = "No History";
+    return;
+  }
+
+  let html = `<table>
+    <tr><th>#</th><th>Weight (g)</th><th>EcoPoints</th></tr>`;
+
+  let i = 1;
+  snap.forEach(s=>{
+    html += `
+      <tr>
+        <td>${i++}</td>
+        <td>${s.val().weight}</td>
+        <td>${s.val().points}</td>
+      </tr>`;
+  });
+
+  html += "</table>";
+  document.getElementById("history").innerHTML = html;
+});
+</script>
+
 </body>
 </html>
