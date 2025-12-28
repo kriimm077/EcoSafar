@@ -7,8 +7,8 @@ const firebaseConfig = {
   databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com/",
   projectId: "ecosafar-b8e9b",
   storageBucket: "ecosafar-b8e9b.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdefg"
+  messagingSenderId: "972209472560",
+  appId: "1:972209472560:web:39fcc096311b3006c6d9f5"
 };
 
 // ---------- INITIALIZE FIREBASE ----------
