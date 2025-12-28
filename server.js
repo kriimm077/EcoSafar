@@ -1,218 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EcoSafar • User Dashboard</title>
+// server.js
+const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
+const path = require('path');
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+const app = express();
+const db = new sqlite3.Database('./ecosafar.db');
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+// Serve static files like logo.png
+app.use(express.static(path.join(__dirname, 'public')));
 
-<style>
-:root{
-  --green-dark:#0b3d0f;
-  --green-main:#145A13;
-  --accent:#2ecc71;
-}
+// Set EJS as template engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-*{box-sizing:border-box;font-family:Inter,sans-serif;}
-
-body{
-  margin:0;
-  background:linear-gradient(135deg,#dff3ea,#c9ebd9);
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  padding:40px 0;
-}
-
-.card{
-  background:#fff;
-  width:420px;
-  padding:35px 28px;
-  border-radius:26px;
-  box-shadow:0 18px 45px rgba(0,0,0,.18);
-  text-align:center;
-}
-
-.logo{width:110px;margin-bottom:16px;}
-
-h2{color:var(--green-main);margin-bottom:6px;}
-.uid{font-size:14px;margin-bottom:22px;color:#4f5e57;}
-
-.stats{
-  display:flex;
-  gap:12px;
-  margin-bottom:22px;
-}
-
-.stat{
-  flex:1;
-  background:#eef9f1;
-  padding:14px;
-  border-radius:14px;
-}
-
-.stat h4{
-  font-size:13px;
-  margin-bottom:6px;
-  color:#4f5e57;
-}
-
-.stat div{
-  font-size:22px;
-  font-weight:700;
-  color:var(--green-main);
-}
-
-.convert-box{
-  background:#f0faf3;
-  padding:16px;
-  border-radius:14px;
-  margin-bottom:24px;
-}
-
-.convert-box p{
-  margin:6px 0;
-  font-weight:600;
-}
-
-.history{text-align:left;}
-.history h3{margin-bottom:12px;color:var(--green-dark);}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14px;
-}
-
-th,td{
-  padding:8px;
-  text-align:center;
-}
-
-th{
-  background:#e6f4ea;
-  color:#145A13;
-}
-
-tr:nth-child(even){
-  background:#f5fbf7;
-}
-
-.empty{
-  background:#eef9f1;
-  padding:10px;
-  border-radius:8px;
-  font-size:14px;
-}
-</style>
-</head>
-<body>
-
-<div class="card">
-  <img src="logo.png" class="logo">
-
-  <h2>Welcome, <span id="userName">---</span></h2>
-  <div class="uid">RFID UID: <b id="userUID">----</b></div>
-
-  <div class="stats">
-    <div class="stat">
-      <h4>Total EcoPoints</h4>
-      <div id="points">0</div>
-    </div>
-    <div class="stat">
-      <h4>Total Waste (g)</h4>
-      <div id="weight">0</div>
-    </div>
-  </div>
-
-  <div class="convert-box">
-    <p>Redeem Value</p>
-    <p>₹ <span id="money">0</span></p>
-    <p style="font-size:12px;color:#555;">(100g = ₹10)</p>
-  </div>
-
-  <div class="history">
-    <h3>Transaction History</h3>
-    <div id="historyList" class="empty">Waiting for ESP32 data…</div>
-  </div>
-</div>
-
-<script>
-/* ---------- FIREBASE INIT ---------- */
-firebase.initializeApp({
-  apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
-  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com/"
-});
-
-const db = firebase.database();
-
-/* ---------- AUTO READ LAST ACTIVE UID ---------- */
-db.ref("lastActiveUID").on("value", snap => {
-  const uid = snap.val();
-  const uidDisplay = document.getElementById("userUID");
-  if(uid){
-    uidDisplay.innerText = uid;
-    loadUserData(uid);
-  } else {
-    uidDisplay.innerText = "----";
-    document.getElementById("userName").innerText = "---";
-    document.getElementById("weight").innerText = 0;
-    document.getElementById("points").innerText = 0;
-    document.getElementById("money").innerText = 0;
-    document.getElementById("historyList").innerHTML = "<div class='empty'>Waiting for ESP32 data…</div>";
-  }
-});
-
-/* ---------- LOAD USER DATA ---------- */
-function loadUserData(uid){
-  db.ref("users/" + uid).on("value", snap => {
-    if(!snap.exists()) return;
-
-    const data = snap.val();
-
-    document.getElementById("userName").innerText = data.name || "User";
-    document.getElementById("weight").innerText = data.TotalWeight || 0;
-    document.getElementById("points").innerText = data.Ecopoints || 0;
-    document.getElementById("money").innerText = ((data.TotalWeight || 0)/100*10).toFixed(2);
-
-    const history = data.history || {};
-    const entries = Object.values(history).reverse();
-
-    const historyDiv = document.getElementById("historyList");
-
-    if(entries.length === 0){
-      historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
-      return;
+// ROUTE: User Dashboard
+app.get('/', (req, res) => {
+  // Get the last inserted user
+  db.get("SELECT rowid, username, points, totalWeight FROM users ORDER BY rowid DESC LIMIT 1", [], (err, user) => {
+    if(err){
+      console.error(err);
+      return res.send("Database error");
     }
 
-    let html = `
-      <table>
-        <tr>
-          <th>#</th>
-          <th>Waste (g)</th>
-          <th>EcoPoints</th>
-        </tr>`;
+    if(!user){
+      return res.send("No users found in the database");
+    }
 
-    entries.forEach((e,i)=>{
-      html += `
-        <tr>
-          <td>${i+1}</td>
-          <td>${e.weight}</td>
-          <td>+${e.ecoPoints}</td>
-        </tr>`;
+    // Calculate redeem value
+    const money = ((user.totalWeight || 0)/100*10).toFixed(2);
+
+    // Example transaction history (replace with real table if you have one)
+    const history = [
+      { weight: 200, ecoPoints: 20 },
+      { weight: 150, ecoPoints: 15 },
+      { weight: 300, ecoPoints: 30 }
+    ];
+
+    res.render('dashboard', {
+      username: user.username,
+      uid: `UID-${user.rowid}`,
+      points: user.points,
+      totalWeight: user.totalWeight,
+      money,
+      history
     });
-
-    html += "</table>";
-    historyDiv.innerHTML = html;
   });
-}
-</script>
+});
 
-</body>
-</html>
+// Start the server
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server running at http://localhost:${PORT}`);
+});
