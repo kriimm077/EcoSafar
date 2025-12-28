@@ -1,303 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EcoSafar • Admin Dashboard</title>
+  <title>Admin Dashboard</title>
 
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<style>
-:root{
-  --green:#0f7a52;
-  --green-dark:#0f4d3f;
-  --yellow:#f2b705;
-  --red:#d84343;
-  --bg:#f4faf7;
-  --card:#ffffff;
-}
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  font-family:Inter,sans-serif;
-}
-
-body{
-  background:var(--bg);
-  padding:32px;
-  color:#333;
-}
-
-/* ================= HEADER ================= */
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:32px;
-}
-
-.header-left{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-
-.logo{
-  height:42px;
-  animation:logoDance 3s infinite ease-in-out;
-}
-
-@keyframes logoDance{
-  0%{transform:translateX(0)}
-  25%{transform:translateX(6px)}
-  50%{transform:translateX(-6px)}
-  75%{transform:scale(1.06)}
-}
-
-h1{
-  font-size:22px;
-  font-weight:700;
-  color:var(--green-dark);
-}
-
-.subtitle{
-  font-size:13px;
-  color:#666;
-}
-
-/* ================= GRID ================= */
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:28px;
-}
-
-@media(max-width:900px){
-  .grid{grid-template-columns:1fr}
-}
-
-/* ================= CARD ================= */
-.card{
-  background:var(--card);
-  border-radius:18px;
-  padding:26px;
-  box-shadow:0 10px 25px rgba(0,0,0,.07);
-}
-
-.card-title{
-  font-size:17px;
-  font-weight:700;
-  color:var(--green-dark);
-  margin-bottom:18px;
-}
-
-/* ================= BIN STATUS ================= */
-.stat{
-  display:flex;
-  justify-content:space-between;
-  font-size:14px;
-  margin-bottom:10px;
-}
-
-.bar{
-  height:14px;
-  background:#e4f2ec;
-  border-radius:10px;
-  overflow:hidden;
-}
-
-.bar-fill{
-  height:100%;
-  width:0%;
-  transition:.4s;
-}
-
-/* ================= TABLE ================= */
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:14px;
-}
-
-thead{
-  background:#f2f8f5;
-}
-
-th,td{
-  padding:10px;
-  text-align:left;
-}
-
-th{
-  font-weight:600;
-  color:var(--green-dark);
-}
-
-tbody tr:not(:last-child){
-  border-bottom:1px solid #eee;
-}
-
-.rank{
-  font-weight:600;
-  color:var(--green);
-}
-
-/* ================= LOGOUT ================= */
-.logout{
-  background:var(--green);
-  color:#fff;
-  border:none;
-  padding:8px 14px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:600;
-}
-.logout:hover{
-  background:var(--green-dark);
-}
-</style>
+  <style>
+    table { width:100%; border-collapse:collapse; }
+    th,td { border:1px solid #000; padding:8px; text-align:center; }
+  </style>
 </head>
-
 <body>
 
-<!-- ================= HEADER ================= -->
-<div class="header">
-  <div class="header-left">
-    <img src="logo.png" class="logo">
-    <div>
-      <h1>EcoSafar Admin Dashboard</h1>
-      <div class="subtitle" id="citySubtitle"></div>
-    </div>
-  </div>
-  <button class="logout" onclick="logout()">Logout</button>
-</div>
+<h2>EcoSafar – Admin Dashboard</h2>
 
-<!-- ================= CONTENT ================= -->
-<div class="grid">
-
-  <!-- BIN STATUS -->
-  <div class="card">
-    <div class="card-title" id="binTitle"></div>
-
-    <div class="stat">
-      <span>Fill Level</span>
-      <strong id="fillText">--%</strong>
-    </div>
-
-    <div class="bar">
-      <div id="fillBar" class="bar-fill"></div>
-    </div>
-
-    <div class="stat" style="margin-top:14px">
-      <span>Total Waste Collected</span>
-      <strong id="binWeight">-- kg</strong>
-    </div>
-  </div>
-
-  <!-- USER TABLE -->
-  <div class="card">
-    <div class="card-title">👥 City User Leaderboard</div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Name</th>
-          <th>Total Weight (g)</th>
-          <th>Eco Points</th>
-        </tr>
-      </thead>
-      <tbody id="userTable"></tbody>
-    </table>
-  </div>
-
-</div>
+<table>
+  <thead>
+    <tr>
+      <th>Rank</th>
+      <th>Name</th>
+      <th>Total Weight (g)</th>
+      <th>EcoPoints</th>
+    </tr>
+  </thead>
+  <tbody id="users"></tbody>
+</table>
 
 <script>
-/* ================= AUTH PROTECTION ================= */
-if(sessionStorage.getItem("ecosafar_admin") !== "true"){
-  window.location.href = "AdminLogin.html";
-}
-
-/* ================= FIREBASE ================= */
-firebase.initializeApp({
-  apiKey:"AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
-  databaseURL:"https://ecosafar-3da96-default-rtdb.firebaseio.com",
-  projectId:"ecosafar-3da96"
-});
-
+const firebaseConfig = {
+  apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
+  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
+  projectId: "ecosafar-b8e9b"
+};
+firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* ================= CURRENT CITY ================= */
-const currentCity = sessionStorage.getItem("ecosafar_admin_city");
-if(!currentCity){
-  window.location.href = "AdminLogin.html";
-}
-
-/* ================= UI TEXT ================= */
-citySubtitle.innerText = "City Monitoring • " + currentCity;
-binTitle.innerText = "🗑 " + currentCity + " Dustbin Status";
-
-/* ================= BIN DATA ================= */
-db.ref("bins/" + currentCity).on("value", snap=>{
-  if(!snap.exists()) return;
-
-  const d = snap.val();
-  const fill = d.fillPercentage || 0;
-
-  fillText.innerText = fill + "%";
-  binWeight.innerText =
-    ((d.TotalWeight || 0) / 1000).toFixed(2) + " kg";
-
-  fillBar.style.width = fill + "%";
-  fillBar.style.background =
-    fill > 85 ? "var(--red)" :
-    fill > 65 ? "var(--yellow)" :
-    "var(--green)";
-});
-
-/* ================= USERS ================= */
 db.ref("users").on("value", snap=>{
-  let users = [];
+  let arr = [];
 
   snap.forEach(u=>{
-    const user = u.val();
-    if(user.city === currentCity){
-      users.push(user);
-    }
+    arr.push(u.val());
   });
 
-  users.sort((a,b)=>(b.Ecopoints||0)-(a.Ecopoints||0));
-  userTable.innerHTML = "";
+  arr.sort((a,b)=>(b.Ecopoints||0)-(a.Ecopoints||0));
 
-  users.forEach((u,i)=>{
-    userTable.innerHTML += `
+  let html="";
+  arr.forEach((u,i)=>{
+    html += `
       <tr>
-        <td class="rank">${i+1}</td>
+        <td>${i+1}</td>
         <td>${u.name || "-"}</td>
         <td>${u.TotalWeight || 0}</td>
         <td>${u.Ecopoints || 0}</td>
-      </tr>
-    `;
+      </tr>`;
   });
 
-  if(users.length === 0){
-    userTable.innerHTML =
-      "<tr><td colspan='4'>No users found</td></tr>";
-  }
+  document.getElementById("users").innerHTML = html;
 });
-
-/* ================= LOGOUT ================= */
-function logout(){
-  sessionStorage.clear();
-  window.location.href = "AdminLogin.html";
-}
 </script>
 
 </body>
