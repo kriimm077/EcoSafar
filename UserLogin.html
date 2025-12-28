@@ -11,12 +11,18 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
+/* 🔒 ORIGINAL DESIGN — UNTOUCHED */
 :root{
   --primary:#145A13;
   --accent:#2ecc71;
   --muted:#5f6f66;
 }
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Inter',sans-serif;
+}
 body{
   background:linear-gradient(135deg,#e8f6ef,#dff3ea);
   min-height:100vh;
@@ -43,7 +49,12 @@ body{
 }
 h2{color:var(--primary);margin-bottom:6px}
 .subtitle{color:var(--muted);margin-bottom:25px;font-size:14px}
-label{display:block;text-align:left;font-weight:600;margin-bottom:6px}
+label{
+  display:block;
+  text-align:left;
+  font-weight:600;
+  margin-bottom:6px;
+}
 input,select{
   width:100%;
   padding:14px;
@@ -66,7 +77,10 @@ button{
   color:#0b3d0f;
   margin-top:10px;
 }
-.msg{margin-top:15px;font-weight:600}
+.msg{
+  margin-top:15px;
+  font-weight:600;
+}
 .error{color:#c40000}
 .success{color:var(--primary)}
 </style>
@@ -94,35 +108,33 @@ button{
   <input id="password" type="password" placeholder="Enter password">
 
   <button type="button" onclick="login()">Login</button>
-  <button type="button" class="register-btn" onclick="goRegister()">New User? Register</button>
+  <button class="register-btn" type="button" onclick="goRegister()">New User? Register</button>
 
   <div id="msg" class="msg"></div>
 </div>
 
 <script>
-/* 🔥 FIREBASE INIT – REAL & WORKING */
+/* ✅ ONLY LOGIC FIXED — NO UI CHANGES */
+
 firebase.initializeApp({
   apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
   authDomain: "ecosafar-b8e9b.firebaseapp.com",
   databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
-  projectId: "ecosafar-b8e9b",
-  storageBucket: "ecosafar-b8e9b.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef"
+  projectId: "ecosafar-b8e9b"
 });
 
 const db = firebase.database();
 
-/* 🔐 LOGIN FUNCTION */
 function login(){
 
+  const city = document.getElementById("city").value;
   const uid = document.getElementById("uid").value.trim().toUpperCase();
-  const password = document.getElementById("password").value;
+  const password = document.getElementById("password").value.trim();
   const msg = document.getElementById("msg");
 
   msg.innerHTML = "";
 
-  if(!uid || !password){
+  if(!city || !uid || !password){
     msg.innerHTML = "<span class='error'>All fields required</span>";
     return;
   }
@@ -143,15 +155,15 @@ function login(){
       msg.innerHTML = "<span class='success'>Login successful ✔</span>";
 
       setTimeout(() => {
-        window.location.href = "UserDash.html?uid=" + uid;
+        window.location.href = `UserDash.html?uid=${uid}`;
       }, 1200);
+
     })
     .catch(err => {
       msg.innerHTML = "<span class='error'>" + err.message + "</span>";
     });
 }
 
-/* ➕ REGISTER */
 function goRegister(){
   window.location.href = "UserRegistration.html";
 }
