@@ -84,60 +84,72 @@ tr:nth-child(even){background:#f5fbf7;}
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // ---------- AUTO READ LAST SCANNED UID ----------
+  // ---------- DASHBOARD ELEMENTS ----------
+  const userNameEl = document.getElementById("userName");
+  const userUIDEl = document.getElementById("userUID");
+  const pointsEl = document.getElementById("points");
+  const weightEl = document.getElementById("weight");
+  const moneyEl = document.getElementById("money");
+  const historyDiv = document.getElementById("historyList");
+
+  let currentUserRef = null;
+  let historyRef = null;
+
+  // ---------- LISTEN FOR LAST ACTIVE UID ----------
   db.ref("lastActiveUID").on("value", snap => {
     const uid = snap.val();
-    const uidDisplay = document.getElementById("userUID");
-    if(uid){
-      uidDisplay.innerText = uid;
-      loadUserData(uid);
-    } else {
-      uidDisplay.innerText = "----";
-      document.getElementById("userName").innerText = "---";
-      document.getElementById("weight").innerText = 0;
-      document.getElementById("points").innerText = 0;
-      document.getElementById("money").innerText = 0;
-      document.getElementById("historyList").innerHTML = "<div class='empty'>Waiting for ESP32 data…</div>";
-    }
+    if(uid) loadUserData(uid);
+    else resetDashboard();
   });
 
   // ---------- LOAD USER DATA ----------
   function loadUserData(uid){
-    db.ref("users/" + uid).on("value", snap => {
-      if(!snap.exists()) return;
+    if(currentUserRef) currentUserRef.off();
+    if(historyRef) historyRef.off();
 
-      const data = snap.val();
-      document.getElementById("userName").innerText = data.name || "User";
-      document.getElementById("weight").innerText = data.TotalWeight || 0;
-      document.getElementById("points").innerText = data.Ecopoints || 0;
-      document.getElementById("money").innerText = ((data.TotalWeight || 0)/100*10).toFixed(2);
+    currentUserRef = db.ref("users/" + uid);
+    historyRef = db.ref("history/" + uid);
 
-      const history = data.history || {};
-      const entries = Object.values(history).reverse();
+    currentUserRef.on("value", snap => {
+      if(!snap.exists()){ resetDashboard(); return; }
+      const d = snap.val();
+      userUIDEl.innerText = uid;
+      userNameEl.innerText = d.name || "User";
+      weightEl.innerText = d.totalWeight || 0;
+      pointsEl.innerText = d.points || 0;
+      moneyEl.innerText = ((d.totalWeight || 0)/100*10).toFixed(2);
+    });
 
-      const historyDiv = document.getElementById("historyList");
+    historyRef.on("value", snap => {
+      const h = snap.val() || {};
+      const entries = Object.values(h).reverse();
       if(entries.length === 0){
         historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
         return;
       }
 
       let html = `<table>
-        <tr>
-          <th>#</th>
-          <th>Waste (g)</th>
-          <th>EcoPoints</th>
-        </tr>`;
-
+        <tr><th>#</th><th>Waste (g)</th><th>EcoPoints</th></tr>`;
       entries.forEach((e,i)=>{
         html += `<tr>
           <td>${i+1}</td>
           <td>${e.weight}</td>
-          <td>+${e.ecoPoints}</td>
+          <td>+${e.points}</td>
         </tr>`;
       });
       html += "</table>";
       historyDiv.innerHTML = html;
     });
+  }
+
+  // ---------- RESET DASHBOARD ----------
+  function resetDashboard(){
+    userUIDEl.innerText = "----";
+    userNameEl.innerText = "---";
+    weightEl.innerText = 0;
+    pointsEl.innerText = 0;
+    moneyEl.innerText = 0;
+    historyDiv.innerHTML = "<div class='empty'>Waiting for ESP32 data…</div>";
   }
 </script>
 
