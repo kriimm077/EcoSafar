@@ -1,16 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Admin Dashboard</title>
+<meta charset="UTF-8">
+<title>EcoSafar • Admin Dashboard</title>
 
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
-  <style>
-    table { width:100%; border-collapse:collapse; }
-    th,td { border:1px solid #000; padding:8px; text-align:center; }
-  </style>
+<style>
+body{
+  font-family:Arial, sans-serif;
+  background:#eef9f1;
+  padding:20px;
+}
+h2{
+  color:#145A13;
+  margin-bottom:20px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:#fff;
+}
+th,td{
+  padding:10px;
+  border:1px solid #ccc;
+  text-align:center;
+}
+th{
+  background:#dff3ea;
+  color:#145A13;
+}
+tr:nth-child(even){
+  background:#f5fbf7;
+}
+</style>
 </head>
+
 <body>
 
 <h2>EcoSafar – Admin Dashboard</h2>
@@ -19,8 +45,10 @@
   <thead>
     <tr>
       <th>Rank</th>
+      <th>RFID UID</th>
       <th>Name</th>
-      <th>Total Weight (g)</th>
+      <th>City</th>
+      <th>Total Waste (g)</th>
       <th>EcoPoints</th>
     </tr>
   </thead>
@@ -28,35 +56,56 @@
 </table>
 
 <script>
-const firebaseConfig = {
+/* FIREBASE INIT */
+firebase.initializeApp({
   apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
   databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
   projectId: "ecosafar-b8e9b"
-};
-firebase.initializeApp(firebaseConfig);
+});
+
 const db = firebase.database();
 
-db.ref("users").on("value", snap=>{
-  let arr = [];
+/* READ ROOT USERS */
+db.ref("/").on("value", snap => {
 
-  snap.forEach(u=>{
-    arr.push(u.val());
+  let users = [];
+
+  snap.forEach(child => {
+    const uid = child.key;
+    const d = child.val();
+
+    // Ignore invalid nodes
+    if(!d || !d.name) return;
+
+    users.push({
+      uid: uid,
+      name: d.name || "-",
+      city: d.city || "-",
+      weight: Number(d.TotalWeight) || 0,
+      points: Number(d.Ecopoints) || 0
+    });
   });
 
-  arr.sort((a,b)=>(b.Ecopoints||0)-(a.Ecopoints||0));
+  // Sort by EcoPoints DESC
+  users.sort((a,b) => b.points - a.points);
 
-  let html="";
-  arr.forEach((u,i)=>{
+  let html = "";
+
+  users.forEach((u,i)=>{
     html += `
       <tr>
         <td>${i+1}</td>
-        <td>${u.name || "-"}</td>
-        <td>${u.TotalWeight || 0}</td>
-        <td>${u.Ecopoints || 0}</td>
-      </tr>`;
+        <td>${u.uid}</td>
+        <td>${u.name}</td>
+        <td>${u.city}</td>
+        <td>${u.weight.toFixed(2)}</td>
+        <td>${u.points.toFixed(2)}</td>
+      </tr>
+    `;
   });
 
-  document.getElementById("users").innerHTML = html;
+  document.getElementById("users").innerHTML =
+    html || "<tr><td colspan='6'>No users found</td></tr>";
 });
 </script>
 
