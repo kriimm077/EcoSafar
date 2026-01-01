@@ -1,20 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- ================= BASIC SETUP ================= -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EcoSafar • User Dashboard</title>
 
-  <!-- ================= GOOGLE FONT ================= -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- ================= FIREBASE SDKs (STEP 1) ================= -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <!-- ================= STYLES ================= -->
   <style>
+    /* (UNCHANGED STYLES) */
     :root{
       --green-dark:#0b3d0f;
       --green-main:#145A13;
@@ -58,128 +55,116 @@
 
 <body>
 
-  <!-- ================= UI ================= -->
-  <div class="card">
-    <img src="logo.png" class="logo">
+<div class="card">
+  <img src="logo.png" class="logo">
 
-    <h2>Welcome, <span id="userName">---</span></h2>
-    <div class="uid">RFID UID: <b id="userUID">----</b></div>
+  <h2>Welcome, <span id="userName">---</span></h2>
+  <div class="uid">RFID UID: <b id="userUID">----</b></div>
 
-    <div class="stats">
-      <div class="stat">
-        <h4>Total EcoPoints</h4>
-        <div id="points">0</div>
-      </div>
-      <div class="stat">
-        <h4>Total Waste (g)</h4>
-        <div id="weight">0</div>
-      </div>
+  <div class="stats">
+    <div class="stat">
+      <h4>Total EcoPoints</h4>
+      <div id="points">0</div>
     </div>
-
-    <div class="convert-box">
-      <p>Redeem Value</p>
-      <p>₹ <span id="money">0</span></p>
-      <p style="font-size:12px;color:#555;">(100g = ₹10)</p>
-    </div>
-
-    <div class="history">
-      <h3>Transaction History</h3>
-      <div id="historyList" class="empty">Waiting for data…</div>
+    <div class="stat">
+      <h4>Total Waste (g)</h4>
+      <div id="weight">0</div>
     </div>
   </div>
 
-  <!-- ================= FIREBASE + LOGIC (STEP 2 → END) ================= -->
-  <script>
-    /* ---------- STEP 2: FIREBASE CONFIG ---------- */
-    const firebaseConfig = {
-      apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
-      authDomain: "ecosafar-3da96.firebaseapp.com",
-      databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
-      projectId: "ecosafar-3da96",
-      storageBucket: "ecosafar-3da96.firebasestorage.app",
-      messagingSenderId: "972209472560",
-      appId: "1:972209472560:web:39fcc096311b3006c6d9f5"
-    };
+  <div class="convert-box">
+    <p>Redeem Value</p>
+    <p>₹ <span id="money">0</span></p>
+    <p style="font-size:12px;color:#555;">(100g = ₹10)</p>
+  </div>
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
+  <div class="history">
+    <h3>Transaction History</h3>
+    <div id="historyList" class="empty">Waiting for data…</div>
+  </div>
+</div>
 
-    const db = firebase.database();
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
+    authDomain: "ecosafar-3da96.firebaseapp.com",
+    databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
+    projectId: "ecosafar-3da96",
+    storageBucket: "ecosafar-3da96.firebasestorage.app",
+    messagingSenderId: "972209472560",
+    appId: "1:972209472560:web:39fcc096311b3006c6d9f5"
+  };
 
-    /* ---------- STEP 3: GET UID FROM URL ---------- */
-    const uid = new URLSearchParams(window.location.search).get("uid");
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
 
-    /* ---------- STEP 4: ELEMENT REFERENCES ---------- */
-    const userNameEl = document.getElementById("userName");
-    const userUIDEl  = document.getElementById("userUID");
-    const pointsEl   = document.getElementById("points");
-    const weightEl   = document.getElementById("weight");
-    const moneyEl    = document.getElementById("money");
-    const historyDiv = document.getElementById("historyList");
+  const uid = new URLSearchParams(window.location.search).get("uid");
 
-    if (uid) {
-      loadUser(uid);
-    } else {
-      resetDashboard();
-    }
+  const userNameEl = document.getElementById("userName");
+  const userUIDEl  = document.getElementById("userUID");
+  const pointsEl   = document.getElementById("points");
+  const weightEl   = document.getElementById("weight");
+  const moneyEl    = document.getElementById("money");
+  const historyDiv = document.getElementById("historyList");
 
-    /* ---------- STEP 5: LOAD USER DATA ---------- */
-    function loadUser(uid) {
-      const userRef = db.ref("users/" + uid);
-      const historyRef = db.ref("history/" + uid);
+  if (uid) loadUser(uid);
+  else resetDashboard();
 
-      userRef.on("value", snap => {
-        if (!snap.exists()) return resetDashboard();
+  function loadUser(uid) {
+    const userRef = db.ref("users/" + uid);
+    const historyRef = db.ref("users/" + uid + "/history");
 
-        const d = snap.val();
-        const weight = Number(d.totalWeight) || 0;
-        const points = Number(d.EcoPoints) || 0;
+    userRef.on("value", snap => {
+      if (!snap.exists()) return resetDashboard();
 
-        userUIDEl.innerText = uid;
-        userNameEl.innerText = d.name || "User";
-        weightEl.innerText = weight;
-        pointsEl.innerText = points;
-        moneyEl.innerText = ((weight / 100) * 10).toFixed(2);
-      });
+      const d = snap.val();
 
-      historyRef.on("value", snap => {
-        const h = snap.val();
-        if (!h) {
-          historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
-          return;
-        }
+      const weight = Number(d.TotalWeight) || 0;
+      const points = Number(d.Ecopoints) || 0;
 
-        let html = `
-          <table>
-            <tr><th>#</th><th>Waste (g)</th><th>EcoPoints</th></tr>
+      userUIDEl.innerText = uid;
+      userNameEl.innerText = d.name || "User";
+      weightEl.innerText = weight.toFixed(1);
+      pointsEl.innerText = points.toFixed(1);
+      moneyEl.innerText = ((weight / 100) * 10).toFixed(2);
+    });
+
+    historyRef.on("value", snap => {
+      const h = snap.val();
+      if (!h) {
+        historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
+        return;
+      }
+
+      let html = `
+        <table>
+          <tr><th>#</th><th>Waste (g)</th><th>EcoPoints</th></tr>
+      `;
+
+      Object.values(h).reverse().forEach((e, i) => {
+        html += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${e.weight || 0}</td>
+            <td>+${e.ecoPoints || 0}</td>
+          </tr>
         `;
-
-        Object.values(h).reverse().forEach((e, i) => {
-          html += `
-            <tr>
-              <td>${i + 1}</td>
-              <td>${e.weight || 0}</td>
-              <td>+${e.points || 0}</td>
-            </tr>
-          `;
-        });
-
-        html += "</table>";
-        historyDiv.innerHTML = html;
       });
-    }
 
-    /* ---------- STEP 6: RESET ---------- */
-    function resetDashboard() {
-      userUIDEl.innerText = "----";
-      userNameEl.innerText = "---";
-      weightEl.innerText = 0;
-      pointsEl.innerText = 0;
-      moneyEl.innerText = 0;
-      historyDiv.innerHTML = "<div class='empty'>Waiting for data…</div>";
-    }
-  </script>
+      html += "</table>";
+      historyDiv.innerHTML = html;
+    });
+  }
+
+  function resetDashboard() {
+    userUIDEl.innerText = "----";
+    userNameEl.innerText = "---";
+    weightEl.innerText = 0;
+    pointsEl.innerText = 0;
+    moneyEl.innerText = 0;
+    historyDiv.innerHTML = "<div class='empty'>Waiting for data…</div>";
+  }
+</script>
 
 </body>
 </html>
