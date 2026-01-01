@@ -5,23 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • User Login</title>
 
+<!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+<!-- Firebase SDK (Compat) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-:root{
-  --primary:#145A13;
-  --accent:#2ecc71;
-  --muted:#5f6f66;
-}
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:'Inter',sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
 body{
   background:linear-gradient(135deg,#e8f6ef,#dff3ea);
   min-height:100vh;
@@ -32,65 +24,42 @@ body{
 .card{
   background:#fff;
   width:420px;
-  padding:50px 35px;
+  padding:45px 35px;
   border-radius:24px;
-  box-shadow:0 25px 60px rgba(0,0,0,.12);
-  text-align:center;
+  box-shadow:0 20px 50px rgba(0,0,0,.12);
 }
-.logo{
-  width:110px;
-  margin-bottom:20px;
-  animation:float 3s infinite ease-in-out;
-}
-@keyframes float{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-8px)}
-}
-h2{color:var(--primary);margin-bottom:6px}
-.subtitle{color:var(--muted);margin-bottom:25px;font-size:14px}
-label{
-  display:block;
-  text-align:left;
-  font-weight:600;
-  margin-bottom:6px;
-}
+h2{text-align:center;color:#145A13;margin-bottom:6px}
+.subtitle{text-align:center;color:#555;margin-bottom:25px}
+label{display:block;font-weight:600;margin-top:12px}
 input,select{
   width:100%;
   padding:14px;
   border-radius:12px;
   border:1px solid #cfded5;
-  margin-bottom:18px;
+  margin-top:6px;
 }
 button{
   width:100%;
   padding:15px;
+  margin-top:22px;
+  background:#145A13;
+  color:white;
   border:none;
   border-radius:16px;
-  background:var(--primary);
-  color:white;
   font-weight:600;
   cursor:pointer;
 }
-.register-btn{
-  background:var(--accent);
-  color:#0b3d0f;
-  margin-top:10px;
-}
-.msg{
-  margin-top:15px;
-  font-weight:600;
-}
+.msg{margin-top:16px;text-align:center;font-weight:600}
 .error{color:#c40000}
-.success{color:var(--primary)}
+.success{color:#145A13}
 </style>
 </head>
 
 <body>
 
 <div class="card">
-  <img src="logo.png" class="logo">
   <h2>User Login</h2>
-  <p class="subtitle">RFID based EcoSafar access</p>
+  <p class="subtitle">Access your EcoSafar account</p>
 
   <label>City</label>
   <select id="city">
@@ -106,39 +75,41 @@ button{
   <label>Password</label>
   <input id="password" type="password" placeholder="Enter password">
 
-  <button type="button" onclick="login()">Login</button>
-  <button class="register-btn" type="button" onclick="goRegister()">New User? Register</button>
+  <button type="button" onclick="loginUser()">Login</button>
 
   <div id="msg" class="msg"></div>
 </div>
 
 <script>
 /* ---------- FIREBASE INIT ---------- */
-firebase.initializeApp({
-  apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
-  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
-  projectId: "ecosafar-3da96" // ✅ comma fixed here
-});
+const firebaseConfig = {
+  apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
+  databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
+  projectId: "ecosafar-3da96"
+};
 
+firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 /* ---------- LOGIN FUNCTION ---------- */
-function login(){
+function loginUser(){
+
   const city = document.getElementById("city").value;
   const uid = document.getElementById("uid").value.trim().toUpperCase();
-  const password = document.getElementById("password").value.trim(); // ✅ trim password
+  const password = document.getElementById("password").value.trim();
   const msg = document.getElementById("msg");
 
   msg.innerHTML = "";
 
   if(!city || !uid || !password){
-    msg.innerHTML = "<span class='error'>All fields required</span>";
+    msg.innerHTML = "<span class='error'>All fields are required</span>";
     return;
   }
 
-  const ref = db.ref(`users/${uid}`);
+  const userRef = db.ref("users/" + uid);
 
-  ref.once("value").then(snapshot => {
+  userRef.once("value").then(snapshot => {
+
     if(!snapshot.exists()){
       msg.innerHTML = "<span class='error'>User not registered</span>";
       return;
@@ -154,16 +125,13 @@ function login(){
     msg.innerHTML = "<span class='success'>Login successful ✔</span>";
 
     setTimeout(() => {
-      window.location.href = `UserDash.html?city=${city}&uid=${uid}`;
+      window.location.href =
+        `UserDashboard.html?uid=${uid}&city=${city}`;
     }, 1200);
 
-  }).catch(err => {
-    msg.innerHTML = "<span class='error'>" + err.message + "</span>";
+  }).catch(error => {
+    msg.innerHTML = "<span class='error'>" + error.message + "</span>";
   });
-}
-
-function goRegister(){
-  window.location.href = "UserRegistration.html";
 }
 </script>
 
