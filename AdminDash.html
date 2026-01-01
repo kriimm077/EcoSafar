@@ -4,33 +4,39 @@
 <meta charset="UTF-8">
 <title>EcoSafar • Admin Dashboard</title>
 
+<!-- Firebase v8 (compatible & stable) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <style>
 body{
-  font-family:Arial, sans-serif;
+  font-family: Arial, sans-serif;
   background:#eef9f1;
   padding:20px;
 }
+
 h2{
   color:#145A13;
   margin-bottom:20px;
 }
+
 table{
   width:100%;
   border-collapse:collapse;
-  background:#fff;
+  background:#ffffff;
 }
-th,td{
+
+th, td{
   padding:10px;
   border:1px solid #ccc;
   text-align:center;
 }
+
 th{
   background:#dff3ea;
   color:#145A13;
 }
+
 tr:nth-child(even){
   background:#f5fbf7;
 }
@@ -52,11 +58,15 @@ tr:nth-child(even){
       <th>EcoPoints</th>
     </tr>
   </thead>
-  <tbody id="users"></tbody>
+  <tbody id="users">
+    <tr><td colspan="6">Loading...</td></tr>
+  </tbody>
 </table>
 
 <script>
-/* FIREBASE INIT */
+/* =========================
+   FIREBASE INITIALIZATION
+========================= */
 firebase.initializeApp({
   apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
   databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
@@ -65,41 +75,43 @@ firebase.initializeApp({
 
 const db = firebase.database();
 
-/* READ ROOT USERS */
-db.ref("/").on("value", snap => {
+/* =========================
+   LOAD ALL USERS (REAL-TIME)
+========================= */
+db.ref("users").on("value", snapshot => {
 
   let users = [];
 
-  snap.forEach(child => {
-    const uid = child.key;
-    const d = child.val();
+  snapshot.forEach(child => {
+    const uid  = child.key;
+    const data = child.val();
 
-    // Ignore invalid nodes
-    if(!d || !d.name) return;
+    // Skip invalid user records
+    if (!data || !data.name) return;
 
     users.push({
       uid: uid,
-      name: d.name || "-",
-      city: d.city || "-",
-      weight: Number(d.TotalWeight) || 0,
-      points: Number(d.Ecopoints) || 0
+      name: data.name || "-",
+      city: data.city || "-",
+      TotalWeight: Number(data.TotalWeight || 0),
+      Ecopoints: Number(data.Ecopoints || 0)
     });
   });
 
-  // Sort by EcoPoints DESC
-  users.sort((a,b) => b.points - a.points);
+  // 🏆 Sort by EcoPoints (DESC)
+  users.sort((a, b) => b.Ecopoints - a.Ecopoints);
 
   let html = "";
 
-  users.forEach((u,i)=>{
+  users.forEach((user, index) => {
     html += `
       <tr>
-        <td>${i+1}</td>
-        <td>${u.uid}</td>
-        <td>${u.name}</td>
-        <td>${u.city}</td>
-        <td>${u.weight.toFixed(2)}</td>
-        <td>${u.points.toFixed(2)}</td>
+        <td>${index + 1}</td>
+        <td>${user.uid}</td>
+        <td>${user.name}</td>
+        <td>${user.city}</td>
+        <td>${user.TotalWeight.toFixed(2)}</td>
+        <td>${user.Ecopoints.toFixed(2)}</td>
       </tr>
     `;
   });
