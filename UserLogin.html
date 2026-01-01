@@ -41,13 +41,20 @@ input,select{
 button{
   width:100%;
   padding:15px;
-  margin-top:22px;
+  margin-top:18px;
   background:#145A13;
   color:white;
   border:none;
   border-radius:16px;
   font-weight:600;
   cursor:pointer;
+}
+.register-btn{
+  background:#2ecc71;
+  color:#0b3d0f;
+}
+.register-btn:hover{
+  background:#27ae60;
 }
 .msg{margin-top:16px;text-align:center;font-weight:600}
 .error{color:#c40000}
@@ -76,6 +83,11 @@ button{
   <input id="password" type="password" placeholder="Enter password">
 
   <button type="button" onclick="loginUser()">Login</button>
+
+  <!-- ✅ REGISTER BUTTON -->
+  <button type="button" class="register-btn" onclick="goRegister()">
+    New user? Register
+  </button>
 
   <div id="msg" class="msg"></div>
 </div>
@@ -132,6 +144,11 @@ function loginUser(){
   }).catch(error => {
     msg.innerHTML = "<span class='error'>" + error.message + "</span>";
   });
+}
+
+/* ---------- GO TO REGISTRATION ---------- */
+function goRegister(){
+  window.location.href = "UserRegistration.html";
 }
 </script>
 
