@@ -172,32 +172,41 @@ const db = firebase.database();
 const params = new URLSearchParams(window.location.search);
 const uid = params.get("uid");
 
+console.log("UID:", uid);
+
 document.getElementById("uidText").innerText = "RFID UID: " + uid;
 
 /* ---------- FETCH USER DATA ---------- */
-db.ref("users/" + uid).on("value", snapshot => {
+db.ref("users/" + uid).once("value")
+.then(snapshot => {
 
-  if(!snapshot.exists()) return;
+  console.log("Snapshot:", snapshot.val());
+
+  if(!snapshot.exists()){
+    console.error("User not found");
+    return;
+  }
 
   const data = snapshot.val();
 
-  const ecoPoints = data.Ecopoints || 0;
-  const totalWeight = data.TotalWeight || 0;
-
   document.getElementById("welcome").innerText =
-    "Welcome, " + (data.name || "User");
+    "Welcome, " + data.name;
 
   document.getElementById("ecoPoints").innerText =
-    ecoPoints.toFixed(2);
+    Number(data.Ecopoints).toFixed(2);
 
   document.getElementById("totalWeight").innerText =
-    totalWeight.toFixed(2);
+    Number(data.TotalWeight).toFixed(2);
 
-  const redeem = (totalWeight / 100) * 10;
+  const redeem = (Number(data.TotalWeight) / 100) * 10;
   document.getElementById("redeemValue").innerText =
     "₹ " + redeem.toFixed(2);
+})
+.catch(err => {
+  console.error("Firebase error:", err);
 });
 </script>
+
 
 </body>
 </html>
