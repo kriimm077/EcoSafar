@@ -4,48 +4,156 @@
 <meta charset="UTF-8">
 <title>EcoSafar • User Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-body{
-  font-family:Inter,sans-serif;
-  background:#eaf7ee;
-  display:flex;
-  justify-content:center;
-  padding:20px;
+/* ===== RESET & BODY ===== */
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #e0f3e8, #c9ebd9);
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  margin: 0;
 }
-.card{
-  background:#fff;
-  width:420px;
-  border-radius:20px;
-  padding:25px;
-  box-shadow:0 10px 30px rgba(0,0,0,.15);
+
+/* ===== CARD ===== */
+.card {
+  background: #ffffff;
+  width: 420px;
+  border-radius: 25px;
+  padding: 30px 25px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-h2{color:#145A13;margin-bottom:5px}
-.stats{display:flex;gap:10px;margin:20px 0}
-.stat{
-  flex:1;
-  background:#eef9f1;
-  padding:15px;
-  border-radius:12px;
-  text-align:center;
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.15);
 }
-.stat b{font-size:22px;color:#145A13}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{padding:8px;border:1px solid #ccc;text-align:center}
-th{background:#dff3ea}
+
+/* ===== LOGO ===== */
+.logo {
+  width: 80px;
+  margin-bottom: 15px;
+  animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* ===== HEADINGS ===== */
+h2 {
+  color: #145A13;
+  margin-bottom: 5px;
+  font-weight: 600;
+  font-size: 22px;
+}
+
+p {
+  margin: 4px 0;
+  color: #4f5e57;
+}
+
+/* ===== STATS ===== */
+.stats {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.stat {
+  flex: 1;
+  background: #eef9f1;
+  padding: 18px 10px;
+  border-radius: 15px;
+  text-align: center;
+  transition: background 0.3s ease;
+}
+
+.stat div {
+  font-weight: 500;
+  color: #4f5e57;
+  margin-bottom: 6px;
+}
+
+.stat b {
+  font-size: 22px;
+  color: #145A13;
+}
+
+/* ===== REDEEM ===== */
+#money {
+  color: #145A13;
+  font-weight: 600;
+}
+
+/* ===== HISTORY TABLE ===== */
+h3 {
+  color: #145A13;
+  margin: 18px 0 10px;
+}
+
+#history {
+  text-align: left;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background: #dff3ea;
+  color: #145A13;
+}
+
+tr:nth-child(even) {
+  background: #f5fbf7;
+}
+
+.empty {
+  background: #eef9f1;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+  color: #4f5e57;
+}
 </style>
 </head>
 
 <body>
 
 <div class="card">
+  <!-- LOGO -->
+  <img src="logo.png" alt="EcoSafar Logo" class="logo">
+
+  <!-- USER INFO -->
   <h2 id="name">User</h2>
   <p>RFID UID: <b id="uid">---</b></p>
 
+  <!-- STATS -->
   <div class="stats">
     <div class="stat">
       <div>Total EcoPoints</div>
@@ -57,10 +165,12 @@ th{background:#dff3ea}
     </div>
   </div>
 
+  <!-- REDEEM VALUE -->
   <p>Redeem Value: ₹ <b id="money">0.00</b></p>
 
+  <!-- HISTORY -->
   <h3>History</h3>
-  <div id="history">No history</div>
+  <div id="history" class="empty">No history</div>
 </div>
 
 <script>
@@ -80,27 +190,22 @@ if(!uid){
 
 document.getElementById("uid").innerText = uid;
 
-/* ===== TOTAL DATA (REALTIME) ===== */
+/* ===== TOTAL DATA ===== */
 db.ref("users/" + uid).on("value", snap => {
   if(!snap.exists()) return;
-
   const d = snap.val();
-
   const totalWeight = Number(d.TotalWeight ?? 0);
   const ecoPoints = Number(d.Ecopoints ?? 0);
-
   document.getElementById("name").innerText = d.name || "User";
   document.getElementById("weight").innerText = totalWeight.toFixed(2);
   document.getElementById("points").innerText = ecoPoints.toFixed(2);
-  document.getElementById("money").innerText =
-    ((totalWeight / 100) * 10).toFixed(2);
+  document.getElementById("money").innerText = ((totalWeight / 100) * 10).toFixed(2);
 });
 
-/* ===== HISTORY (SAFE & SORTED) ===== */
+/* ===== HISTORY ===== */
 db.ref("users/" + uid + "/history").on("value", snap => {
-
   if(!snap.exists()){
-    document.getElementById("history").innerHTML = "No history yet";
+    document.getElementById("history").innerHTML = "<div class='empty'>No history yet</div>";
     return;
   }
 
@@ -108,11 +213,7 @@ db.ref("users/" + uid + "/history").on("value", snap => {
 
   snap.forEach(child => {
     const h = child.val();
-
-    const time = h.timestamp
-      ? new Date(h.timestamp).toLocaleString("en-IN")
-      : "—";
-
+    const time = h.timestamp ? new Date(h.timestamp).toLocaleString("en-IN") : "—";
     rows.push(`
       <tr>
         <td>${time}</td>
