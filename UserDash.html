@@ -1,4 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoSafar • User Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<style>
+:root{
+  --green:#145A13;
+  --light:#eef9f1;
+}
+*{
+  box-sizing:border-box;
+  font-family:Inter,sans-serif;
+}
+body{
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(135deg,#dff3ea,#c9ebd9);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.card{
+  background:#fff;
+  width:420px;
+  padding:36px 28px;
+  border-radius:28px;
+  box-shadow:0 20px 45px rgba(0,0,0,.15);
+  text-align:center;
+}
+
+/* LOGO ANIMATION */
+.logo{
+  width:90px;
+  margin-bottom:12px;
+  animation:float 3s ease-in-out infinite,
+             pulse 2.2s ease-in-out infinite;
+}
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+}
+
+h2{
+  color:var(--green);
+  margin-bottom:6px;
+}
+.uid{
+  font-size:14px;
+  color:#4f5e57;
+  margin-bottom:22px;
+}
+
+.stats{
+  display:flex;
+  gap:14px;
+  margin-bottom:20px;
+}
+.stat{
+  flex:1;
+  background:var(--light);
+  padding:16px;
+  border-radius:16px;
+}
+.stat h4{
+  font-size:13px;
+  color:#4f5e57;
+  margin-bottom:6px;
+}
+.stat div{
+  font-size:22px;
+  font-weight:700;
+  color:var(--green);
+}
+
+.convert{
+  background:#f0faf3;
+  padding:16px;
+  border-radius:16px;
+  margin-bottom:22px;
+}
+.convert p{
+  margin:6px 0;
+  font-weight:600;
+}
+
+.history{
+  text-align:left;
+}
+.history h3{
+  color:var(--green);
+  margin-bottom:10px;
+}
+.empty{
+  background:#eef9f1;
+  padding:12px;
+  border-radius:10px;
+  font-size:14px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+th,td{
+  padding:8px;
+  text-align:center;
+}
+th{
+  background:#e6f4ea;
+}
+tr:nth-child(even){
+  background:#f5fbf7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <img src="logo.png" class="logo">
+
+  <h2>Welcome, <span id="name">---</span></h2>
+  <div class="uid">RFID UID: <b id="uid">----</b></div>
+
+  <div class="stats">
+    <div class="stat">
+      <h4>Total EcoPoints</h4>
+      <div id="points">0</div>
+    </div>
+    <div class="stat">
+      <h4>Total Waste (g)</h4>
+      <div id="weight">0</div>
+    </div>
+  </div>
+
+  <div class="convert">
+    <p>Redeem Value</p>
+    <p>₹ <span id="money">0.00</span></p>
+    <p style="font-size:12px;color:#555">(100g = ₹10)</p>
+  </div>
+
+  <div class="history">
+    <h3>Transaction History</h3>
+    <div id="history" class="empty">No transactions yet</div>
+  </div>
+</div>
+
+<script>
+/* FIREBASE INIT */
+firebase.initializeApp({
+  apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
+  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
+  projectId: "ecosafar-b8e9b"
+});
+
+const db = firebase.database();
+
+/* GET UID FROM URL */
+const uid = new URLSearchParams(window.location.search).get("uid");
+
+const nameEl   = document.getElementById("name");
+const uidEl    = document.getElementById("uid");
+const pointsEl = document.getElementById("points");
+const weightEl = document.getElementById("weight");
+const moneyEl  = document.getElementById("money");
+const histEl   = document.getElementById("history");
+
+if(uid){
+  loadUser(uid);
+} else {
+  alert("No UID provided in URL!");
+}
+
 function loadUser(uid){
+  // ✅ Point to the users node
   const userRef = db.ref('users/' + uid);
 
   // Load main user info
@@ -7,8 +193,8 @@ function loadUser(uid){
 
     const d = snap.val();
 
-    const weight = Number(d.TotalWeight || 0);     // ✅ Matches your DB
-    const points = Number(d.Ecopoins || 0);       // ✅ Matches your DB
+    const weight = Number(d.totalWeight || 0);
+    const points = Number(d.ecoPoints || 0);
 
     nameEl.innerText   = d.name || "User";
     uidEl.innerText    = uid;
@@ -37,3 +223,7 @@ function loadUser(uid){
     histEl.innerHTML = html;
   });
 }
+</script>
+
+</body>
+</html>
