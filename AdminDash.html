@@ -9,41 +9,114 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <style>
-body{
-  font-family: Arial, sans-serif;
-  background:#eef9f1;
-  padding:20px;
+/* ====== BODY & TYPOGRAPHY ====== */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0faf5;
+  margin: 0;
+  padding: 30px 20px;
+  color: #145A13;
+  text-align: center;
 }
 
-h2{
-  color:#145A13;
-  margin-bottom:20px;
+/* ====== LOGO ANIMATION ====== */
+#logo {
+  width: 100px;
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
 }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-  background:#ffffff;
+@keyframes float {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  25%  { transform: translateY(-10px) rotate(-3deg); }
+  50%  { transform: translateY(0px) rotate(0deg); }
+  75%  { transform: translateY(-10px) rotate(3deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
 }
 
-th, td{
-  padding:10px;
-  border:1px solid #ccc;
-  text-align:center;
+/* ====== HEADING ====== */
+h2 {
+  color: #145A13;
+  font-weight: 600;
+  font-size: 28px;
+  margin-bottom: 25px;
+  letter-spacing: 0.5px;
 }
 
-th{
-  background:#dff3ea;
-  color:#145A13;
+/* ====== TABLE STYLING ====== */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-tr:nth-child(even){
-  background:#f5fbf7;
+th, td {
+  padding: 14px 12px;
+  text-align: center;
+  font-size: 15px;
+}
+
+th {
+  background: #dff3ea;
+  color: #145A13;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+td {
+  color: #2c3e2f;
+}
+
+tr:nth-child(even) td {
+  background: #f7fcf8;
+}
+
+tr:hover td {
+  background: #e3f5df;
+  transition: 0.2s;
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+  thead tr {
+    display: none;
+  }
+  tr {
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+  td {
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    width: calc(50% - 30px);
+    font-weight: 600;
+    text-align: left;
+    color: #145A13;
+  }
 }
 </style>
 </head>
 
 <body>
+
+<!-- Logo with cute animation -->
+<img src="logo.png" id="logo" alt="EcoSafar Logo">
 
 <h2>EcoSafar – Admin Dashboard</h2>
 
@@ -106,12 +179,12 @@ db.ref("users").on("value", snapshot => {
   users.forEach((user, index) => {
     html += `
       <tr>
-        <td>${index + 1}</td>
-        <td>${user.uid}</td>
-        <td>${user.name}</td>
-        <td>${user.city}</td>
-        <td>${user.TotalWeight.toFixed(2)}</td>
-        <td>${user.Ecopoints.toFixed(2)}</td>
+        <td data-label="Rank">${index + 1}</td>
+        <td data-label="RFID UID">${user.uid}</td>
+        <td data-label="Name">${user.name}</td>
+        <td data-label="City">${user.city}</td>
+        <td data-label="Total Waste">${user.TotalWeight.toFixed(2)}</td>
+        <td data-label="EcoPoints">${user.Ecopoints.toFixed(2)}</td>
       </tr>
     `;
   });
