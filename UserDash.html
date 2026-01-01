@@ -153,7 +153,7 @@ tr:nth-child(even) {
   <div class="convert">
     <p>Redeem Value</p>
     <p>₹ <span id="money">0.00</span></p>
-    <p style="font-size:12px;color:#555">(100g = ₹10)</p>
+    <p style="font-size:12px;color:#555">(1000g = ₹10)</p>
   </div>
 
   <div class="history">
@@ -214,7 +214,7 @@ function loadUser(uid) {
     uidEl.innerText    = uid;
     weightEl.innerText = totalWeight.toFixed(2);
     pointsEl.innerText = ecoPoints.toFixed(2);
-    moneyEl.innerText  = ((totalWeight / 100) * 10).toFixed(2);
+    moneyEl.innerText  = ((totalWeight / 1000) * 10).toFixed(2);
   });
 
   // 🔴 TRANSACTION HISTORY (REAL-TIME)
