@@ -1,169 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EcoSafar • User Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoSafar • User Dashboard</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <style>
-    /* (UNCHANGED STYLES) */
-    :root{
-      --green-dark:#0b3d0f;
-      --green-main:#145A13;
-      --accent:#2ecc71;
-    }
-    *{box-sizing:border-box;font-family:Inter,sans-serif;}
-    body{
-      margin:0;
-      background:linear-gradient(135deg,#dff3ea,#c9ebd9);
-      min-height:100vh;
-      display:flex;
-      justify-content:center;
-      padding:40px 0;
-    }
-    .card{
-      background:#fff;
-      width:420px;
-      padding:35px 28px;
-      border-radius:26px;
-      box-shadow:0 18px 45px rgba(0,0,0,.18);
-      text-align:center;
-    }
-    .logo{width:110px;margin-bottom:16px;}
-    h2{color:var(--green-main);margin-bottom:6px;}
-    .uid{font-size:14px;margin-bottom:22px;color:#4f5e57;}
-    .stats{display:flex;gap:12px;margin-bottom:22px;}
-    .stat{flex:1;background:#eef9f1;padding:14px;border-radius:14px;}
-    .stat h4{font-size:13px;margin-bottom:6px;color:#4f5e57;}
-    .stat div{font-size:22px;font-weight:700;color:var(--green-main);}
-    .convert-box{background:#f0faf3;padding:16px;border-radius:14px;margin-bottom:24px;}
-    .convert-box p{margin:6px 0;font-weight:600;}
-    .history{text-align:left;}
-    .history h3{margin-bottom:12px;color:var(--green-dark);}
-    table{width:100%;border-collapse:collapse;font-size:14px;}
-    th,td{padding:8px;text-align:center;}
-    th{background:#e6f4ea;color:#145A13;}
-    tr:nth-child(even){background:#f5fbf7;}
-    .empty{background:#eef9f1;padding:10px;border-radius:8px;font-size:14px;}
-  </style>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{
+  background:linear-gradient(135deg,#e8f6ef,#dff3ea);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.card{
+  background:#fff;
+  width:420px;
+  padding:40px;
+  border-radius:26px;
+  box-shadow:0 20px 50px rgba(0,0,0,.12);
+}
+.logo{text-align:center;font-size:26px;font-weight:700;color:#2e7d32}
+h2{text-align:center;margin-top:12px;color:#145A13}
+.uid{text-align:center;color:#555;margin-bottom:25px}
+
+.stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+.box{
+  background:#f1fbf4;
+  padding:20px;
+  border-radius:18px;
+  text-align:center;
+}
+.box h3{font-size:14px;color:#555}
+.box p{font-size:22px;font-weight:700;color:#145A13;margin-top:6px}
+
+.redeem{
+  margin-top:20px;
+  background:#eef9f1;
+  padding:20px;
+  border-radius:18px;
+  text-align:center;
+}
+.redeem h3{margin-bottom:6px}
+
+.history{
+  margin-top:25px;
+}
+.history h3{margin-bottom:10px}
+.history .box{font-size:14px;color:#555}
+</style>
 </head>
 
 <body>
 
 <div class="card">
-  <img src="logo.png" class="logo">
+  <div class="logo">🌿 EcoSafar</div>
 
-  <h2>Welcome, <span id="userName">---</span></h2>
-  <div class="uid">RFID UID: <b id="userUID">----</b></div>
+  <h2 id="welcome">Welcome</h2>
+  <div class="uid" id="uidText"></div>
 
   <div class="stats">
-    <div class="stat">
-      <h4>Total EcoPoints</h4>
-      <div id="points">0</div>
+    <div class="box">
+      <h3>Total EcoPoints</h3>
+      <p id="ecoPoints">0.0</p>
     </div>
-    <div class="stat">
-      <h4>Total Waste (g)</h4>
-      <div id="weight">0</div>
+    <div class="box">
+      <h3>Total Waste (g)</h3>
+      <p id="totalWeight">0.0</p>
     </div>
   </div>
 
-  <div class="convert-box">
-    <p>Redeem Value</p>
-    <p>₹ <span id="money">0</span></p>
-    <p style="font-size:12px;color:#555;">(100g = ₹10)</p>
+  <div class="redeem">
+    <h3>Redeem Value</h3>
+    <p id="redeemValue">₹ 0.00</p>
+    <small>(100g = ₹10)</small>
   </div>
 
   <div class="history">
     <h3>Transaction History</h3>
-    <div id="historyList" class="empty">Waiting for data…</div>
+    <div class="box">No transactions yet</div>
   </div>
 </div>
 
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
-    authDomain: "ecosafar-3da96.firebaseapp.com",
-    databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
-    projectId: "ecosafar-3da96",
-    storageBucket: "ecosafar-3da96.firebasestorage.app",
-    messagingSenderId: "972209472560",
-    appId: "1:972209472560:web:39fcc096311b3006c6d9f5"
-  };
+/* ---------- FIREBASE INIT ---------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
+  databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
+  projectId: "ecosafar-3da96"
+};
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-  const uid = new URLSearchParams(window.location.search).get("uid");
+/* ---------- GET UID FROM URL ---------- */
+const params = new URLSearchParams(window.location.search);
+const uid = params.get("uid");
 
-  const userNameEl = document.getElementById("userName");
-  const userUIDEl  = document.getElementById("userUID");
-  const pointsEl   = document.getElementById("points");
-  const weightEl   = document.getElementById("weight");
-  const moneyEl    = document.getElementById("money");
-  const historyDiv = document.getElementById("historyList");
+document.getElementById("uidText").innerText = "RFID UID: " + uid;
 
-  if (uid) loadUser(uid);
-  else resetDashboard();
+/* ---------- FETCH USER DATA ---------- */
+db.ref("users/" + uid).on("value", snapshot => {
 
-  function loadUser(uid) {
-    const userRef = db.ref("users/" + uid);
-    const historyRef = db.ref("users/" + uid + "/history");
+  if(!snapshot.exists()) return;
 
-    userRef.on("value", snap => {
-      if (!snap.exists()) return resetDashboard();
+  const data = snapshot.val();
 
-      const d = snap.val();
+  // 🔥 EXACT field names from Firebase
+  const ecoPoints = data.Ecopoints || 0;
+  const totalWeight = data.TotalWeight || 0;
 
-      const weight = Number(d.TotalWeight) || 0;
-      const points = Number(d.Ecopoints) || 0;
+  document.getElementById("welcome").innerText =
+    "Welcome, " + (data.name || "User");
 
-      userUIDEl.innerText = uid;
-      userNameEl.innerText = d.name || "User";
-      weightEl.innerText = weight.toFixed(1);
-      pointsEl.innerText = points.toFixed(1);
-      moneyEl.innerText = ((weight / 100) * 10).toFixed(2);
-    });
+  document.getElementById("ecoPoints").innerText =
+    ecoPoints.toFixed(2);
 
-    historyRef.on("value", snap => {
-      const h = snap.val();
-      if (!h) {
-        historyDiv.innerHTML = "<div class='empty'>No transactions yet</div>";
-        return;
-      }
+  document.getElementById("totalWeight").innerText =
+    totalWeight.toFixed(2);
 
-      let html = `
-        <table>
-          <tr><th>#</th><th>Waste (g)</th><th>EcoPoints</th></tr>
-      `;
-
-      Object.values(h).reverse().forEach((e, i) => {
-        html += `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${e.weight || 0}</td>
-            <td>+${e.ecoPoints || 0}</td>
-          </tr>
-        `;
-      });
-
-      html += "</table>";
-      historyDiv.innerHTML = html;
-    });
-  }
-
-  function resetDashboard() {
-    userUIDEl.innerText = "----";
-    userNameEl.innerText = "---";
-    weightEl.innerText = 0;
-    pointsEl.innerText = 0;
-    moneyEl.innerText = 0;
-    historyDiv.innerHTML = "<div class='empty'>Waiting for data…</div>";
-  }
+  // 💰 Redeem Calculation (100g = ₹10)
+  const redeem = (totalWeight / 100) * 10;
+  document.getElementById("redeemValue").innerText =
+    "₹ " + redeem.toFixed(2);
+});
 </script>
 
 </body>
