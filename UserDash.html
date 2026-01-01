@@ -213,8 +213,8 @@ const uid = new URLSearchParams(window.location.search).get("uid");
 ========================= */
 const nameEl   = document.getElementById("name");
 const uidEl    = document.getElementById("uid");
-const pointsEl = document.getElementById("points");
-const weightEl = document.getElementById("weight");
+const pointsEl = document.getElementById("Ecopoints");
+const weightEl = document.getElementById("TotalWeight");
 const moneyEl  = document.getElementById("money");
 const histEl   = document.getElementById("history");
 
@@ -236,8 +236,8 @@ function loadUser(uid){
 
     const d = snap.val();
 
-    const weight = Number(d.totalWeight || 0);
-    const points = Number(d.ecoPoints || 0);
+    const weight = Number(d.TotalWeight || 0);
+    const points = Number(d.Ecopoints || 0);
 
     nameEl.innerText   = d.name || "User";
     uidEl.innerText    = uid;
@@ -258,8 +258,8 @@ function loadUser(uid){
       html += `
         <tr>
           <td>${i+1}</td>
-          <td>${e.weight || 0}</td>
-          <td>+${e.ecoPoints || 0}</td>
+          <td>${e.TotalWeight || 0}</td>
+          <td>+${e.Ecopoints || 0}</td>
         </tr>`;
     });
     html += "</table>";
