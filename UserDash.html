@@ -11,112 +11,117 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
-
+:root{
+  --green:#145A13;
+  --light:#eef9f1;
+}
+*{
+  box-sizing:border-box;
+  font-family:Inter,sans-serif;
+}
 body{
-  background:linear-gradient(135deg,#e8f6ef,#dff3ea);
+  margin:0;
   min-height:100vh;
+  background:linear-gradient(135deg,#dff3ea,#c9ebd9);
   display:flex;
   justify-content:center;
   align-items:center;
 }
-
-/* CARD */
 .card{
   background:#fff;
   width:420px;
-  padding:38px;
+  padding:36px 28px;
   border-radius:28px;
-  box-shadow:0 20px 50px rgba(0,0,0,.12);
+  box-shadow:0 20px 45px rgba(0,0,0,.15);
+  text-align:center;
 }
 
-/* LOGO */
-.logo-wrapper{
-  display:flex;
-  justify-content:center;
-  margin-bottom:12px;
-}
-
+/* LOGO ANIMATION */
 .logo{
   width:90px;
-  animation: float 3.5s ease-in-out infinite,
-             pulse 2.8s ease-in-out infinite;
+  margin-bottom:12px;
+  animation:float 3s ease-in-out infinite,
+             pulse 2.2s ease-in-out infinite;
 }
-
-/* LOGO ANIMATIONS */
 @keyframes float{
-  0%{transform:translateY(0)}
+  0%,100%{transform:translateY(0)}
   50%{transform:translateY(-8px)}
-  100%{transform:translateY(0)}
 }
-
 @keyframes pulse{
   0%,100%{transform:scale(1)}
   50%{transform:scale(1.05)}
 }
 
-/* TEXT */
 h2{
-  text-align:center;
-  color:#145A13;
-  margin-top:6px;
+  color:var(--green);
+  margin-bottom:6px;
 }
 .uid{
-  text-align:center;
-  color:#555;
-  margin-bottom:24px;
   font-size:14px;
+  color:#4f5e57;
+  margin-bottom:22px;
 }
 
-/* STATS */
 .stats{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
+  display:flex;
+  gap:14px;
+  margin-bottom:20px;
 }
-.box{
-  background:#f1fbf4;
-  padding:20px;
-  border-radius:18px;
-  text-align:center;
+.stat{
+  flex:1;
+  background:var(--light);
+  padding:16px;
+  border-radius:16px;
 }
-.box h3{
-  font-size:14px;
-  color:#555;
+.stat h4{
+  font-size:13px;
+  color:#4f5e57;
+  margin-bottom:6px;
 }
-.box p{
+.stat div{
   font-size:22px;
   font-weight:700;
-  color:#145A13;
-  margin-top:6px;
+  color:var(--green);
 }
 
-/* REDEEM */
-.redeem{
-  margin-top:20px;
-  background:#eef9f1;
-  padding:20px;
-  border-radius:18px;
-  text-align:center;
+.convert{
+  background:#f0faf3;
+  padding:16px;
+  border-radius:16px;
+  margin-bottom:22px;
 }
-.redeem h3{margin-bottom:6px}
-.redeem p{
-  font-size:20px;
-  font-weight:700;
-  color:#145A13;
+.convert p{
+  margin:6px 0;
+  font-weight:600;
 }
 
-/* HISTORY */
 .history{
-  margin-top:24px;
+  text-align:left;
 }
 .history h3{
+  color:var(--green);
   margin-bottom:10px;
-  color:#145A13;
 }
-.history .box{
+.empty{
+  background:#eef9f1;
+  padding:12px;
+  border-radius:10px;
   font-size:14px;
-  color:#555;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14px;
+}
+th,td{
+  padding:8px;
+  text-align:center;
+}
+th{
+  background:#e6f4ea;
+}
+tr:nth-child(even){
+  background:#f5fbf7;
 }
 </style>
 </head>
@@ -124,89 +129,96 @@ h2{
 <body>
 
 <div class="card">
+  <img src="logo.png" class="logo">
 
-  <!-- 🌿 LOGO -->
-  <div class="logo-wrapper">
-    <img src="logo.png" class="logo" alt="EcoSafar Logo">
-  </div>
-
-  <h2 id="welcome">Welcome</h2>
-  <div class="uid" id="uidText"></div>
+  <h2>Welcome, <span id="name">---</span></h2>
+  <div class="uid">RFID UID: <b id="uid">----</b></div>
 
   <div class="stats">
-    <div class="box">
-      <h3>Total EcoPoints</h3>
-      <p id="ecoPoints">0.0</p>
+    <div class="stat">
+      <h4>Total EcoPoints</h4>
+      <div id="points">0</div>
     </div>
-    <div class="box">
-      <h3>Total Waste (g)</h3>
-      <p id="totalWeight">0.0</p>
+    <div class="stat">
+      <h4>Total Waste (g)</h4>
+      <div id="weight">0</div>
     </div>
   </div>
 
-  <div class="redeem">
-    <h3>Redeem Value</h3>
-    <p id="redeemValue">₹ 0.00</p>
-    <small>(100g = ₹10)</small>
+  <div class="convert">
+    <p>Redeem Value</p>
+    <p>₹ <span id="money">0.00</span></p>
+    <p style="font-size:12px;color:#555">(100g = ₹10)</p>
   </div>
 
   <div class="history">
     <h3>Transaction History</h3>
-    <div class="box">No transactions yet</div>
+    <div id="history" class="empty">No transactions yet</div>
   </div>
-
 </div>
 
 <script>
-/* ---------- FIREBASE INIT ---------- */
-const firebaseConfig = {
+/* FIREBASE INIT */
+firebase.initializeApp({
   apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
   databaseURL: "https://ecosafar-3da96-default-rtdb.firebaseio.com",
   projectId: "ecosafar-3da96"
-};
+});
 
-firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* ---------- GET UID ---------- */
-const params = new URLSearchParams(window.location.search);
-const uid = params.get("uid");
+/* GET UID FROM URL */
+const uid = new URLSearchParams(window.location.search).get("uid");
 
-console.log("UID:", uid);
+const nameEl   = document.getElementById("name");
+const uidEl    = document.getElementById("uid");
+const pointsEl = document.getElementById("points");
+const weightEl = document.getElementById("weight");
+const moneyEl  = document.getElementById("money");
+const histEl   = document.getElementById("history");
 
-document.getElementById("uidText").innerText = "RFID UID: " + uid;
+if(uid){
+  loadUser(uid);
+}
 
-/* ---------- FETCH USER DATA ---------- */
-db.ref("users/" + uid).once("value")
-.then(snapshot => {
+function loadUser(uid){
+  const userRef = db.ref(uid); // ✅ ROOT UID FIX
 
-  console.log("Snapshot:", snapshot.val());
+  userRef.on("value", snap=>{
+    if(!snap.exists()) return;
 
-  if(!snapshot.exists()){
-    console.error("User not found");
-    return;
-  }
+    const d = snap.val();
 
-  const data = snapshot.val();
+    const weight = Number(d.TotalWeight) || 0;
+    const points = Number(d.Ecopoints) || 0;
 
-  document.getElementById("welcome").innerText =
-    "Welcome, " + data.name;
+    nameEl.innerText   = d.name || "User";
+    uidEl.innerText    = uid;
+    weightEl.innerText = weight.toFixed(2);
+    pointsEl.innerText = points.toFixed(2);
+    moneyEl.innerText  = ((weight/100)*10).toFixed(2);
+  });
 
-  document.getElementById("ecoPoints").innerText =
-    Number(data.Ecopoints).toFixed(2);
+  userRef.child("history").on("value", snap=>{
+    if(!snap.exists()){
+      histEl.innerHTML = "<div class='empty'>No transactions yet</div>";
+      return;
+    }
 
-  document.getElementById("totalWeight").innerText =
-    Number(data.TotalWeight).toFixed(2);
-
-  const redeem = (Number(data.TotalWeight) / 100) * 10;
-  document.getElementById("redeemValue").innerText =
-    "₹ " + redeem.toFixed(2);
-})
-.catch(err => {
-  console.error("Firebase error:", err);
-});
+    let html = "<table><tr><th>#</th><th>Waste (g)</th><th>EcoPoints</th></tr>";
+    Object.values(snap.val()).reverse().forEach((e,i)=>{
+      html += `
+        <tr>
+          <td>${i+1}</td>
+          <td>${e.weight || 0}</td>
+          <td>+${e.ecoPoints || 0}</td>
+        </tr>`;
+    });
+    html += "</table>";
+    histEl.innerHTML = html;
+  });
+}
 </script>
-
 
 </body>
 </html>
