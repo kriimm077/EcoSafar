@@ -161,37 +161,7 @@ tr:nth-child(even) {
 </head>
 
 <body>
-
-<div class="card">
-  <img src="logo.png" alt="EcoSafar Logo" class="logo">
-
-  <h2>Welcome, <span id="name">---</span></h2>
-  <div class="uid">RFID UID: <b id="uid">----</b></div>
-
-  <div class="stats">
-    <div class="stat">
-      <h4>Total EcoPoints</h4>
-      <div id="points">0</div>
-    </div>
-    <div class="stat">
-      <h4>Total Waste (g)</h4>
-      <div id="weight">0</div>
-    </div>
-  </div>
-
-  <div class="convert">
-    <p>Redeem Value</p>
-    <p>₹ <span id="money">0.00</span></p>
-    <p style="font-size:12px;color:#555">(100g = ₹10)</p>
-  </div>
-
-  <div class="history">
-    <h3>Transaction History</h3>
-    <div id="history" class="empty">No transactions yet</div>
-  </div>
-</div>
-
-<script>
+  <script>
 /* =========================
    FIREBASE INIT
 ========================= */
@@ -267,6 +237,33 @@ function loadUser(uid){
   });
 }
 </script>
+
+<div class="card">
+  <img src="logo.png" alt="EcoSafar Logo" class="logo">
+
+  <h2>Welcome, <span id="name">---</span></h2>
+  <div class="uid">RFID UID: <b id="uid">----</b></div>
+
+  <div class="stats">
+    <div class="stat">
+      <h4>Total EcoPoints</h4>
+      <div id="Ecopoints">0</div>
+    </div>
+    <div class="stat">
+      <h4>Total Waste (g)</h4>
+      <div id="TotalWeight">0</div>
+    </div>
+  </div>
+
+  <div class="convert">
+    <p>Redeem Value</p>
+    <p>₹ <span id="money">0.00</span></p>
+    <p style="font-size:12px;color:#555">(100g = ₹10)</p>
+  </div>
+
+ 
+
+
 
 </body>
 </html>
