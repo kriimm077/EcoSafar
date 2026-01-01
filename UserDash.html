@@ -73,46 +73,65 @@ firebase.initializeApp({
 const db = firebase.database();
 const uid = new URLSearchParams(window.location.search).get("uid");
 
-if(!uid){ alert("No UID"); }
+if(!uid){
+  alert("No UID found");
+  throw new Error("UID missing");
+}
 
 document.getElementById("uid").innerText = uid;
 
-/* ===== TOTAL DATA ===== */
-db.ref("users/" + uid).on("value", snap=>{
+/* ===== TOTAL DATA (REALTIME) ===== */
+db.ref("users/" + uid).on("value", snap => {
   if(!snap.exists()) return;
 
   const d = snap.val();
-  const weight = Number(d.TotalWeight || 0);
-  const points = Number(d.Ecopoints || 0);
+
+  const totalWeight = Number(d.TotalWeight ?? 0);
+  const ecoPoints = Number(d.Ecopoints ?? 0);
 
   document.getElementById("name").innerText = d.name || "User";
-  document.getElementById("weight").innerText = weight.toFixed(2);
-  document.getElementById("points").innerText = points.toFixed(2);
+  document.getElementById("weight").innerText = totalWeight.toFixed(2);
+  document.getElementById("points").innerText = ecoPoints.toFixed(2);
   document.getElementById("money").innerText =
-    ((weight/100)*10).toFixed(2);
+    ((totalWeight / 100) * 10).toFixed(2);
 });
 
-/* ===== HISTORY ===== */
-db.ref("users/" + uid + "/history").on("value", snap=>{
+/* ===== HISTORY (SAFE & SORTED) ===== */
+db.ref("users/" + uid + "/history").on("value", snap => {
+
   if(!snap.exists()){
-    document.getElementById("history").innerText = "No history";
+    document.getElementById("history").innerHTML = "No history yet";
     return;
   }
 
-  let html = "<table><tr><th>Date</th><th>Weight</th><th>Points</th></tr>";
+  let rows = [];
 
-  Object.values(snap.val()).reverse().forEach(h=>{
-    const date = new Date(h.timestamp);
-    html += `
+  snap.forEach(child => {
+    const h = child.val();
+
+    const time = h.timestamp
+      ? new Date(h.timestamp).toLocaleString("en-IN")
+      : "—";
+
+    rows.push(`
       <tr>
-        <td>${date.toLocaleString("en-IN")}</td>
-        <td>${h.TotalWeight}</td>
-        <td>${h.Ecopoints}</td>
-      </tr>`;
+        <td>${time}</td>
+        <td>${Number(h.TotalWeight ?? 0).toFixed(2)}</td>
+        <td>${Number(h.Ecopoints ?? 0).toFixed(2)}</td>
+      </tr>
+    `);
   });
 
-  html += "</table>";
-  document.getElementById("history").innerHTML = html;
+  document.getElementById("history").innerHTML = `
+    <table>
+      <tr>
+        <th>Date</th>
+        <th>Weight (g)</th>
+        <th>Points</th>
+      </tr>
+      ${rows.reverse().join("")}
+    </table>
+  `;
 });
 </script>
 
