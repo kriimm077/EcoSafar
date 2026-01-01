@@ -10,12 +10,10 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-/* ===== RESET ===== */
 *{
   box-sizing:border-box;
 }
 
-/* ===== BODY ===== */
 body {
   font-family: 'Inter', sans-serif;
   background: radial-gradient(circle at top, #eefaf3, #cfeedd);
@@ -33,23 +31,16 @@ body {
   width: 420px;
   border-radius: 26px;
   padding: 30px 26px;
-  box-shadow: 
+  box-shadow:
     0 10px 30px rgba(20,90,19,.15),
     inset 0 1px 0 rgba(255,255,255,.7);
   text-align: center;
   animation: fadeUp .6s ease;
 }
 
-/* ===== ENTRY ANIMATION ===== */
 @keyframes fadeUp{
-  from{
-    opacity:0;
-    transform:translateY(12px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+  from{opacity:0; transform:translateY(14px);}
+  to{opacity:1; transform:translateY(0);}
 }
 
 /* ===== LOGO (UNCHANGED) ===== */
@@ -69,18 +60,22 @@ body {
   50% { transform: scale(1.05); }
 }
 
-/* ===== USER INFO ===== */
-h2 {
-  color: #145A13;
-  margin: 6px 0 2px;
+/* ===== WELCOME ===== */
+.welcome {
+  font-size: 18px;
   font-weight: 600;
-  font-size: 22px;
+  color: #145A13;
+  margin-top: 6px;
 }
 
-p {
-  margin: 4px 0;
-  color: #556b5f;
-  font-size: 14px;
+.welcome span {
+  font-weight: 700;
+}
+
+.subtext {
+  font-size: 13px;
+  color: #6b8075;
+  margin-top: 4px;
 }
 
 /* ===== STATS ===== */
@@ -104,10 +99,9 @@ p {
 }
 
 .stat div {
-  font-weight: 500;
+  font-size: 13px;
   color: #5a7065;
   margin-bottom: 6px;
-  font-size: 13px;
 }
 
 .stat b {
@@ -116,25 +110,24 @@ p {
 }
 
 /* ===== REDEEM ===== */
+.redeem {
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
 #money {
   color: #145A13;
   font-weight: 600;
-  font-size: 16px;
 }
 
 /* ===== HISTORY ===== */
 h3 {
   color: #145A13;
   margin: 20px 0 10px;
-  font-weight: 600;
   font-size: 16px;
+  font-weight: 600;
 }
 
-#history {
-  margin-top: 8px;
-}
-
-/* ===== TABLE ===== */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -152,21 +145,18 @@ th, td {
 th {
   background: linear-gradient(135deg,#dff3ea,#cfeedd);
   color: #145A13;
-  font-weight: 600;
 }
 
 tr:nth-child(even) {
   background: #f5fbf7;
 }
 
-/* ===== EMPTY STATE ===== */
 .empty {
   background: linear-gradient(135deg,#eef9f1,#e2f5ea);
   padding: 14px;
   border-radius: 14px;
   font-size: 13.5px;
   color: #5a7065;
-  box-shadow: inset 0 0 0 1px rgba(20,90,19,.08);
 }
 </style>
 </head>
@@ -176,9 +166,15 @@ tr:nth-child(even) {
 <div class="card">
   <img src="logo.png" alt="EcoSafar Logo" class="logo">
 
-  <h2 id="name">User</h2>
-  <p>RFID UID: <b id="uid">---</b></p>
+  <!-- WELCOME -->
+  <div class="welcome">
+    Welcome, <span id="name">User</span> 🌱
+  </div>
+  <div class="subtext">
+    RFID UID: <b id="uid">---</b>
+  </div>
 
+  <!-- STATS -->
   <div class="stats">
     <div class="stat">
       <div>Total EcoPoints</div>
@@ -190,10 +186,14 @@ tr:nth-child(even) {
     </div>
   </div>
 
-  <p>Redeem Value: ₹ <b id="money">0.00</b></p>
+  <!-- REDEEM -->
+  <div class="redeem">
+    Redeem Value: ₹ <b id="money">0.00</b>
+  </div>
 
+  <!-- HISTORY -->
   <h3>History</h3>
-  <div id="history" class="empty">No history</div>
+  <div id="history" class="empty">No history yet</div>
 </div>
 
 <script>
@@ -213,20 +213,25 @@ if(!uid){
 
 document.getElementById("uid").innerText = uid;
 
+/* ===== TOTAL DATA ===== */
 db.ref("users/" + uid).on("value", snap => {
   if(!snap.exists()) return;
+
   const d = snap.val();
   const totalWeight = Number(d.TotalWeight ?? 0);
   const ecoPoints = Number(d.Ecopoints ?? 0);
+
   document.getElementById("name").innerText = d.name || "User";
   document.getElementById("weight").innerText = totalWeight.toFixed(2);
   document.getElementById("points").innerText = ecoPoints.toFixed(2);
   document.getElementById("money").innerText = ((totalWeight / 1000) * 10).toFixed(2);
 });
 
+/* ===== HISTORY ===== */
 db.ref("users/" + uid + "/history").on("value", snap => {
   if(!snap.exists()){
-    document.getElementById("history").innerHTML = "<div class='empty'>No history yet</div>";
+    document.getElementById("history").innerHTML =
+      "<div class='empty'>No history yet</div>";
     return;
   }
 
@@ -234,7 +239,10 @@ db.ref("users/" + uid + "/history").on("value", snap => {
 
   snap.forEach(child => {
     const h = child.val();
-    const time = h.timestamp ? new Date(h.timestamp).toLocaleString("en-IN") : "—";
+    const time = h.timestamp
+      ? new Date(h.timestamp).toLocaleString("en-IN")
+      : "—";
+
     rows.push(`
       <tr>
         <td>${time}</td>
