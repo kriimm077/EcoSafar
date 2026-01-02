@@ -4,142 +4,158 @@
 <meta charset="UTF-8">
 <title>EcoSafar • Admin Dashboard</title>
 
-<!-- Firebase v8 (compatible & stable) -->
+<!-- Firebase v8 -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <style>
-/* ====== BODY & TYPOGRAPHY ====== */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0faf5;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: #f4fbf7;
   margin: 0;
-  padding: 30px 20px;
-  color: #145A13;
-  text-align: center;
+  padding: 32px 18px;
+  color: #1f3d2b;
 }
 
-/* ====== LOGO ANIMATION ====== */
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
 #logo {
-  width: 100px;
-  margin-bottom: 20px;
+  width: 90px;
   animation: float 3s ease-in-out infinite;
 }
-
 @keyframes float {
-  0%   { transform: translateY(0px) rotate(0deg); }
-  25%  { transform: translateY(-10px) rotate(-3deg); }
-  50%  { transform: translateY(0px) rotate(0deg); }
-  75%  { transform: translateY(-10px) rotate(3deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
 }
-
-/* ====== HEADING ====== */
 h2 {
-  color: #145A13;
+  margin: 10px 0 0;
   font-weight: 600;
-  font-size: 28px;
-  margin-bottom: 25px;
-  letter-spacing: 0.5px;
 }
 
-/* ====== TABLE STYLING ====== */
+/* Bin Card */
+.bin-card {
+  max-width: 620px;
+  margin: 0 auto 30px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+.bin-title {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* Progress */
+.progress {
+  width: 100%;
+  height: 22px;
+  background: #e6efe9;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 20px;
+  transition: width 1s ease, background 0.4s ease;
+}
+
+.bin-meta {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #355f4b;
+}
+
+/* Button */
+.actions {
+  text-align: center;
+  margin-bottom: 26px;
+}
+button {
+  background: #1e8449;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+button:hover {
+  background: #166a3a;
+}
+
+/* Table */
 table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
   background: #ffffff;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-radius: 12px;
+  border-collapse: collapse;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
 }
-
 th, td {
-  padding: 14px 12px;
+  padding: 14px;
+  font-size: 14px;
   text-align: center;
-  font-size: 15px;
 }
-
 th {
-  background: #dff3ea;
-  color: #145A13;
+  background: #e3f3eb;
   font-weight: 600;
-  letter-spacing: 0.5px;
   text-transform: uppercase;
 }
-
-td {
-  color: #2c3e2f;
-}
-
 tr:nth-child(even) td {
-  background: #f7fcf8;
-}
-
-tr:hover td {
-  background: #e3f5df;
-  transition: 0.2s;
-}
-
-/* ====== RESPONSIVE ====== */
-@media (max-width: 768px) {
-  table, thead, tbody, th, td, tr {
-    display: block;
-  }
-  thead tr {
-    display: none;
-  }
-  tr {
-    margin-bottom: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    overflow: hidden;
-  }
-  td {
-    text-align: right;
-    padding-left: 50%;
-    position: relative;
-  }
-  td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 15px;
-    width: calc(50% - 30px);
-    font-weight: 600;
-    text-align: left;
-    color: #145A13;
-  }
+  background: #f7fcf9;
 }
 </style>
 </head>
 
 <body>
 
-<!-- Logo with cute animation -->
-<img src="logo.png" id="logo" alt="EcoSafar Logo">
+<div class="header">
+  <img src="logo.png" id="logo">
+  <h2>EcoSafar – Admin Dashboard (Anand)</h2>
+</div>
 
-<h2>EcoSafar – Admin Dashboard</h2>
+<!-- BIN STATUS -->
+<div class="bin-card">
+  <div class="bin-title">Dustbin Status • BIN001</div>
+  <div class="progress">
+    <div id="binBar" class="progress-bar"></div>
+  </div>
+  <div class="bin-meta">
+    Fill Level: <strong><span id="fillPercentage">0</span>%</strong>
+    &nbsp;•&nbsp;
+    Distance: <span id="distanceCM">0</span> cm
+  </div>
+</div>
 
+<div class="actions">
+  <button onclick="downloadCSV()">Download CSV Report</button>
+</div>
+
+<!-- USERS TABLE -->
 <table>
-  <thead>
-    <tr>
-      <th>Rank</th>
-      <th>RFID UID</th>
-      <th>Name</th>
-      <th>City</th>
-      <th>Total Waste (g)</th>
-      <th>EcoPoints</th>
-    </tr>
-  </thead>
-  <tbody id="users">
-    <tr><td colspan="6">Loading...</td></tr>
-  </tbody>
+<thead>
+<tr>
+  <th>Rank</th>
+  <th>RFID UID</th>
+  <th>Name</th>
+  <th>City</th>
+  <th>Total Waste (g)</th>
+  <th>EcoPoints</th>
+</tr>
+</thead>
+<tbody id="users">
+<tr><td colspan="6">Loading...</td></tr>
+</tbody>
 </table>
 
 <script>
-/* =========================
-   FIREBASE INITIALIZATION
-========================= */
+/* Firebase Init */
 firebase.initializeApp({
   apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
   databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
@@ -148,50 +164,77 @@ firebase.initializeApp({
 
 const db = firebase.database();
 
-/* =========================
-   LOAD ALL USERS (REAL-TIME)
-========================= */
-db.ref("users").on("value", snapshot => {
+/* BIN LISTENER */
+db.ref("admins/Anand/bins/BIN001").on("value", snap => {
+  if (!snap.exists()) return;
 
+  const d = snap.val();
+  const percent = Number(d.fillPercentage || 0);
+  const distance = Number(d.distanceCM || 0);
+
+  document.getElementById("fillPercentage").innerText = percent.toFixed(0);
+  document.getElementById("distanceCM").innerText = distance;
+
+  const bar = document.getElementById("binBar");
+  bar.style.width = percent + "%";
+
+  if (percent < 50) bar.style.background = "#2ecc71";
+  else if (percent < 80) bar.style.background = "#f1c40f";
+  else bar.style.background = "#e74c3c";
+});
+
+/* USERS TABLE */
+let cachedUsers = [];
+
+db.ref("users").on("value", snapshot => {
   let users = [];
 
   snapshot.forEach(child => {
-    const uid  = child.key;
-    const data = child.val();
-
-    // Skip invalid user records
-    if (!data || !data.name) return;
+    const d = child.val();
+    if (!d || !d.name) return;
 
     users.push({
-      uid: uid,
-      name: data.name || "-",
-      city: data.city || "-",
-      TotalWeight: Number(data.TotalWeight || 0),
-      Ecopoints: Number(data.Ecopoints || 0)
+      uid: child.key,
+      name: d.name,
+      city: d.city,
+      weight: Number(d.TotalWeight || 0),
+      points: Number(d.Ecopoints || 0)
     });
   });
 
-  // 🏆 Sort by EcoPoints (DESC)
-  users.sort((a, b) => b.Ecopoints - a.Ecopoints);
+  users.sort((a, b) => b.points - a.points);
+  cachedUsers = users;
 
   let html = "";
-
-  users.forEach((user, index) => {
+  users.forEach((u, i) => {
     html += `
       <tr>
-        <td data-label="Rank">${index + 1}</td>
-        <td data-label="RFID UID">${user.uid}</td>
-        <td data-label="Name">${user.name}</td>
-        <td data-label="City">${user.city}</td>
-        <td data-label="Total Waste">${user.TotalWeight.toFixed(2)}</td>
-        <td data-label="EcoPoints">${user.Ecopoints.toFixed(2)}</td>
-      </tr>
-    `;
+        <td>${i + 1}</td>
+        <td>${u.uid}</td>
+        <td>${u.name}</td>
+        <td>${u.city}</td>
+        <td>${u.weight.toFixed(2)}</td>
+        <td>${u.points.toFixed(2)}</td>
+      </tr>`;
   });
 
   document.getElementById("users").innerHTML =
     html || "<tr><td colspan='6'>No users found</td></tr>";
 });
+
+/* CSV */
+function downloadCSV() {
+  let csv = "Rank,UID,Name,City,TotalWeight,EcoPoints\n";
+  cachedUsers.forEach((u, i) => {
+    csv += `${i+1},${u.uid},${u.name},${u.city},${u.weight},${u.points}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "EcoSafar_Report.csv";
+  a.click();
+}
 </script>
 
 </body>
