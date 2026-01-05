@@ -166,7 +166,6 @@ tr:nth-child(even) {
 <div class="card">
   <img src="logo.png" alt="EcoSafar Logo" class="logo">
 
-  <!-- WELCOME -->
   <div class="welcome">
     Welcome, <span id="name">User</span> 🌱
   </div>
@@ -174,7 +173,6 @@ tr:nth-child(even) {
     RFID UID: <b id="uid">---</b>
   </div>
 
-  <!-- STATS -->
   <div class="stats">
     <div class="stat">
       <div>Total EcoPoints</div>
@@ -186,12 +184,10 @@ tr:nth-child(even) {
     </div>
   </div>
 
-  <!-- REDEEM -->
   <div class="redeem">
     Redeem Value: ₹ <b id="money">0.00</b>
   </div>
 
-  <!-- HISTORY -->
   <h3>History</h3>
   <div id="history" class="empty">No history yet</div>
 </div>
@@ -239,8 +235,13 @@ db.ref("users/" + uid + "/history").on("value", snap => {
 
   snap.forEach(child => {
     const h = child.val();
+
     const time = h.timestamp
-      ? new Date(h.timestamp).toLocaleString("en-IN")
+      ? new Date(
+          h.timestamp.toString().length === 10
+            ? h.timestamp * 1000
+            : h.timestamp
+        ).toLocaleString("en-IN")
       : "—";
 
     rows.push(`
