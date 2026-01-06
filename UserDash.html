@@ -10,18 +10,13 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-}
-
+/* ===== RESET & BODY ===== */
 body {
   font-family: 'Inter', sans-serif;
-  background: radial-gradient(circle at top, #eefaf3, #cfeedd);
-  min-height: 100vh;
+  background: linear-gradient(135deg, #e0f3e8, #c9ebd9);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding: 30px 16px;
+  padding: 20px;
   margin: 0;
 }
 
@@ -29,24 +24,22 @@ body {
 .card {
   background: #ffffff;
   width: 420px;
-  border-radius: 26px;
-  padding: 30px 26px;
-  box-shadow:
-    0 10px 30px rgba(20,90,19,.15),
-    inset 0 1px 0 rgba(255,255,255,.7);
+  border-radius: 25px;
+  padding: 30px 25px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.12);
   text-align: center;
-  animation: fadeUp .6s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-@keyframes fadeUp{
-  from{opacity:0; transform:translateY(14px);}
-  to{opacity:1; transform:translateY(0);}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.15);
 }
 
-/* ===== LOGO (UNCHANGED) ===== */
+/* ===== LOGO ===== */
 .logo {
   width: 80px;
-  margin-bottom: 16px;
+  margin-bottom: 15px;
   animation: float 3s ease-in-out infinite, pulse 2s ease-in-out infinite;
 }
 
@@ -60,47 +53,38 @@ body {
   50% { transform: scale(1.05); }
 }
 
-/* ===== WELCOME ===== */
-.welcome {
-  font-size: 18px;
-  font-weight: 600;
+/* ===== HEADINGS ===== */
+h2 {
   color: #145A13;
-  margin-top: 6px;
+  margin-bottom: 5px;
+  font-weight: 600;
+  font-size: 22px;
 }
 
-.welcome span {
-  font-weight: 700;
-}
-
-.subtext {
-  font-size: 13px;
-  color: #6b8075;
-  margin-top: 4px;
+p {
+  margin: 4px 0;
+  color: #4f5e57;
 }
 
 /* ===== STATS ===== */
 .stats {
   display: flex;
   gap: 12px;
-  margin: 22px 0 14px;
+  margin: 20px 0;
 }
 
 .stat {
   flex: 1;
-  background: linear-gradient(135deg,#eef9f1,#e2f5ea);
+  background: #eef9f1;
   padding: 18px 10px;
-  border-radius: 16px;
-  box-shadow: inset 0 0 0 1px rgba(20,90,19,.08);
-  transition: transform .25s ease;
-}
-
-.stat:hover{
-  transform: translateY(-3px);
+  border-radius: 15px;
+  text-align: center;
+  transition: background 0.3s ease;
 }
 
 .stat div {
-  font-size: 13px;
-  color: #5a7065;
+  font-weight: 500;
+  color: #4f5e57;
   margin-bottom: 6px;
 }
 
@@ -110,40 +94,37 @@ body {
 }
 
 /* ===== REDEEM ===== */
-.redeem {
-  font-size: 15px;
-  margin-bottom: 10px;
-}
-
 #money {
   color: #145A13;
   font-weight: 600;
 }
 
-/* ===== HISTORY ===== */
+/* ===== HISTORY TABLE ===== */
 h3 {
   color: #145A13;
-  margin: 20px 0 10px;
-  font-size: 16px;
-  font-weight: 600;
+  margin: 18px 0 10px;
+}
+
+#history {
+  text-align: left;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13.5px;
-  border-radius: 12px;
+  font-size: 14px;
+  background: #fff;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: inset 0 0 0 1px rgba(20,90,19,.08);
 }
 
 th, td {
-  padding: 10px 6px;
+  padding: 10px;
   text-align: center;
 }
 
 th {
-  background: linear-gradient(135deg,#dff3ea,#cfeedd);
+  background: #dff3ea;
   color: #145A13;
 }
 
@@ -152,11 +133,12 @@ tr:nth-child(even) {
 }
 
 .empty {
-  background: linear-gradient(135deg,#eef9f1,#e2f5ea);
-  padding: 14px;
-  border-radius: 14px;
-  font-size: 13.5px;
-  color: #5a7065;
+  background: #eef9f1;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+  color: #4f5e57;
 }
 </style>
 </head>
@@ -164,15 +146,14 @@ tr:nth-child(even) {
 <body>
 
 <div class="card">
+  <!-- LOGO -->
   <img src="logo.png" alt="EcoSafar Logo" class="logo">
 
-  <div class="welcome">
-    Welcome, <span id="name">User</span> 🌱
-  </div>
-  <div class="subtext">
-    RFID UID: <b id="uid">---</b>
-  </div>
+  <!-- USER INFO -->
+  <h2 id="name">User</h2>
+  <p>RFID UID: <b id="uid">---</b></p>
 
+  <!-- STATS -->
   <div class="stats">
     <div class="stat">
       <div>Total EcoPoints</div>
@@ -184,12 +165,12 @@ tr:nth-child(even) {
     </div>
   </div>
 
-  <div class="redeem">
-    Redeem Value: ₹ <b id="money">0.00</b>
-  </div>
+  <!-- REDEEM VALUE -->
+  <p>Redeem Value: ₹ <b id="money">0.00</b></p>
 
+  <!-- HISTORY -->
   <h3>History</h3>
-  <div id="history" class="empty">No history yet</div>
+  <div id="history" class="empty">No history</div>
 </div>
 
 <script>
@@ -212,22 +193,19 @@ document.getElementById("uid").innerText = uid;
 /* ===== TOTAL DATA ===== */
 db.ref("users/" + uid).on("value", snap => {
   if(!snap.exists()) return;
-
   const d = snap.val();
   const totalWeight = Number(d.TotalWeight ?? 0);
   const ecoPoints = Number(d.Ecopoints ?? 0);
-
   document.getElementById("name").innerText = d.name || "User";
   document.getElementById("weight").innerText = totalWeight.toFixed(2);
   document.getElementById("points").innerText = ecoPoints.toFixed(2);
-  document.getElementById("money").innerText = ((totalWeight / 1000) * 10).toFixed(2);
+  document.getElementById("money").innerText = ((totalWeight / 100) * 10).toFixed(2);
 });
 
 /* ===== HISTORY ===== */
 db.ref("users/" + uid + "/history").on("value", snap => {
   if(!snap.exists()){
-    document.getElementById("history").innerHTML =
-      "<div class='empty'>No history yet</div>";
+    document.getElementById("history").innerHTML = "<div class='empty'>No history yet</div>";
     return;
   }
 
@@ -235,15 +213,7 @@ db.ref("users/" + uid + "/history").on("value", snap => {
 
   snap.forEach(child => {
     const h = child.val();
-
-    const time = h.timestamp
-      ? new Date(
-          h.timestamp.toString().length === 10
-            ? h.timestamp * 1000
-            : h.timestamp
-        ).toLocaleString("en-IN")
-      : "—";
-
+    const time = h.timestamp ? new Date(h.timestamp).toLocaleString("en-IN") : "—";
     rows.push(`
       <tr>
         <td>${time}</td>
