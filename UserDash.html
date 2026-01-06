@@ -199,7 +199,7 @@ db.ref("users/" + uid).on("value", snap => {
   document.getElementById("name").innerText = d.name || "User";
   document.getElementById("weight").innerText = totalWeight.toFixed(2);
   document.getElementById("points").innerText = ecoPoints.toFixed(2);
-  document.getElementById("money").innerText = ((totalWeight / 100) * 10).toFixed(2);
+  document.getElementById("money").innerText = ((totalWeight / 1000) * 10).toFixed(2);
 });
 
 /* ===== HISTORY ===== */
