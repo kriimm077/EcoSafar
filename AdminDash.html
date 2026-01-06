@@ -179,10 +179,7 @@ db.ref("admins/Anand/bins/BIN001").on("value", snap => {
   document.getElementById("fill").innerText = d.fillPercentage;
   document.getElementById("fillBar").style.width = d.fillPercentage + "%";
 
-  if (d.lastUpdated) {
-  document.getElementById("lastUpdated").innerText =
-    new Date(d.lastUpdated * 1000).toLocaleString();
-}
+  f (d.lastUpdated) { document.getElementById("lastUpdated").innerText = new Date(d.lastUpdated).toLocaleString(); }
 
 
 /* USERS (UNCHANGED) */
