@@ -9,7 +9,6 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <style>
-/* ====== BODY ====== */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: #f0faf5;
@@ -19,7 +18,6 @@ body {
   text-align: center;
 }
 
-/* ====== LOGO ====== */
 #logo {
   width: 100px;
   margin-bottom: 20px;
@@ -32,13 +30,11 @@ body {
   100% { transform: translateY(0); }
 }
 
-/* ====== HEADING ====== */
 h2 {
   font-size: 28px;
   margin-bottom: 20px;
 }
 
-/* ====== BIN STATUS CARD ====== */
 .bin-card {
   max-width: 420px;
   margin: 0 auto 30px;
@@ -74,7 +70,6 @@ h2 {
   transition: width 0.5s ease;
 }
 
-/* ====== TABLE ====== */
 table {
   width: 100%;
   border-collapse: separate;
@@ -100,7 +95,6 @@ tr:nth-child(even) td {
   background: #f7fcf8;
 }
 
-/* ====== RESPONSIVE ====== */
 @media (max-width: 768px) {
   table, thead, tbody, th, td, tr { display: block; }
   thead { display: none; }
@@ -129,7 +123,6 @@ tr:nth-child(even) td {
 <img src="logo.png" id="logo" alt="EcoSafar Logo">
 <h2>EcoSafar – Admin Dashboard</h2>
 
-<!-- ✅ BIN STATUS -->
 <div class="bin-card">
   <div class="bin-title">🗑️ BIN001 Status</div>
 
@@ -153,7 +146,6 @@ tr:nth-child(even) td {
   </div>
 </div>
 
-<!-- ✅ USERS TABLE -->
 <table>
   <thead>
     <tr>
@@ -171,7 +163,6 @@ tr:nth-child(even) td {
 </table>
 
 <script>
-/* ===== FIREBASE INIT ===== */
 firebase.initializeApp({
   apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
   databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com"
@@ -179,8 +170,8 @@ firebase.initializeApp({
 
 const db = firebase.database();
 
-/* ===== BIN LIVE DATA ===== */
-db.ref("bins/BIN001").on("value", snap => {
+/* ✅ FIXED PATH HERE */
+db.ref("admins/Anand/bins/BIN001").on("value", snap => {
   const d = snap.val();
   if (!d) return;
 
@@ -194,7 +185,7 @@ db.ref("bins/BIN001").on("value", snap => {
   }
 });
 
-/* ===== USERS LEADERBOARD ===== */
+/* USERS (UNCHANGED) */
 db.ref("users").on("value", snapshot => {
   let users = [];
 
