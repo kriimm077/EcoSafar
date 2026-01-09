@@ -103,7 +103,6 @@ function registerUser(){
   const password = document.getElementById("password").value.trim();
   const msg = document.getElementById("msg");
 
-
   msg.innerHTML = "";
 
   if(!name || !city || !uid || !password){
@@ -125,10 +124,10 @@ function registerUser(){
       return;
     }
 
-    userRef.set({
+    userRef.update({   // ✅ ONLY CHANGE IS HERE
       name: name,
       city: city,
-      password: password,   // ✅ USER-ENTERED PASSWORD
+      password: password,
       Ecopoints: 0,
       TotalWeight: 0,
       isActive: true,
@@ -144,6 +143,7 @@ function registerUser(){
     msg.innerHTML = "<span class='error'>" + error.message + "</span>";
   });
 }
+
 </script>
 
 </body>
