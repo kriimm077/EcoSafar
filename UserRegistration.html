@@ -130,6 +130,7 @@ function registerUser(){
       password: password,   // ✅ USER-ENTERED PASSWORD
       Ecopoints: 0,
       TotalWeight: 0,
+      isActive: true,
       createdAt: new Date().toISOString()
     }).then(() => {
       msg.innerHTML = "<span class='success'>Registration successful ✔</span>";
