@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>EcoSafar • Admin Dashboard</title>
 
-<!-- Firebase v8 -->
+
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
@@ -35,7 +35,7 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* 🔔 ALERT BOX */
+
 #alertBox {
   display: none;
   max-width: 420px;
@@ -136,7 +136,7 @@ tr:nth-child(even) td {
 <img src="logo.png" id="logo" alt="EcoSafar Logo">
 <h2>EcoSafar – Admin Dashboard</h2>
 
-<!-- 🔔 ALERT DISPLAY -->
+
 <div id="alertBox">⚠️ BIN001 IS FULL – COLLECTION REQUIRED</div>
 
 <div class="bin-card">
@@ -186,7 +186,7 @@ firebase.initializeApp({
 
 const db = firebase.database();
 
-/* 🔔 BIN STATUS + ALERT + FIXED TIMESTAMP */
+
 db.ref("admins/Anand/bins/BIN001").on("value", snap => {
   const d = snap.val();
   if (!d) return;
@@ -195,7 +195,7 @@ db.ref("admins/Anand/bins/BIN001").on("value", snap => {
   document.getElementById("fill").innerText = d.fillPercentage;
   document.getElementById("fillBar").style.width = d.fillPercentage + "%";
 
-  // 🔹 FIXED LAST UPDATED TIME
+
   if (d.lastUpdated) {
     const ts = d.lastUpdated < 1000000000000
       ? d.lastUpdated * 1000
@@ -204,15 +204,13 @@ db.ref("admins/Anand/bins/BIN001").on("value", snap => {
       new Date(ts).toLocaleString();
   }
 
-  // 🔴 BIN FULL ALERT
+
   if (d.fillPercentage >= 90) {
     document.getElementById("alertBox").style.display = "block";
   } else {
     document.getElementById("alertBox").style.display = "none";
   }
 });
-
-/* USERS (UNCHANGED) */
 db.ref("users").on("value", snapshot => {
   let users = [];
 
