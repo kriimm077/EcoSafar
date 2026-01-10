@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EcoSafar • User Login</title>
 
-<!-- Google Font -->
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Firebase SDK (Compat) -->
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -84,7 +84,7 @@ button{
 
   <button type="button" onclick="loginUser()">Login</button>
 
-  <!-- ✅ REGISTER BUTTON -->
+  
   <button type="button" class="register-btn" onclick="goRegister()">
     New user? Register
   </button>
@@ -93,7 +93,7 @@ button{
 </div>
 
 <script>
-/* ---------- FIREBASE INIT ---------- */
+
 const firebaseConfig = {
   apiKey: "AIzaSyC-ukbAaOdiEb65v9F7FuBzT0TTRoQHyxw",
   databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com",
@@ -103,7 +103,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-/* ---------- LOGIN FUNCTION ---------- */
+
 function loginUser(){
 
   const city = document.getElementById("city").value;
@@ -146,7 +146,7 @@ function loginUser(){
   });
 }
 
-/* ---------- GO TO REGISTRATION ---------- */
+
 function goRegister(){
   window.location.href = "UserRegistration.html";
 }
