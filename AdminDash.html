@@ -35,6 +35,19 @@ h2 {
   margin-bottom: 20px;
 }
 
+/* 🔔 ALERT BOX */
+#alertBox {
+  display: none;
+  max-width: 420px;
+  margin: 0 auto 20px;
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
 .bin-card {
   max-width: 420px;
   margin: 0 auto 30px;
@@ -123,6 +136,9 @@ tr:nth-child(even) td {
 <img src="logo.png" id="logo" alt="EcoSafar Logo">
 <h2>EcoSafar – Admin Dashboard</h2>
 
+<!-- 🔔 ALERT DISPLAY -->
+<div id="alertBox">⚠️ BIN001 IS FULL – COLLECTION REQUIRED</div>
+
 <div class="bin-card">
   <div class="bin-title">🗑️ BIN001 Status</div>
 
@@ -170,7 +186,7 @@ firebase.initializeApp({
 
 const db = firebase.database();
 
-/* ✅ FIXED PATH HERE */
+/* 🔔 BIN STATUS + ALERT + FIXED TIMESTAMP */
 db.ref("admins/Anand/bins/BIN001").on("value", snap => {
   const d = snap.val();
   if (!d) return;
@@ -179,9 +195,20 @@ db.ref("admins/Anand/bins/BIN001").on("value", snap => {
   document.getElementById("fill").innerText = d.fillPercentage;
   document.getElementById("fillBar").style.width = d.fillPercentage + "%";
 
+  // 🔹 FIXED LAST UPDATED TIME
   if (d.lastUpdated) {
+    const ts = d.lastUpdated < 1000000000000
+      ? d.lastUpdated * 1000
+      : d.lastUpdated;
     document.getElementById("lastUpdated").innerText =
-      new Date(d.lastUpdated).toLocaleString();
+      new Date(ts).toLocaleString();
+  }
+
+  // 🔴 BIN FULL ALERT
+  if (d.fillPercentage >= 90) {
+    document.getElementById("alertBox").style.display = "block";
+  } else {
+    document.getElementById("alertBox").style.display = "none";
   }
 });
 
