@@ -20,7 +20,6 @@ body {
   margin: 0;
 }
 
-
 .card {
   background: #ffffff;
   width: 420px;
@@ -51,7 +50,6 @@ body {
   0%,100% { transform: scale(1); }
   50% { transform: scale(1.05); }
 }
-
 
 h2 {
   color: #145A13;
@@ -91,12 +89,10 @@ p {
   color: #145A13;
 }
 
-
 #money {
   color: #145A13;
   font-weight: 600;
 }
-
 
 h3 {
   color: #145A13;
@@ -147,11 +143,9 @@ tr:nth-child(even) {
  
   <img src="logo.png" alt="EcoSafar Logo" class="logo">
 
-  
   <h2 id="name">User</h2>
   <p>RFID UID: <b id="uid">---</b></p>
 
-  
   <div class="stats">
     <div class="stat">
       <div>Total EcoPoints</div>
@@ -163,10 +157,8 @@ tr:nth-child(even) {
     </div>
   </div>
 
-  
   <p>Redeem Value: ₹ <b id="money">0.00</b></p>
 
-  
   <h3>History</h3>
   <div id="history" class="empty">No history</div>
 </div>
@@ -187,7 +179,6 @@ if(!uid){
 }
 
 document.getElementById("uid").innerText = uid;
-
 
 db.ref("users/" + uid).on("value", snap => {
   if(!snap.exists()) return;
@@ -210,7 +201,19 @@ db.ref("users/" + uid + "/history").on("value", snap => {
 
   snap.forEach(child => {
     const h = child.val();
-    const time = h.timestamp ? new Date(h.timestamp).toLocaleString("en-IN") : "—";
+
+    // ✅ ONLY TIMESTAMP LINE CHANGED HERE
+    const time = h.timestamp 
+      ? new Date(Number(h.timestamp)).toLocaleString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit"
+        })
+      : "—";
+
     rows.push(`
       <tr>
         <td>${time}</td>
