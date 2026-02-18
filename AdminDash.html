@@ -1,12 +1,8 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>EcoSafar • Admin Dashboard</title>
-
-
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <style>
 body {
@@ -34,7 +30,6 @@ h2 {
   font-size: 28px;
   margin-bottom: 20px;
 }
-
 
 #alertBox {
   display: none;
@@ -107,27 +102,6 @@ th {
 tr:nth-child(even) td {
   background: #f7fcf8;
 }
-
-@media (max-width: 768px) {
-  table, thead, tbody, th, td, tr { display: block; }
-  thead { display: none; }
-  tr {
-    margin-bottom: 15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    border-radius: 8px;
-  }
-  td {
-    text-align: right;
-    padding-left: 50%;
-    position: relative;
-  }
-  td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 15px;
-    font-weight: 600;
-  }
-}
 </style>
 </head>
 
@@ -135,7 +109,6 @@ tr:nth-child(even) td {
 
 <img src="logo.png" id="logo" alt="EcoSafar Logo">
 <h2>EcoSafar – Admin Dashboard</h2>
-
 
 <div id="alertBox">⚠️ BIN001 IS FULL – COLLECTION REQUIRED</div>
 
@@ -163,38 +136,65 @@ tr:nth-child(even) td {
 </div>
 
 <table>
-  <thead>
-    <tr>
-      <th>Rank</th>
-      <th>RFID UID</th>
-      <th>Name</th>
-      <th>City</th>
-      <th>Total Waste (g)</th>
-      <th>EcoPoints</th>
-    </tr>
-  </thead>
-  <tbody id="users">
-    <tr><td colspan="6">Loading...</td></tr>
-  </tbody>
+<thead>
+<tr>
+<th>Rank</th>
+<th>RFID UID</th>
+<th>Name</th>
+<th>City</th>
+<th>Total Waste (g)</th>
+<th>EcoPoints</th>
+</tr>
+</thead>
+<tbody id="users">
+<tr><td colspan="6">Loading...</td></tr>
+</tbody>
 </table>
 
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"></script>
+
+<!-- Firebase Config -->
+<script src="firebase-config.js"></script>
+
 <script>
-firebase.initializeApp({
-  apiKey: "AIzaSyBK72ROuOs4fDc5p5CFaHSWwW8oQZwEL-g",
-  databaseURL: "https://ecosafar-b8e9b-default-rtdb.firebaseio.com"
+const messaging = firebase.messaging();
+
+// 🔔 Ask notification permission
+messaging.requestPermission()
+.then(() => {
+  console.log("Notification permission granted.");
+  return messaging.getToken({
+    vapidKey: "BA4P4hdv85OrkXnA8Jnoj67SVcRtvIxbyH_7H7KDlxIVrXoBj9OAir4PcaBfsaxZMUN4WoynTIB23DcD6Dp-8
+"
+  });
+})
+.then((token) => {
+  console.log("FCM Token:", token);
+  // Save token in database
+  database.ref("adminTokens").push(token);
+})
+.catch((err) => {
+  console.log("Notification permission denied", err);
 });
 
-const db = firebase.database();
+// Foreground message handler
+messaging.onMessage((payload) => {
+  console.log("Message received:", payload);
+  alert(payload.notification.title + "\n" + payload.notification.body);
+});
 
-
-db.ref("admins/Anand/bins/BIN001").on("value", snap => {
+// BIN DATA LISTENER
+database.ref("admins/Anand/bins/BIN001").on("value", snap => {
   const d = snap.val();
   if (!d) return;
 
   document.getElementById("distance").innerText = d.distanceCM;
   document.getElementById("fill").innerText = d.fillPercentage;
   document.getElementById("fillBar").style.width = d.fillPercentage + "%";
-
 
   if (d.lastUpdated) {
     const ts = d.lastUpdated < 1000000000000
@@ -204,14 +204,23 @@ db.ref("admins/Anand/bins/BIN001").on("value", snap => {
       new Date(ts).toLocaleString();
   }
 
-
-  if (d.fillPercentage >= 90) {
+  if (d.fillPercentage >= 85) {
     document.getElementById("alertBox").style.display = "block";
+
+    // Local notification if open
+    if (Notification.permission === "granted") {
+      new Notification("EcoSafar Alert", {
+        body: "BIN001 is above 85% full. Collection required!",
+        icon: "logo.png"
+      });
+    }
   } else {
     document.getElementById("alertBox").style.display = "none";
   }
 });
-db.ref("users").on("value", snapshot => {
+
+// USERS TABLE
+database.ref("users").on("value", snapshot => {
   let users = [];
 
   snapshot.forEach(child => {
@@ -231,12 +240,12 @@ db.ref("users").on("value", snapshot => {
 
   document.getElementById("users").innerHTML = users.map((u,i)=>`
     <tr>
-      <td data-label="Rank">${i+1}</td>
-      <td data-label="RFID UID">${u.uid}</td>
-      <td data-label="Name">${u.name}</td>
-      <td data-label="City">${u.city}</td>
-      <td data-label="Total Waste">${u.TotalWeight.toFixed(2)}</td>
-      <td data-label="EcoPoints">${u.Ecopoints.toFixed(2)}</td>
+      <td>${i+1}</td>
+      <td>${u.uid}</td>
+      <td>${u.name}</td>
+      <td>${u.city}</td>
+      <td>${u.TotalWeight.toFixed(2)}</td>
+      <td>${u.Ecopoints.toFixed(2)}</td>
     </tr>
   `).join("") || "<tr><td colspan='6'>No users</td></tr>";
 });
