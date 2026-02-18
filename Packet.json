@@ -1,14 +1,18 @@
 {
-  "name": "ecosafar-backend",
+  "name": "eco",
   "version": "1.0.0",
-  "main": "server.js",
+  "description": "",
+  "main": "firebase-messaging-sw.js",
   "scripts": {
-    "start": "node server.js",
-    "seed": "node init_db.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
-    "body-parser": "^1.20.2",
-    "express": "^4.18.2",
-    "sqlite3": "^5.1.6"
+    "@capacitor/cli": "^8.1.0",
+    "@capacitor/core": "^8.1.0"
   }
 }
