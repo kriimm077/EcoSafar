@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -161,32 +161,59 @@ tr:nth-child(even) td {
 <script src="firebase-config.js"></script>
 
 <script>
+
+// 🔥 REGISTER SERVICE WORKER
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('firebase-messaging-sw.js')
+  .then(function(registration) {
+    console.log("Service Worker registered:", registration.scope);
+  }).catch(function(error) {
+    console.log("Service Worker registration failed:", error);
+  });
+}
+
 const messaging = firebase.messaging();
 
-// 🔔 Ask notification permission
+// 🔔 REQUEST PERMISSION
 messaging.requestPermission()
-.then(() => {
+.then(function() {
   console.log("Notification permission granted.");
   return messaging.getToken({
     vapidKey: "BA4P4hdv85OrkXnA8Jnoj67SVcRtvIxbyH_7H7KDlxIVrXoBj9OAir4PcaBfsaxZMUN4WoynTIB23DcD6Dp-8"
   });
 })
-.then((token) => {
+.then(function(token) {
   console.log("FCM Token:", token);
-  // Save token in database
-  database.ref("adminTokens").push(token);
+
+  // Save token only once
+  database.ref("adminTokens").once("value", snap => {
+    let exists = false;
+    snap.forEach(child => {
+      if (child.val() === token) exists = true;
+    });
+    if (!exists) {
+      database.ref("adminTokens").push(token);
+    }
+  });
+
 })
-.catch((err) => {
-  console.log("Notification permission denied", err);
+.catch(function(err) {
+  console.log("Notification permission denied:", err);
 });
 
-// Foreground message handler
-messaging.onMessage((payload) => {
-  console.log("Message received:", payload);
-  alert(payload.notification.title + "\n" + payload.notification.body);
+// 🔔 FOREGROUND NOTIFICATION
+messaging.onMessage(function(payload) {
+  console.log("Foreground message:", payload);
+
+  if (payload.notification) {
+    new Notification(payload.notification.title, {
+      body: payload.notification.body,
+      icon: "logo.png"
+    });
+  }
 });
 
-// BIN DATA LISTENER
+// 📊 BIN LISTENER
 database.ref("admins/Anand/bins/BIN001").on("value", snap => {
   const d = snap.val();
   if (!d) return;
@@ -205,20 +232,12 @@ database.ref("admins/Anand/bins/BIN001").on("value", snap => {
 
   if (d.fillPercentage >= 85) {
     document.getElementById("alertBox").style.display = "block";
-
-    // Local notification if open
-    if (Notification.permission === "granted") {
-      new Notification("EcoSafar Alert", {
-        body: "BIN001 is above 85% full. Collection required!",
-        icon: "logo.png"
-      });
-    }
   } else {
     document.getElementById("alertBox").style.display = "none";
   }
 });
 
-// USERS TABLE
+// 👥 USERS TABLE
 database.ref("users").on("value", snapshot => {
   let users = [];
 
@@ -237,17 +256,19 @@ database.ref("users").on("value", snapshot => {
 
   users.sort((a,b) => b.Ecopoints - a.Ecopoints);
 
-  document.getElementById("users").innerHTML = users.map((u,i)=>`
-    <tr>
-      <td>${i+1}</td>
-      <td>${u.uid}</td>
-      <td>${u.name}</td>
-      <td>${u.city}</td>
-      <td>${u.TotalWeight.toFixed(2)}</td>
-      <td>${u.Ecopoints.toFixed(2)}</td>
-    </tr>
-  `).join("") || "<tr><td colspan='6'>No users</td></tr>";
+  document.getElementById("users").innerHTML =
+    users.map((u,i)=>`
+      <tr>
+        <td>${i+1}</td>
+        <td>${u.uid}</td>
+        <td>${u.name}</td>
+        <td>${u.city}</td>
+        <td>${u.TotalWeight.toFixed(2)}</td>
+        <td>${u.Ecopoints.toFixed(2)}</td>
+      </tr>
+    `).join("") || "<tr><td colspan='6'>No users</td></tr>";
 });
+
 </script>
 
 </body>
